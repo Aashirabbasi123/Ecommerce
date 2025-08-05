@@ -211,9 +211,9 @@
                                   @endforeach
 
                               </div>
-                              <!-- /.swiper-wrapper -->
-                          </div><!-- /.swiper-container js-swiper-slider -->
-                      </div><!-- /.position-relative -->
+
+                          </div>
+                      </div>
                   </div>
               </div>
           </section>
@@ -293,3 +293,5 @@
       <div class="mb-3 mb-xl-5 pt-1 pb-4"></div>
 
   </main>
+{{-- hsadahsjdhkjashdkhaskjdksadksadka
+asjdkhsadhadkjaskjd --}}

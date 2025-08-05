@@ -114,6 +114,10 @@ Route::delete('/wishlist/remove/', [WishlistController::class, 'empty_wishlist']
 Route::post('/wishlist/move-to-cart/{id}', [WishlistController::class, 'move_to_cart'])->name('wishlist.move.cart');
 
 
+/// ----------------====================== User Controller ===================---------------------------\\\
+Route::get('/contact', [UserController::class, 'contact'])->name('contact');
+Route::get('/contact/store', [UserController::class, 'contact_store'])->name('user.contact.store');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -135,7 +139,6 @@ Route::middleware(['auth:web', 'user'])->group(function () {
 Route::get('/', [UserController::class, 'dashboard'])->name('dashboard');
 Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
 Route::get('/about', [UserController::class, 'about'])->name('about');
-Route::get('/contact', [UserController::class, 'contact'])->name('contact');
 Route::get('/register', [UserController::class, 'register'])->name('register');
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);

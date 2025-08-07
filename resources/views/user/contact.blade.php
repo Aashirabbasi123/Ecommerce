@@ -22,10 +22,11 @@
         <section class="contact-us container">
             <div class="mw-930">
                 <div class="contact-us__form">
-                      @if (session()->has('sucess'))
-                        <p class="alert alert-dismissible fade show" role="alert">{{ session('sucess') }}</p>
+                      @if (session()->has('success'))
+                        <p class="alert alert-success" role="alert">{{ session('success') }}</p>
                     @endif
-                    <form name="contact-us-form" class="needs-validation" novalidate="" method="POST" action="{{route('user.contact.store')}}">
+                    <form name="contact-us-form" class="needs-validation" novalidate="" method="POST" action="{{route('user.contact.store')}}" enctype="multipart/form-data">
+                        @csrf
                         <h3 class="mb-5">Get In Touch</h3>
                         <div class="form-floating my-4">
                             <input type="text" class="form-control" name="name" placeholder="Name *" required="" value="{{old('name')}}">

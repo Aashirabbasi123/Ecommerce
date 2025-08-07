@@ -1,3 +1,34 @@
+  <style>
+      .product-item {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          gap: 15px;
+          transition: all 0.3s ease;
+          padding-right: 5px;
+      }
+
+      .product-item .image {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 50px;
+          height: 50px;
+          gap: 10px;
+          flex-shrink: 0;
+          padding: 5px;
+          border-radius: 10px;
+          background: #EFF4F8;
+      }
+
+      #box-content-search li {
+          list-style: none;
+      }
+
+      #box-content-search .product-item {
+          margin-bottom: 10px;
+      }
+  </style>
   <svg class="d-none">
       <symbol id="icon_nav" viewBox="0 0 25 18">
           <rect width="25" height="2" />
@@ -248,13 +279,27 @@
               </a>
           </div>
 
-          <a href="#" class="header-tools__item header-tools__cart js-open-aside" data-aside="cartDrawer">
-              <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <use href="#icon_cart" />
-              </svg>
-              <span class="cart-amount d-block position-absolute js-cart-items-count">3</span>
-          </a>
+          <div class="header-tools__cart">
+              <a href="{{ route('cart') }}">
+                  <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <use href="#icon_cart" />
+                  </svg>
+                  @php
+                      $cart = session()->get('cart', []);
+                      $cart_count = 0;
+
+                      foreach ($cart as $item) {
+                          $cart_count += $item['qty'] ?? 1;
+                      }
+                  @endphp
+                  @if ($cart_count > 0)
+                      <span class="cart-amount d-block position-absolute js-cart-items-count">
+                          {{ $cart_count }}
+                      </span>
+                  @endif
+              </a>
+          </div>
       </div>
       <nav
           class="header-mobile__navigation navigation d-flex flex-column w-100 position-absolute top-100 bg-body overflow-auto">
@@ -398,13 +443,14 @@
                               <i class="btn-icon btn-close-lg"></i>
                           </a>
                       </div>
-
+                      @stack('scripts')
                       <div class="search-popup js-hidden-content">
-                          <form action="#" method="GET" class="search-field container">
+                          <form action="{{ route('dashboard') }}" method="GET" class="search-field container">
                               <p class="text-uppercase text-secondary fw-medium mb-4">What are you looking for?</p>
                               <div class="position-relative">
                                   <input class="search-field__input search-popup__input w-100 fw-medium"
-                                      type="text" name="search-keyword" placeholder="Search products" />
+                                      type="text" name="search-keyword" id="search-input"
+                                      placeholder="Search products" />
                                   <button class="btn-icon search-popup__submit" type="submit">
                                       <svg class="d-block" width="20" height="20" viewBox="0 0 20 20"
                                           fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -415,23 +461,7 @@
                               </div>
 
                               <div class="search-popup__results">
-                                  <div class="sub-menu search-suggestion">
-                                      <h6 class="sub-menu__title fs-base">Quicklinks</h6>
-                                      <ul class="sub-menu__list list-unstyled">
-                                          <li class="sub-menu__item"><a href="shop2.html"
-                                                  class="menu-link menu-link_us-s">New Arrivals</a></li>
-                                          <li class="sub-menu__item"><a href="#"
-                                                  class="menu-link menu-link_us-s">Dresses</a></li>
-                                          <li class="sub-menu__item"><a href="shop3.html"
-                                                  class="menu-link menu-link_us-s">Accessories</a></li>
-                                          <li class="sub-menu__item"><a href="#"
-                                                  class="menu-link menu-link_us-s">Footwear</a></li>
-                                          <li class="sub-menu__item"><a href="#"
-                                                  class="menu-link menu-link_us-s">Sweatshirt</a></li>
-                                      </ul>
-                                  </div>
-
-                                  <div class="search-result row row-cols-5"></div>
+                                  <ul id="box-content-search"></ul>
                               </div>
                           </form>
                       </div>

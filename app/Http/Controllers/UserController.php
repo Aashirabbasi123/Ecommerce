@@ -16,13 +16,24 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function dashboard()
+    public function dashboard(Request $request)
     {
-        $products = Product::latest()->take(10)->get();
+        $searchKeyword = $request->input('search-keyword');
+        if ($searchKeyword) {
+            $product = Product::where('name', $searchKeyword)->first();
+            if ($product) {
+                return redirect()->route('detailpage', ['product_slug' => $product->slug]);
+            }
+            $products = Product::where('name', 'LIKE', "%{$searchKeyword}%")->get();
+        } else {
+            $products = Product::latest()->take(10)->get();
+        }
         $slides = slide::orderBy('id', 'DESC')->take(5)->get();
         $categories = Category::orderBy('name')->get();
+
         return view('user.dashboard', compact('products', 'slides', 'categories'));
     }
+
     public function login()
     {
         return view('auth.login');
@@ -93,14 +104,45 @@ class UserController extends Controller
 
         return view('user.order-detail', compact('order', 'orderItems', 'transaction', 'address'));
     }
-
     public function order_cancel(Request $request)
     {
-        $order = Order::find($request->order_id);
-        $order->status = "canceled";
-        $order->canceled_date = Carbon::now();
+        $request->validate([
+            'order_id' => 'required|exists:orders,id',
+        ]);
+
+        $order = Order::where('id', $request->order_id)
+            ->where('user_id', Auth::id())
+            ->first();
+
+        if (!$order || $order->status !== 'ordered') {
+            return back()->with('status', 'Order cannot be canceled.');
+        }
+
+        // Time Check (only within 24 hours)
+        $cancelDeadline = $order->created_at->addMinutes(5);
+        if (now()->greaterThan($cancelDeadline)) {
+            return back()->with('status', 'Cannot cancel. 10 hours have passed.');
+        }
+
+        $order->status = 'canceled';
+        $order->canceled_date = now();
         $order->save();
 
-        return back()->with("status", "Order has been cancelled successfully!");
+        return back()->with('status', 'Order canceled successfully.');
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        if (!$query) {
+            return response()->json([]);
+        }
+
+        $results = Product::where('name', 'LIKE', "%{$query}%")
+            ->take(8)
+            ->get(['name', 'slug', 'image']);
+
+        return response()->json($results);
     }
 }

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Address;
+use App\Models\Contact;
 use App\Models\Coupon;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 use App\Models\OrderItem;
 use App\Models\Transaction;
@@ -154,6 +156,32 @@ class AdminController extends Controller
             $transaction->save();
         }
         return back()->with("status", "Status changed Sucessfully!");
+    }
+    public function contacts()
+    {
+        $contacts = Contact::orderBy('created_at', 'DESC')->paginate(10);
+        return view('admin.contacts', compact('contacts'));
+    }
+    public function delete_contact($id)
+    {
+        $contact = Contact::findOrFail($id);
+        $contact->delete();
+
+        return redirect()->route('admin.contacts')->with('status', 'contact has been deleted successfully!');
+    }
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        if (!$query) {
+            return response()->json([]);
+        }
+
+        $results = Product::where('name', 'LIKE', "%{$query}%")
+            ->take(8)
+            ->get(['id','name', 'slug', 'image']);
+
+        return response()->json($results);
     }
 
 }

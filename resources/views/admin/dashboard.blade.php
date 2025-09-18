@@ -146,7 +146,7 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap10">
-                                <h4>${{ $TotalAmount }}</h4>
+                                <h4>Rs{{ $TotalAmount }}</h4>
 
                             </div>
                         </div>
@@ -158,7 +158,7 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap10">
-                                <h4>${{ $TotalOrderedAmount }}</h4>
+                                <h4>Rs{{ $TotalOrderedAmount }}</h4>
 
                             </div>
                         </div>
@@ -170,7 +170,7 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap10">
-                                <h4>${{ $TotalDeliveredAmount }}</h4>
+                                <h4>Rs{{ $TotalDeliveredAmount }}</h4>
 
                             </div>
                         </div>
@@ -182,7 +182,7 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap10">
-                                <h4>${{ $TotalCanceledAmount }}</h4>
+                                <h4>Rs{{ $TotalCanceledAmount }}</h4>
 
                             </div>
                         </div>
@@ -227,9 +227,9 @@
                                             <td class="text-center">{{ $order->id }}</td>
                                             <td class="text-center">{{ $order->name }}</td>
                                             <td class="text-center">{{ $order->phone }}</td>
-                                            <td class="text-center">${{ $order->subtotal }}</td>
-                                            <td class="text-center">${{ $order->tax }}</td>
-                                            <td class="text-center">${{ $order->total }}</td>
+                                            <td class="text-center">Rs{{ $order->subtotal }}</td>
+                                            <td class="text-center">Rs{{ $order->tax }}</td>
+                                            <td class="text-center">Rs{{ $order->total }}</td>
                                             <td>
                                                 @if ($order->status == 'delivered')
                                                     <span class="badge bg-success">Delivered</span>
@@ -265,98 +265,104 @@
     </div>
 @endsection
 @push('scripts')
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        (function($) {
-            var tfLineChart = (function() {
-                var chartBar = function() {
-                    var options = {
-                        series: [{
-                                name: 'Total',
-                                data: [{!! $AmountM !!}]
-                            },
-                            {
-                                name: 'Pending',
-                                data: [{!! $OrderedAmountM !!}]
-                            },
-                            {
-                                name: 'Delivered',
-                                data: [{!! $DeliveredAmountM !!}]
-                            },
-                            {
-                                name: 'Canceled',
-                                data: [{!! $CanceledAmountM !!}]
-                            }
-                        ],
-                        chart: {
-                            type: 'bar',
-                            height: 325,
-                            toolbar: {
-                                show: false,
-                            },
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    (function ($) {
+        var tfLineChart = (function () {
+            var chartBar = function () {
+                var options = {
+                    series: [
+                        {
+                            name: 'Total',
+                            data: [{{ $AmountM }}]
                         },
-                        plotOptions: {
-                            bar: {
-                                horizontal: false,
-                                columnWidth: '10px',
-                                endingShape: 'rounded'
-                            },
+                        {
+                            name: 'Pending',
+                            data: [{{ $OrderedAmountM }}]
                         },
-                        dataLabels: {
-                            enabled: false
+                        {
+                            name: 'Delivered',
+                            data: [{{ $DeliveredAmountM }}]
                         },
-                        legend: {
+                        {
+                            name: 'Canceled',
+                            data: [{{ $CanceledAmountM }}]
+                        }
+                    ],
+                    chart: {
+                        type: 'bar',
+                        height: 325,
+                        toolbar: {
                             show: false,
                         },
-                        colors: ['#2377FC', '#FFA500', '#078407', '#FF0000'],
-                        stroke: {
-                            show: false,
+                    },
+                    plotOptions: {
+                        bar: {
+                            horizontal: false,
+                            columnWidth: '20px',
+                            endingShape: 'rounded'
                         },
-                        xaxis: {
-                            labels: {
-                                style: {
-                                    colors: '#212529',
-                                },
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    legend: {
+                        show: true,
+                        position: 'top',
+                        horizontalAlign: 'center'
+                    },
+                    colors: ['#2377FC', '#FFA500', '#078407', '#FF0000'],
+                    stroke: {
+                        show: false,
+                    },
+                    xaxis: {
+                        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                        labels: {
+                            style: {
+                                colors: '#212529',
                             },
-                            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
-                                'Oct', 'Nov', 'Dec'
-                            ],
                         },
-                        yaxis: {
-                            show: false,
-                        },
-                        fill: {
-                            opacity: 1
-                        },
-                        tooltip: {
-                            y: {
-                                formatter: function(val) {
-                                    return "$ " + val;
-                                }
+                    },
+                    yaxis: {
+                        show: true,
+                        labels: {
+                            formatter: function (val) {
+                                return "Rs " + val;
                             }
                         }
-                    };
-
-                    if ($("#line-chart-8").length > 0) {
-                        var chart = new ApexCharts(document.querySelector("#line-chart-8"), options);
-                        chart.render();
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return "Rs " + val;
+                            }
+                        }
+                    },
+                    fill: {
+                        opacity: 1
                     }
                 };
 
-                return {
-                    init: function() {},
-                    load: function() {
-                        chartBar();
-                    },
-                    resize: function() {}
-                };
-            })();
+                if ($("#line-chart-8").length > 0) {
+                    var chart = new ApexCharts(document.querySelector("#line-chart-8"), options);
+                    chart.render();
+                }
+            };
 
-            $(document).ready(function() {});
-            $(window).on("load", function() {
-                tfLineChart.load();
-            });
-            $(window).on("resize", function() {});
-        })(jQuery);
-    </script>
+            return {
+                init: function () { },
+                load: function () {
+                    chartBar();
+                },
+                resize: function () { }
+            };
+        })();
+
+        $(window).on("load", function () {
+            tfLineChart.load();
+        });
+    })(jQuery);
+</script>
 @endpush
+
+

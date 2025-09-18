@@ -13,31 +13,31 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-    /*
-    |--------------------------------------------------------------------------
-    | Landing Route: '/'
-    |--------------------------------------------------------------------------
-    | Redirects based on auth status
-    */
+/*
+|--------------------------------------------------------------------------
+| Landing Route: '/'
+|--------------------------------------------------------------------------
+| Redirects based on auth status
+*/
 
-    Route::get('/', function () {
-        $user = Auth::user();
-        if ($user && $user->is_admin) {
-            return redirect()->route('admin.dashboard');
-        } elseif ($user) {
-            return redirect()->route('dashboard');
-        }
+Route::get('/', function () {
+    $user = Auth::user();
+    if ($user && $user->is_admin) {
+        return redirect()->route('admin.dashboard');
+    } elseif ($user) {
+        return redirect()->route('dashboard');
+    }
 
-        return view('auth.login');
-    })->name('home');
+    return view('auth.login');
+})->name('home');
 
-    // |--------------------------------------------------------------------------
-    // | Admin Routes (Requires auth + admin middleware)
-    // |--------------------------------------------------------------------------
-    // */
-    Route::middleware(['auth:admin', 'admin'])->group(function () {
-        Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    });
+// |--------------------------------------------------------------------------
+// | Admin Routes (Requires auth + admin middleware)
+// |--------------------------------------------------------------------------
+// */
+Route::middleware(['auth:admin', 'admin'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+});
 ////----------------==============Coupon Code ==========---------------------------\\\
 Route::get('/admin/coupons', [AdminController::class, 'coupons'])->name('admin.coupons');
 Route::get('/admin/add_coupons', [AdminController::class, 'add_coupons'])->name('admin.add_coupons');
@@ -45,12 +45,12 @@ Route::post('/admin/coupon/store', [AdminController::class, 'coupon_store'])->na
 Route::get('/admin/coupon/edit/{id}', [AdminController::class, 'edit_coupon'])->name('admin.coupon.edit');
 Route::put('/admin/coupon/update/{id}', [AdminController::class, 'update_coupon'])->name('admin.coupon.update');
 Route::delete('/admin/coupon/{id}/delete', [AdminController::class, 'delete_coupon'])->name('admin.coupon.delete');
-Route::get('/admin/contacts',[AdminController::class,'contacts'])->name('admin.contacts');
+Route::get('/admin/contacts', [AdminController::class, 'contacts'])->name('admin.contacts');
 Route::delete('/admin/contact/{id}/delete', [AdminController::class, 'delete_contact'])->name('admin.contacts.delete');
-Route::get( '/admin/search', [AdminController::class, 'search'])->name('admin.search');
+Route::get('/admin/search', [AdminController::class, 'search'])->name('admin.search');
 ////================---------------Slides ===================----------------------------\\\
-Route::get('/admin/slides', [SlideController::class,'slides'])->name('admin.slides');
-Route::get('/admin/add_slider', [SlideController::class,'add_slider'])->name('admin.add_slider');
+Route::get('/admin/slides', [SlideController::class, 'slides'])->name('admin.slides');
+Route::get('/admin/add_slider', [SlideController::class, 'add_slider'])->name('admin.add_slider');
 Route::post('/admin/slide/store', [SlideController::class, 'slide_store'])->name('admin.slide.store');
 Route::get('/admin/slide/edit/{id}', [SlideController::class, 'edit_slide'])->name('admin.slide.edit');
 Route::put('/admin/slide/update/{id}', [SlideController::class, 'update_slide'])->name('admin.slide.update');
@@ -70,7 +70,7 @@ Route::get('/admin/brand/edit/{id}', [BrandController::class, 'edit_brand'])->na
 Route::put('/admin/brand/update/{id}', [BrandController::class, 'update_brand'])->name('admin.brand.update');
 Route::get('/admin/brand/{id}/delete', [BrandController::class, 'delete_brand'])->name('admin.brand.delete');
 Route::delete('/admin/brand/{id}/delete', [BrandController::class, 'delete_brand'])->name('admin.brand.delete');
-                    ///----------------categeory ROutes--------------------------------\\\
+///----------------categeory ROutes--------------------------------\\\
 Route::get('/admin/category', [CategoryController::class, 'categories'])->name('admin.categories');
 Route::get('/admin/add_category', [CategoryController::class, 'add_category'])->name('admin.add_category');
 Route::post('/admin/category/store', [CategoryController::class, 'category_store'])->name('admin.category.store');
@@ -86,14 +86,17 @@ Route::get('/admin/product/edit/{id}', [productController::class, 'product_edit'
 Route::put('/admin/product/update/{id}', [productController::class, 'update_product'])->name('admin.product.update');
 Route::get('/admin/product/{id}/delete', [productController::class, 'delete_product'])->name('admin.product.delete');
 Route::delete('/admin/product/{id}/delete', [productController::class, 'delete_product'])->name('admin.product.delete');
+Route::post('/product/{id}/review', [ProductController::class, 'addReview'])->name('product.addReview');
+Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
 /////--------------=============----Shop Page -------------==================--------------------\\\
-Route::get('/shop', [ShopController::class, 'shop'])->name('shop');;
+Route::get('/shop', [ShopController::class, 'shop'])->name('shop');
+;
 Route::get('/shop/detail/{product_slug}', [ShopController::class, 'detail'])->name('detailpage');
 ////////////////////////===================Order Route =================================\\\\\\\\\\\\\\\\
 
-Route::get('/admin/orders',[AdminController::class,'order'])->name('admin.order');
-Route::get('/admin/order/{order_id},detail',[AdminController::class,'order_detail'])->name('admin.order-detail');
-Route::put('/admin/order/update-status',[AdminController::class,'update_order_status'])->name('admin.order.status.update');
+Route::get('/admin/orders', [AdminController::class, 'order'])->name('admin.order');
+Route::get('/admin/order/{order_id},detail', [AdminController::class, 'order_detail'])->name('admin.order-detail');
+Route::put('/admin/order/update-status', [AdminController::class, 'update_order_status'])->name('admin.order.status.update');
 
 ////================-=========----------cart route ===============--------------------\\\\\\
 Route::get('/cart', [CartController::class, 'cart'])->name('cart');

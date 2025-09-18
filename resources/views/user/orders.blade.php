@@ -57,7 +57,7 @@
                                     <th>Name</th>
                                     <th>Phone</th>
                                     <th>Subtotal</th>
-                                    <th>Tax</th>
+                                    <!-- <th>Tax</th> -->
                                     <th>Total</th>
                                     <th>Status</th>
                                     <th>Order Date</th>
@@ -72,9 +72,9 @@
                                         <td>{{ $order->id }}</td>
                                         <td>{{ $order->name }}</td>
                                         <td>{{ $order->phone }}</td>
-                                        <td>${{ $order->subtotal }}</td>
-                                        <td>${{ $order->tax }}</td>
-                                        <td>${{ $order->total }}</td>
+                                        <td>Rs{{ $order->subtotal }}</td>
+                                        {{-- <td>${{ $order->tax }}</td> --}}
+                                        <td>Rs{{ $order->total }}</td>
                                         <td>
                                             @if ($order->status == 'delivered')
                                                 <span class="badge bg-success">Delivered</span>

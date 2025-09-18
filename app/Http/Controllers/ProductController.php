@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -189,4 +190,26 @@ class ProductController extends Controller
         $image->move($uploadPath, $fileName);
         return $fileName;
     }
+    //////////////////=============== Review =====================\\\\\\\\\\\\\\\\\
+    public function addReview(Request $request, $productId)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'rating' => 'required|integer|min:1|max:5',
+            'review' => 'required|string',
+        ]);
+
+        Review::create([
+            'product_id' => $productId,
+            'name' => $request->name,
+            'email' => $request->email,
+            'rating' => $request->rating,
+            'review' => $request->review,
+        ]);
+
+        return back()->with('success', 'Review submitted successfully!');
+    }
+    
+
 }

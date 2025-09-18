@@ -70,20 +70,16 @@
                                         <td>
                                             <div class="shopping-cart__product-item__detail">
                                                 <h4>{{ $item['name'] ?? 'No Name' }}</h4>
-                                                <ul class="shopping-cart__product-item__options">
-                                                    <li>Color: Yellow</li>
-                                                    <li>Size: L</li>
-                                                </ul>
                                             </div>
                                         </td>
                                         <td>
                                             <span
-                                                class="shopping-cart__product-price">${{ number_format($price, 2) }}</span>
+                                                class="shopping-cart__product-price">Rs{{ number_format($price, 2) }}</span>
                                         </td>
                                         <td>
                                             <div class="qty-control position-relative">
                                                 <input type="number" name="quantity" value="{{ $quantity }}"
-                                                    min="1" class="qty-control__number text-center">
+                                                    min="3" class="qty-control__number text-center">
                                                 <form method="POST" action="{{ route('cart.qty.decrease', $item['id']) }}">
                                                     @csrf
                                                     @method('PUT')
@@ -98,7 +94,7 @@
                                         </td>
                                         <td>
                                             <span
-                                                class="shopping-cart__subtotal">${{ number_format($itemSubtotal, 2) }}</span>
+                                                class="shopping-cart__subtotal">Rs{{ number_format($itemSubtotal, 2) }}</span>
                                         </td>
                                         <td>
                                             <form method="POST" action="{{ route('cart.remove', $item['id']) }}">
@@ -167,9 +163,9 @@
                             <div class="shopping-cart__totals">
                                 <h3>Cart Totals</h3>
 
-                                @php
+                                {{-- @php
                                     $vatPercentage = 15;
-                                @endphp
+                                @endphp --}}
 
                                 @if (session()->has('discounts'))
                                     @php
@@ -181,25 +177,25 @@
                                         <tbody>
                                             <tr>
                                                 <th>Subtotal</th>
-                                                <td>${{ number_format($subtotal, 2) }}</td>
+                                                <td>Rs{{ number_format($subtotal, 2) }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Discount <span style="color:red">{{ $coupon['code'] ?? '' }}</span>
                                                 </th>
-                                                <td>- ${{ number_format($discountData['discount'], 2) }}</td>
+                                                <td>- Rs{{ number_format($discountData['discount'], 2) }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Subtotal After Discount</th>
-                                                <td>${{ number_format($discountData['subtotal'], 2) }}</td>
+                                                <td>Rs{{ number_format($discountData['subtotal'], 2) }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Shipping</th>
                                                 <td>Free</td>
                                             </tr>
-                                            <tr>
+                                            {{-- <tr>
                                                 <th>VAT</th>
-                                                <td>${{ number_format($discountData['tax'], 2) }}</td>
-                                            </tr>
+                                                <td>Rs{{ number_format($discountData['tax'], 2) }}</td>
+                                            </tr> --}}
                                             <tr>
                                                 <th>Total</th>
                                                 <td><strong>${{ number_format($discountData['total'], 2) }}</strong></td>
@@ -208,27 +204,27 @@
                                     </table>
                                 @else
                                     @php
-                                        $vat = ($subtotal * $vatPercentage) / 100;
-                                        $total = $subtotal + $vat;
+                                        // $vat = ($subtotal * $vatPercentage) / 100;
+                                        $total = $subtotal ;
                                     @endphp
 
                                     <table class="checkout-totals">
                                         <tbody>
                                             <tr>
                                                 <th>Subtotal</th>
-                                                <td>${{ number_format($subtotal, 2) }}</td>
+                                                <td>Rs{{ number_format($subtotal, 2) }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Shipping</th>
                                                 <td>Free shipping</td>
                                             </tr>
-                                            <tr>
+                                            {{-- <tr>
                                                 <th>VAT</th>
                                                 <td>${{ number_format($vat, 2) }}</td>
-                                            </tr>
+                                            </tr> --}}
                                             <tr>
                                                 <th>Total</th>
-                                                <td><strong>${{ number_format($total, 2) }}</strong></td>
+                                                <td><strong>Rs{{ number_format($total, 2) }}</strong></td>
                                             </tr>
                                         </tbody>
                                     </table>

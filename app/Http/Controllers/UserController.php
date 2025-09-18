@@ -44,15 +44,18 @@ class UserController extends Controller
     }
     public function detail()
     {
-        return view('user.detail');
+     $categories = Category::all();
+    return view('user.detail', compact('categories'));
     }
     public function about()
     {
-        return view('user.about');
+         $categories = Category::all();
+         return view('user.about', compact('categories'));
     }
     public function contact()
     {
-        return view('user.contact');
+         $categories = Category::all();
+         return view('user.contact', compact('categories'));
     }
     public function contact_store(Request $request)
     {
@@ -74,7 +77,8 @@ class UserController extends Controller
     }
     public function register()
     {
-        return view('auth.register');
+         $categories = Category::all();
+         return view('auth.register', compact('categories'));
     }
     public function orders()
     {

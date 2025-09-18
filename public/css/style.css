@@ -12226,7 +12226,7 @@ textarea.form-control-lg {
 .header {
   display: none;
   position: relative;
-  background-color: #ffffff;
+  background-color: #0b9ed4;
   z-index: 2; }
   .header .form-select {
     border: 0;
@@ -15540,4 +15540,3 @@ body.coming-soon-page {
   .btn-video-player.playing svg.btn-pause {
     display: block; }
 
-    

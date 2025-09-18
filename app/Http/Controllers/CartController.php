@@ -11,63 +11,87 @@ use App\Models\OrderItem;
 use App\Models\Transaction;
 use App\Models\Coupon;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderPlacedMail;
+use App\Models\Category;
 
 class CartController extends Controller
 {
     public function cart()
     {
         $items = session()->get('cart', []);
-        return view('user.cart', compact('items'));
+        $categories = Category::all();
+        return view('user.cart', compact('items', 'categories'));
     }
+
     public function add_to_cart(Request $request)
     {
         $cart = session()->get('cart', []);
-
         $id = $request->id;
 
+        // 🛠️ Quantity ko int me convert karo aur minimum 3 enforce karo
+        $requestedQty = (int) $request->quantity;
+        if ($requestedQty < 3) {
+            $requestedQty = 3;
+        }
+
+        // 🧠 Agar product already cart me hai
         if (isset($cart[$id])) {
-            $cart[$id]['quantity'] += $request->quantity;
+            $cart[$id]['quantity'] += $requestedQty;
         } else {
+            // 🎯 Ab koi limit nahi — jitni bheji user ne, wohi jayegi (minimum 3)
             $cart[$id] = [
                 'id' => $id,
                 'name' => $request->name,
                 'price' => $request->price,
-                'quantity' => $request->quantity,
+                'quantity' => $requestedQty,
                 'image' => $request->image,
-
+                'cutting_option' => $request->cutting_option,
             ];
         }
 
         session()->put('cart', $cart);
-
         return redirect()->back()->with('success', 'Product Added to Cart!');
     }
+
+
     public function increase_quantity($id)
     {
         $cart = session()->get('cart', []);
 
         if (isset($cart[$id])) {
+            // ✅ quantity ko freely increase kar sakta hai
             $cart[$id]['quantity'] += 1;
             session()->put('cart', $cart);
+            return redirect()->back()->with('success', 'Quantity Increased!');
         }
 
-        return redirect()->back()->with('success', 'Quantity Increased!');
+        return redirect()->back()->with('error', 'Product not found in cart!');
     }
 
     public function decrease_quantity($id)
     {
         $cart = session()->get('cart', []);
 
-        if (isset($cart[$id]) && $cart[$id]['quantity'] > 1) {
-            $cart[$id]['quantity'] -= 1;
+        if (isset($cart[$id])) {
+            $currentQty = $cart[$id]['quantity'];
+
+            // ✅ agar 5 se zyada hai to 1 kam karo
+            if ($currentQty > 3) {
+                $cart[$id]['quantity'] = $currentQty - 1;
+            } else {
+                // ✅ agar 5 ya 5 se kam hai to fix 5 hi rakho
+                $cart[$id]['quantity'] = 3;
+            }
+
             session()->put('cart', $cart);
-        } elseif (isset($cart[$id]) && $cart[$id]['quantity'] == 1) {
-            unset($cart[$id]); //  Quantity 0 pe item remove kar deta hai
-            session()->put('cart', $cart);
+            return redirect()->back()->with('success', 'Quantity Updated!');
         }
 
-        return redirect()->back()->with('success', 'Quantity Updated!');
+        return redirect()->back()->with('error', 'Product not found in cart!');
     }
+
 
     public function remove($id)
     {
@@ -80,12 +104,12 @@ class CartController extends Controller
 
         return redirect()->back()->with('success', 'Item Removed from Cart!');
     }
+
     public function empty_cart()
     {
         session()->forget('cart');
         return redirect()->back();
     }
-
 
     public function apply_coupon_code(Request $request)
     {
@@ -114,9 +138,8 @@ class CartController extends Controller
                 'value' => $coupon->value,
                 'cart_value' => $coupon->cart_value,
             ]);
+
             $this->calculateDiscount($subtotal);
-
-
             $this->setAmountForCheckout();
 
             return redirect()->back()->with('success', 'Coupon has been applied');
@@ -139,21 +162,19 @@ class CartController extends Controller
             }
 
             $subtotalAfterDiscount = $subtotal - $discount;
-            $taxRate = config('cart.tax', 0);
-            $taxAfterDiscount = ($subtotalAfterDiscount * $taxRate) / 100;
-            $totalAfterDiscount = $subtotalAfterDiscount + $taxAfterDiscount;
+            $totalAfterDiscount = $subtotalAfterDiscount;
 
             Session::put('discounts', [
                 'discount' => number_format($discount, 2, '.', ''),
                 'subtotal' => number_format($subtotalAfterDiscount, 2, '.', ''),
-                'tax' => number_format($taxAfterDiscount, 2, '.', ''),
+                'tax' => 0, // tax removed, still set as 0 for compatibility
                 'total' => number_format($totalAfterDiscount, 2, '.', '')
             ]);
         }
     }
+
     public function remove_coupon_code()
     {
-
         Session::forget('coupon');
         Session::forget('discounts');
 
@@ -165,13 +186,16 @@ class CartController extends Controller
         if (!Auth::check()) {
             return redirect()->route('login');
         }
+
         $address = Address::where('user_id', Auth::user()->id)->where('isdefault', 1)->first();
         return view('user.checkout', compact('address'));
     }
+
     public function place_an_order(Request $request)
     {
         $user_id = Auth::user()->id;
-        $address = Address::where('user_id', $user_id)->where('isdefault', true)->first();
+        $address = Address::where('user_id', $user_id)->
+            where('isdefault', true)->first();
 
         if (!$address) {
             $request->validate([
@@ -192,6 +216,7 @@ class CartController extends Controller
             $address->isdefault = true;
             $address->save();
         }
+
         $cart = session()->get('cart', []);
         $subtotal = 0;
         foreach ($cart as $item) {
@@ -206,31 +231,33 @@ class CartController extends Controller
             return redirect()->back()->with('error', 'Checkout session not found. Please try again.');
         }
 
-        // Create Order
+        // ✅ Create Order
         $order = new Order();
         $order->user_id = $user_id;
         $order->subtotal = $checkout['subtotal'];
         $order->discount = $checkout['discount'];
-        $order->tax = $checkout['tax'];
         $order->total = $checkout['total'];
+        $order->tax = 0;
         $order->name = $address->name;
         $order->phone = $address->phone;
         $order->address = $address->address;
         $order->city = $address->city;
         $order->state = $address->state;
+        $order->status = 'pending';
         $order->save();
 
-        // Save order items
+        // ✅ Save Order Items
         foreach ($cart as $item) {
             $orderItem = new OrderItem();
             $orderItem->product_id = $item['id'];
             $orderItem->order_id = $order->id;
             $orderItem->price = $item['price'];
             $orderItem->quantity = $item['quantity'];
+            $orderItem->cutting_option = $item['cutting_option'] ?? null;
             $orderItem->save();
         }
 
-        // Save transaction
+        // ✅ Save Transaction
         if (in_array($request->mode, ['Cash_On_delivery', 'card', 'Easypaisa'])) {
             $transaction = new Transaction();
             $transaction->user_id = $user_id;
@@ -240,7 +267,17 @@ class CartController extends Controller
             $transaction->save();
         }
 
-        // Clear session
+        // ✅ Send Email
+        $order->loadMissing(['orderItems.product']);
+        try {
+            Mail::to(Auth::user()->email)
+                ->cc(env('MAIL_FROM_ADDRESS'))
+                ->send(new OrderPlacedMail($order));
+        } catch (\Exception $e) {
+            \Log::error('Email sending failed: ' . $e->getMessage());
+        }
+
+        // ✅ Clear Cart
         Session::forget('cart');
         Session::forget('checkout');
         Session::forget('coupon');
@@ -265,24 +302,16 @@ class CartController extends Controller
         }
 
         if (Session::has('coupon') && Session::has('discounts')) {
-            // Use calculated values from calculateDiscount
             Session::put('checkout', [
                 'discount' => Session::get('discounts')['discount'],
                 'subtotal' => Session::get('discounts')['subtotal'],
-                'tax' => Session::get('discounts')['tax'],
                 'total' => Session::get('discounts')['total'],
             ]);
         } else {
-            // No coupon applied, calculate normally
-            $taxRate = config('cart.tax', 0.13);
-            $tax = ($subtotal * $taxRate);
-            $total = $subtotal + $tax;
-
             Session::put('checkout', [
                 'discount' => 0,
                 'subtotal' => round($subtotal, 2),
-                'tax' => round($tax, 2),
-                'total' => round($total, 2),
+                'total' => round($subtotal, 2),
             ]);
         }
     }
@@ -293,6 +322,7 @@ class CartController extends Controller
             $order = Order::with(['transaction', 'orderItems.product'])->find(Session::get('order_id'));
             return view('user.order_confirm', compact('order'));
         }
+
         return redirect()->route('cart');
     }
 }

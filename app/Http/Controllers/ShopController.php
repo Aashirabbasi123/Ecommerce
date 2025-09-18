@@ -59,8 +59,8 @@ class ShopController extends Controller
 
         $previous = Product::where('id', '<', $product->id)->orderBy('id', 'desc')->first();
         $next = Product::where('id', '>', $product->id)->orderBy('id', 'asc')->first();
-
-        return view('user.detail', compact('product', 'rproducts', 'previous', 'next'));
+        $categories = Category::all();
+        return view('user.detail', compact('product', 'rproducts', 'previous', 'next','categories'));
     }
 
 }

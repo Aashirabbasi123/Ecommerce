@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Models\Category;
 class WishlistController extends Controller
 {
     public function wishlist()
     {
         $items = session()->get('wishlist', []);
-        return view('user.wishlist', compact('items'));
+         $categories = Category::all();
+        return view('user.wishlist', compact('items','categories'));
     }
 
 

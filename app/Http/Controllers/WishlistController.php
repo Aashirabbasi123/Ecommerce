@@ -4,15 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+
 class WishlistController extends Controller
 {
     public function wishlist()
     {
         $items = session()->get('wishlist', []);
-         $categories = Category::all();
-        return view('user.wishlist', compact('items','categories'));
+        $categories = Category::all();
+        return view('user.wishlist', compact('items', 'categories'));
     }
-
 
     public function add_to_wishlist(Request $request)
     {
@@ -20,11 +20,17 @@ class WishlistController extends Controller
 
         $productId = $request->id;
 
+        // Quantity fix: always min 3
+        $qty = (int) $request->quantity;
+        if ($qty < 1) {
+            $qty = 1;
+        }
+
         if (!isset($wishlist[$productId])) {
             $wishlist[$productId] = [
                 'id' => $productId,
                 'name' => $request->name,
-                'quantity' => $request->quantity,
+                'quantity' => $qty,
                 'price' => $request->price,
                 'image' => $request->image,
             ];
@@ -45,6 +51,7 @@ class WishlistController extends Controller
 
         return redirect()->back()->with('success', 'Item removed from wishlist!');
     }
+
     public function empty_wishlist()
     {
         session()->forget('wishlist');
@@ -52,43 +59,37 @@ class WishlistController extends Controller
     }
     public function move_to_cart($id)
     {
-        // Get wishlist and cart from session
         $wishlist = session()->get('wishlist', []);
         $cart = session()->get('cart', []);
 
-        // Check if product exists in wishlist
         if (isset($wishlist[$id])) {
             $item = $wishlist[$id];
 
-            // Remove from wishlist
             unset($wishlist[$id]);
             session()->put('wishlist', $wishlist);
 
-            // Add to cart (check if already in cart, then increase quantity)
+            $wantedQty = isset($item['quantity']) ? (int) $item['quantity'] : 3;
+            $qtyToAdd = max(3, $wantedQty);
+
             if (isset($cart[$id])) {
-                $cart[$id]['quantity'] += 1;
+                $cart[$id]['quantity'] = (int) $cart[$id]['quantity'] + $qtyToAdd;
             } else {
                 $cart[$id] = [
                     'id' => $item['id'],
                     'name' => $item['name'],
                     'price' => $item['price'],
                     'image' => $item['image'] ?? null,
-                    'quantity' => 1,
+                    'quantity' => $qtyToAdd,
                 ];
             }
 
             session()->put('cart', $cart);
 
-            // Flash message
-            session()->flash('success', 'Item moved to cart successfully!');
+            session()->flash('success', 'Item moved to cart (qty: ' . $qtyToAdd . ')!');
         } else {
             session()->flash('error', 'Item not found in wishlist.');
         }
 
         return redirect()->back();
     }
-
-
-
-
 }

@@ -32,8 +32,8 @@ class CartController extends Controller
 
         // 🛠️ Quantity ko int me convert karo aur minimum 3 enforce karo
         $requestedQty = (int) $request->quantity;
-        if ($requestedQty < 3) {
-            $requestedQty = 3;
+        if ($requestedQty < 1) {
+            $requestedQty = 1;
         }
 
         // 🧠 Agar product already cart me hai

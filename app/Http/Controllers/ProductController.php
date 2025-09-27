@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -117,16 +116,35 @@ class ProductController extends Controller
         $product->brand_id = $request->brand_id;
 
         if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($product->image) {
+                $oldPath = public_path('uploads/product/' . $product->image);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
+            }
             $product->image = $this->uploadProductImage($request->file('image'));
         }
 
         if ($request->hasFile('images')) {
+            // Step 1: Delete old gallery images from disk
+            if ($product->images) {
+                foreach (explode(',', $product->images) as $oldImage) {
+                    $oldPath = public_path('uploads/product/' . $oldImage);
+                    if (file_exists($oldPath)) {
+                        unlink($oldPath); // پرانی images delete ہو جاتی ہیں
+                    }
+                }
+            }
+
+            // Step 2: Upload new gallery images
             $gallery = [];
             foreach ($request->file('images') as $imageFile) {
-                $gallery[] = $this->uploadProductImage($imageFile);
+                $gallery[] = $this->uploadProductImage($imageFile); // نئی images copy ہوتی ہیں
             }
             $product->images = implode(',', $gallery);
         }
+
 
         $product->save();
 
@@ -137,6 +155,7 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
+        // Delete main image
         if ($product->image) {
             $path = public_path('uploads/product/' . $product->image);
             if (file_exists($path)) {
@@ -144,6 +163,7 @@ class ProductController extends Controller
             }
         }
 
+        // Delete gallery images
         if ($product->images) {
             foreach (explode(',', $product->images) as $imageFile) {
                 $path = public_path('uploads/product/' . $imageFile);
@@ -170,26 +190,4 @@ class ProductController extends Controller
         $image->move($uploadPath, $fileName);
         return $fileName;
     }
-    //////////////////=============== Review =====================\\\\\\\\\\\\\\\\\
-    public function addReview(Request $request, $productId)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email',
-            'rating' => 'required|integer|min:1|max:5',
-            'review' => 'required|string',
-        ]);
-
-        Review::create([
-            'product_id' => $productId,
-            'name' => $request->name,
-            'email' => $request->email,
-            'rating' => $request->rating,
-            'review' => $request->review,
-        ]);
-
-        return back()->with('success', 'Review submitted successfully!');
-    }
-    
-
 }

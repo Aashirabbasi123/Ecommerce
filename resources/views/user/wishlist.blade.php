@@ -6,21 +6,21 @@
         <section class="shop-checkout container">
             <h2 class="page-title">Wishlist</h2>
             <div class="checkout-steps">
-                <a href="shop_cart.html" class="checkout-steps__item active">
+                <a href="{{route('cart')}}" class="checkout-steps__item active">
                     <span class="checkout-steps__item-number">01</span>
                     <span class="checkout-steps__item-title">
                         <span>Shopping Bag</span>
                         <em>Manage Your Items List</em>
                     </span>
                 </a>
-                <a href="shop_checkout.html" class="checkout-steps__item">
+                <a href="{{ route('checkout') }}" class="checkout-steps__item">
                     <span class="checkout-steps__item-number">02</span>
                     <span class="checkout-steps__item-title">
                         <span>Shipping and Checkout</span>
                         <em>Checkout Your Items List</em>
                     </span>
                 </a>
-                <a href="shop_order_complete.html" class="checkout-steps__item">
+                <a href="#" class="checkout-steps__item">
                     <span class="checkout-steps__item-number">03</span>
                     <span class="checkout-steps__item-title">
                         <span>Confirmation</span>
@@ -56,10 +56,10 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <span class="shopping-cart__product-price">${{ $item['price'] }}</span>
+                                            <span class="shopping-cart__product-price">Rs{{ $item['price'] }}</span>
                                         </td>
                                         <td>
-                                            {{ $item['quantity'] }}
+                                            {{ $item['quantity'] }} kg
                                         </td>
                                         <td>
                                             <div class="row">

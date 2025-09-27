@@ -4,45 +4,60 @@
     @include('user.components.navbar')
     @stack('styles')
     <style>
-        /* Ocean Blue Border for Slides */
+        /* ===== Swiper Slide Border with Hover Effect ===== */
         .swiper-slide .slide-split {
             border: 4px solid #0077b6;
             /* Ocean Blue */
-            border-radius: 12px;
-            /* Rounded corners */
+            border-radius: 14px;
+            /* Slightly more rounded */
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+            /* No shadow initially */
+            background-color: #fff;
+            /* White bg for contrast */
         }
 
-        /* Hover effect */
         .swiper-slide .slide-split:hover {
             border-color: #0096c7;
             /* Light aqua-blue hover */
-            transform: translateY(-5px);
-            box-shadow: 0 6px 18px rgba(0, 51, 77, 0.25);
+            transform: translateY(-6px);
+            box-shadow: 0 10px 25px rgba(0, 102, 153, 0.3);
         }
 
+        /* ===== Quantity Input Group ===== */
         .input-group {
             display: inline-flex;
             align-items: center;
-            border: 1.5px solid #ccc;
-            border-radius: 6px;
+            border: 1.8px solid #ccc;
+            border-radius: 8px;
             overflow: hidden;
-            width: 130px;
-            /* adjust kar sakte ho width */
-            background-color: #f9f9f9;
+            width: 140px;
+            /* Slightly wider for comfort */
+            background-color: #fafafa;
+            box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.1);
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group:focus-within {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
         }
 
         .input-group button {
             background-color: #007bff;
             color: white;
             border: none;
-            padding: 8px 12px;
+            padding: 10px 15px;
             cursor: pointer;
-            font-weight: bold;
-            font-size: 18px;
-            transition: background-color 0.3s ease;
+            font-weight: 700;
+            font-size: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
             user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 42px;
         }
 
         .input-group button:hover {
@@ -50,21 +65,61 @@
         }
 
         .quantity-input {
-            width: 50px;
+            width: 60px;
             border: none;
             text-align: center;
-            font-size: 16px;
-            padding: 8px 0;
+            font-size: 18px;
+            padding: 10px 0;
             outline: none;
             background-color: transparent;
+            font-weight: 600;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
             -moz-appearance: textfield;
-            /* Firefox ke liye number input arrows hatao */
+            /* Firefox: remove number input arrows */
         }
 
         .quantity-input::-webkit-inner-spin-button,
         .quantity-input::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
+        }
+
+        /* Mobile first: chhoti screen ke liye base styles pehle se hain */
+
+        /* Medium screens (tablets) ke liye tweaks */
+        @media (min-width: 600px) {
+            .input-group {
+                width: 180px;
+                /* thoda aur wide */
+            }
+
+            .quantity-input {
+                width: 80px;
+                font-size: 20px;
+            }
+
+            .input-group button {
+                min-width: 50px;
+                font-size: 22px;
+            }
+        }
+
+        /* Large screens (desktops) ke liye */
+        @media (min-width: 992px) {
+            .input-group {
+                width: 220px;
+            }
+
+            .quantity-input {
+                width: 100px;
+                font-size: 22px;
+            }
+
+            .input-group button {
+                min-width: 60px;
+                font-size: 24px;
+            }
         }
     </style>
     <main class="pt-90">
@@ -115,15 +170,13 @@
                         </div>
                     </div>
                 </div>
-
-                {{--
-                <div class="accordion" id="color-filters">
+                <div class="accordion" id="brand-filters">
                     <div class="accordion-item mb-4 pb-3">
-                        <h5 class="accordion-header" id="accordion-heading-1">
+                        <h5 class="accordion-header" id="accordion-heading-brand">
                             <button class="accordion-button p-0 border-0 fs-5 text-uppercase" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#accordion-filter-2" aria-expanded="true"
-                                aria-controls="accordion-filter-2">
-                                Color
+                                data-bs-toggle="collapse" data-bs-target="#accordion-filter-brand" aria-expanded="true"
+                                aria-controls="accordion-filter-brand">
+                                Brands
                                 <svg class="accordion-button__icon type2" viewBox="0 0 10 6"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <g aria-hidden="true" stroke="none" fill-rule="evenodd">
@@ -133,113 +186,43 @@
                                 </svg>
                             </button>
                         </h5>
-                        <div id="accordion-filter-2" class="accordion-collapse collapse show border-0"
-                            aria-labelledby="accordion-heading-1" data-bs-parent="#color-filters">
-                            <div class="accordion-body px-0 pb-0">
-                                <div class="d-flex flex-wrap">
-                                    <a href="#" class="swatch-color js-filter" style="color: #0a2472"></a>
-                                    <a href="#" class="swatch-color js-filter" style="color: #d7bb4f"></a>
-                                    <a href="#" class="swatch-color js-filter" style="color: #282828"></a>
-                                    <a href="#" class="swatch-color js-filter" style="color: #b1d6e8"></a>
-                                    <a href="#" class="swatch-color js-filter" style="color: #9c7539"></a>
-                                    <a href="#" class="swatch-color js-filter" style="color: #d29b48"></a>
-                                    <a href="#" class="swatch-color js-filter" style="color: #e6ae95"></a>
-                                    <a href="#" class="swatch-color js-filter" style="color: #d76b67"></a>
-                                    <a href="#" class="swatch-color swatch_active js-filter" style="color: #bababa"></a>
-                                    <a href="#" class="swatch-color js-filter" style="color: #bfdcc4"></a>
-                                </div>
+                        <div id="accordion-filter-brand" class="accordion-collapse collapse show border-0"
+                            aria-labelledby="accordion-heading-brand" data-bs-parent="#brand-filters">
+                            <div class="search-field multi-select accordion-body px-0 pb-0">
+                                <ul class="list list-inline mb-0 brand-list">
+                                    @foreach ($brands as $brand)
+                                        <li class="list-item">
+                                            <span class="menu-link py-1">
+                                                <input type="checkbox" name="brands" value="{{ $brand->id }}" class="chk-brand"
+                                                    @if (in_array($brand->id, explode(',', $f_brands ?? ''))) checked @endif>
+                                                {{ $brand->name }}
+                                            </span>
+                                            <span class="text-right float-end">
+                                                {{ $brand->products->count() }}
+                                            </span>
+                                        </li>
+                                    @endforeach
+                                </ul>
                             </div>
                         </div>
                     </div>
                 </div>
-
-
-                <div class="accordion" id="size-filters">
-                    <div class="accordion-item mb-4 pb-3">
-                        <h5 class="accordion-header" id="accordion-heading-size">
-                            <button class="accordion-button p-0 border-0 fs-5 text-uppercase" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#accordion-filter-size" aria-expanded="true"
-                                aria-controls="accordion-filter-size">
-                                Sizes
-                                <svg class="accordion-button__icon type2" viewBox="0 0 10 6"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <g aria-hidden="true" stroke="none" fill-rule="evenodd">
-                                        <path
-                                            d="M5.35668 0.159286C5.16235 -0.053094 4.83769 -0.0530941 4.64287 0.159286L0.147611 5.05963C-0.0492049 5.27473 -0.049205 5.62357 0.147611 5.83813C0.344427 6.05323 0.664108 6.05323 0.860924 5.83813L5 1.32706L9.13858 5.83867C9.33589 6.05378 9.65507 6.05378 9.85239 5.83867C10.0492 5.62357 10.0492 5.27473 9.85239 5.06018L5.35668 0.159286Z" />
-                                    </g>
-                                </svg>
-                            </button>
-                        </h5>
-                        <div id="accordion-filter-size" class="accordion-collapse collapse show border-0"
-                            aria-labelledby="accordion-heading-size" data-bs-parent="#size-filters">
-                            <div class="accordion-body px-0 pb-0">
-                                <div class="d-flex flex-wrap">
-                                    <a href="#" class="swatch-size btn btn-sm btn-outline-light mb-3 me-3 js-filter">XS</a>
-                                    <a href="#" class="swatch-size btn btn-sm btn-outline-light mb-3 me-3 js-filter">S</a>
-                                    <a href="#" class="swatch-size btn btn-sm btn-outline-light mb-3 me-3 js-filter">M</a>
-                                    <a href="#" class="swatch-size btn btn-sm btn-outline-light mb-3 me-3 js-filter">L</a>
-                                    <a href="#" class="swatch-size btn btn-sm btn-outline-light mb-3 me-3 js-filter">XL</a>
-                                    <a href="#" class="swatch-size btn btn-sm btn-outline-light mb-3 me-3 js-filter">XXL</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
-
-
-                  <div class="accordion" id="brand-filters">
-                      <div class="accordion-item mb-4 pb-3">
-                          <h5 class="accordion-header" id="accordion-heading-brand">
-                              <button class="accordion-button p-0 border-0 fs-5 text-uppercase" type="button"
-                                  data-bs-toggle="collapse" data-bs-target="#accordion-filter-brand" aria-expanded="true"
-                                  aria-controls="accordion-filter-brand">
-                                  Brands
-                                  <svg class="accordion-button__icon type2" viewBox="0 0 10 6"
-                                      xmlns="http://www.w3.org/2000/svg">
-                                      <g aria-hidden="true" stroke="none" fill-rule="evenodd">
-                                          <path
-                                              d="M5.35668 0.159286C5.16235 -0.053094 4.83769 -0.0530941 4.64287 0.159286L0.147611 5.05963C-0.0492049 5.27473 -0.049205 5.62357 0.147611 5.83813C0.344427 6.05323 0.664108 6.05323 0.860924 5.83813L5 1.32706L9.13858 5.83867C9.33589 6.05378 9.65507 6.05378 9.85239 5.83867C10.0492 5.62357 10.0492 5.27473 9.85239 5.06018L5.35668 0.159286Z" />
-                                      </g>
-                                  </svg>
-                              </button>
-                          </h5>
-                          <div id="accordion-filter-brand" class="accordion-collapse collapse show border-0"
-                              aria-labelledby="accordion-heading-brand" data-bs-parent="#brand-filters">
-                              <div class="search-field multi-select accordion-body px-0 pb-0">
-                                  <ul class="list list-inline mb-0 brand-list">
-                                      @foreach ($brands as $brand)
-                                          <li class="list-item">
-                                              <span class="menu-link py-1">
-                                                  <input type="checkbox" name="brands" value="{{ $brand->id }}"
-                                                      class="chk-brand" @if (in_array($brand->id, explode(',', $f_brands ?? ''))) checked @endif>
-                                                  {{ $brand->name }}
-                                              </span>
-                                              <span class="text-right float-end">
-                                                  {{ $brand->products->count() }}
-                                              </span>
-                                          </li>
-                                      @endforeach
-                                  </ul>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
+            </div>
 
             <div class="shop-list flex-grow-1">
                 <div class="swiper-container js-swiper-slider slideshow slideshow_small slideshow_split" data-settings='{
-                            "autoplay": {
-                              "delay": 5000
-                            },
-                            "slidesPerView": 1,
-                            "effect": "fade",
-                            "loop": true,
-                            "pagination": {
-                              "el": ".slideshow-pagination",
-                              "type": "bullets",
-                              "clickable": true
-                            }
-                          }'>
+                                                "autoplay": {
+                                                  "delay": 5000
+                                                },
+                                                "slidesPerView": 1,
+                                                "effect": "fade",
+                                                "loop": true,
+                                                "pagination": {
+                                                  "el": ".slideshow-pagination",
+                                                  "type": "bullets",
+                                                  "clickable": true
+                                                }
+                                              }'>
 
                     <div class="swiper-wrapper">
 
@@ -459,9 +442,22 @@
 
                 <div class="products-grid row row-cols-2 row-cols-md-3" id="products-grid">
                     @foreach ($products as $product)
+                        @php
+                            $discount = 0;
+                            if ($product->sale_price && $product->sale_price < $product->regular_price) {
+                                $discount = round((($product->regular_price - $product->sale_price) / $product->regular_price) * 100);
+                            }
+                        @endphp
                         <div class="product-card-wrapper">
                             <div class="product-card mb-3 mb-md-4 mb-xxl-5">
-                                <div class="pc__img-wrapper">
+                                <div class="pc__img-wrapper" style="position: relative;">
+                                    @if($discount > 0)
+                                        <div
+                                            style="position: absolute; top: 10px; left: 10px; background: red; color: white; padding: 5px 8px; font-weight: bold; border-radius: 4px; z-index: 10;">
+                                            -{{ $discount }}%
+                                        </div>
+                                    @endif
+
                                     <div class="swiper-container background-img js-swiper-slider"
                                         data-settings='{"resizeObserver": true}'>
                                         <div class="swiper-wrapper">
@@ -590,7 +586,7 @@
                                             @csrf
                                             <input type="hidden" name="id" value="{{ $product->id }}">
                                             <input type="hidden" name="name" value="{{ $product->name }}">
-                                            <input type="hidden" name="quantity" value="1">
+                                            <input type="hidden" name="quantity" value="3">
                                             <input type="hidden" name="image" value="{{ $product->image }}">
                                             <input type="hidden" name="price"
                                                 value="{{ $product->sale_price ?? $product->regular_price }}">
@@ -605,35 +601,36 @@
                                         </form>
                                     @endif
 
-                                  </div>
-                              </div>
-                          </div>
-                      @endforeach
-                      <div class="divider">
-                          <div class="flex item-center jsutify-between flex-wrap gap10 wgp-pagination">
-                              {{ $products->withQueryString()->links('pagination::bootstrap-5') }}
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </section>
-      </main>
-      @include('user.components.footer')
-      <form id="frmfilter" method="GET" action="{{ route('shop') }}">
-          <input type="hidden" name="page" value="{{ $products->currentPage() }}" />
-          <input type="hidden" name="size" id="size" value="{{ $size }}" />
-          <input type="hidden" name="order" id="order" value="{{ $order }}" />
-          <input type="hidden" name="brands" id="hdnBrands" />
-          <input type="hidden" name="categories" id="hdnCategories" />
-      </form>
-  @endsection
-  @push('scripts')
-      <script>
-          $(function() {
-              $("#pagesize").on("change", function() {
-                  $("#size").val($(this).val());
-                  $("#frmfilter").submit();
-              });
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                <div class="divider">
+                    <div class="flex item-center jsutify-between flex-wrap gap10 wgp-pagination">
+                        {{ $products->withQueryString()->links('pagination::bootstrap-5') }}
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section>
+    </main>
+    @include('user.components.footer')
+    <form id="frmfilter" method="GET" action="{{ route('shop') }}">
+        <input type="hidden" name="page" value="{{ $products->currentPage() }}" />
+        <input type="hidden" name="size" id="size" value="{{ $size }}" />
+        <input type="hidden" name="order" id="order" value="{{ $order }}" />
+        <input type="hidden" name="brands" id="hdnBrands" />
+        <input type="hidden" name="categories" id="hdnCategories" />
+    </form>
+@endsection
+@push('scripts')
+    <script>
+        $(function () {
+            $("#pagesize").on("change", function () {
+                $("#size").val($(this).val());
+                $("#frmfilter").submit();
+            });
 
             $("#orderby").on("change", function () {
                 $("#order").val($(this).val());

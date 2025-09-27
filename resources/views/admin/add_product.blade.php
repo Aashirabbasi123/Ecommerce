@@ -38,8 +38,8 @@
                         <!-- Product Name -->
                         <fieldset class="name">
                             <div class="body-title mb-10">Product name <span class="tf-color-1">*</span></div>
-                            <input class="mb-10" type="text" placeholder="Enter product name" name="name"
-                                tabindex="0" value="{{ old('name') }}">
+                            <input class="mb-10" type="text" placeholder="Enter product name" name="name" tabindex="0"
+                                value="{{ old('name') }}">
                             <div class="text-tiny">Do not exceed 100 characters when entering the product name.</div>
                         </fieldset>
                         @error('name')
@@ -49,8 +49,8 @@
                         <!-- Slug -->
                         <fieldset class="name">
                             <div class="body-title mb-10">Slug <span class="tf-color-1">*</span></div>
-                            <input class="mb-10" type="text" placeholder="Enter product slug" name="slug"
-                                tabindex="0" value="{{ old('slug') }}">
+                            <input class="mb-10" type="text" placeholder="Enter product slug" name="slug" tabindex="0"
+                                value="{{ old('slug') }}">
                             <div class="text-tiny">Do not exceed 100 characters when entering the product name.</div>
                         </fieldset>
                         @error('slug')
@@ -93,7 +93,8 @@
                         <!-- Short Description -->
                         <fieldset class="shortdescription">
                             <div class="body-title mb-10">Short Description <span class="tf-color-1">*</span></div>
-                            <textarea class="mb-10 ht-150" name="short_description" placeholder="Short Description" tabindex="0">{{ old('short_description') }}</textarea>
+                            <textarea class="mb-10 ht-150" name="short_description" placeholder="Short Description"
+                                tabindex="0">{{ old('short_description') }}</textarea>
                         </fieldset>
                         @error('short_description')
                             <span class="alert alert-danger text-center">{{ $message }}</span>
@@ -102,7 +103,10 @@
                         <!-- Description -->
                         <fieldset class="description">
                             <div class="body-title mb-10">Description <span class="tf-color-1">*</span></div>
-                            <textarea class="mb-10" name="description" placeholder="Description" tabindex="0">{{ old('description') }}</textarea>
+                            <textarea id="description" class="mb-10" name="description" placeholder="Description"
+                                tabindex="0">{{ old('description') }}</textarea>
+
+
                         </fieldset>
                         @error('description')
                             <span class="alert alert-danger text-center">{{ $message }}</span>
@@ -153,8 +157,8 @@
                         <div class="cols gap22">
                             <fieldset class="name">
                                 <div class="body-title mb-10">Regular Price <span class="tf-color-1">*</span></div>
-                                <input class="mb-10" type="text" placeholder="Enter regular price"
-                                    name="regular_price" tabindex="0" value="{{ old('regular_price') }}">
+                                <input class="mb-10" type="text" placeholder="Enter regular price" name="regular_price"
+                                    tabindex="0" value="{{ old('regular_price') }}">
                             </fieldset>
                             @error('regular_price')
                                 <span class="alert alert-danger text-center">{{ $message }}</span>
@@ -174,8 +178,8 @@
                         <div class="cols gap22">
                             <fieldset class="name">
                                 <div class="body-title mb-10">SKU <span class="tf-color-1">*</span></div>
-                                <input class="mb-10" type="text" placeholder="Enter SKU" name="SKU"
-                                    tabindex="0" value="{{ old('SKU') }}">
+                                <input class="mb-10" type="text" placeholder="Enter SKU" name="SKU" tabindex="0"
+                                    value="{{ old('SKU') }}">
                             </fieldset>
                             @error('SKU')
                                 <span class="alert alert-danger text-center">{{ $message }}</span>
@@ -183,8 +187,8 @@
 
                             <fieldset class="name">
                                 <div class="body-title mb-10">Quantity <span class="tf-color-1">*</span></div>
-                                <input class="mb-10" type="text" placeholder="Enter quantity" name="quantity"
-                                    tabindex="0" value="{{ old('quantity') }}">
+                                <input class="mb-10" type="text" placeholder="Enter quantity" name="quantity" tabindex="0"
+                                    value="{{ old('quantity') }}">
                             </fieldset>
                             @error('quantity')
                                 <span class="alert alert-danger text-center">{{ $message }}</span>
@@ -239,11 +243,12 @@
     </div>
     @push('scripts')
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script> -->
         <script>
-            $(function() {
+            $(function () {
 
                 // ✅ Preview single image
-                $("#myFile").on("change", function() {
+                $("#myFile").on("change", function () {
                     const [file] = this.files;
                     if (file) {
                         $("#imgpreview img").attr('src', URL.createObjectURL(file));
@@ -252,19 +257,19 @@
                 });
 
                 // ✅ Preview gallery images
-                $("#gFile").on("change", function() {
+                $("#gFile").on("change", function () {
                     const gphotos = this.files;
-                    $.each(gphotos, function(key, val) {
+                    $.each(gphotos, function (key, val) {
                         $('#galUpload').prepend(`
-                    <div class="items gitems">
-                        <img src="${URL.createObjectURL(val)}" style="width: 80px; height: 80px; object-fit: cover; margin: 5px;" />
-                    </div>
-                `);
+                                                            <div class="items gitems">
+                                                                <img src="${URL.createObjectURL(val)}" style="width: 80px; height: 80px; object-fit: cover; margin: 5px;" />
+                                                            </div>
+                                                        `);
                     });
                 });
 
                 // ✅ Auto-generate slug from name
-                $("input[name='name']").on("change", function() {
+                $("input[name='name']").on("change", function () {
                     $("input[name='slug']").val(StringToSlug($(this).val()));
                 });
 
@@ -275,7 +280,7 @@
                         .replace(/ +/g, "-");
                 }
 
-            });
+            });or
         </script>
     @endpush
 @endsection

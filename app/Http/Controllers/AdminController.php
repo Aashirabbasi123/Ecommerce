@@ -8,6 +8,8 @@ use App\Models\Order;
 use Illuminate\Support\Facades\DB;
 use App\Models\OrderItem;
 use App\Models\Transaction;
+use App\Models\Contact;
+use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 

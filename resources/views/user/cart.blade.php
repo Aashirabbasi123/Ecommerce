@@ -73,28 +73,31 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <span
-                                                class="shopping-cart__product-price">Rs{{ number_format($price, 2) }}</span>
+                                            <span class="shopping-cart__product-price">Rs{{ number_format($price, 2) }}</span>
                                         </td>
                                         <td>
                                             <div class="qty-control position-relative">
-                                                <input type="number" name="quantity" value="{{ $quantity }}"
-                                                    min="3" class="qty-control__number text-center">
+                                                <input type="number" name="quantity" value="{{ $quantity ?? 1 }}" min="1"
+                                                    class="qty-control__number text-center"
+                                                    style="width:90px; padding-right:30px; text-align:center;">
+                                                     <span style="position:absolute; right: 30px; top:5%; transform:translateY(50%); pointer-events:none;">
+                                                    kg </span>
                                                 <form method="POST" action="{{ route('cart.qty.decrease', $item['id']) }}">
                                                     @csrf
                                                     @method('PUT')
                                                     <div class="qty-control__reduce">-</div>
                                                 </form>
+                                                </span>
                                                 <form method="POST" action="{{ route('cart.qty.increase', $item['id']) }}">
                                                     @csrf
                                                     @method('PUT')
-                                                    <div class="qty-control__increase">+</div>
+                                                    <div class="qty-control__increase" style="left: 90px;">+</div>
                                                 </form>
+
                                             </div>
                                         </td>
                                         <td>
-                                            <span
-                                                class="shopping-cart__subtotal">Rs{{ number_format($itemSubtotal, 2) }}</span>
+                                            <span class="shopping-cart__subtotal">Rs{{ number_format($itemSubtotal, 2) }}</span>
                                         </td>
                                         <td>
                                             <form method="POST" action="{{ route('cart.remove', $item['id']) }}">
@@ -118,23 +121,20 @@
 
                         <div class="cart-table-footer">
                             @if (!session()->has('coupon'))
-                                <form action="{{ route('apply.coupon.code') }}" method="POST"
-                                    class="position-relative bg-body">
+                                <form action="{{ route('apply.coupon.code') }}" method="POST" class="position-relative bg-body">
                                     @csrf
-                                    <input class="form-control" type="text" name="coupon_code" placeholder="Coupon Code"
-                                        required>
-                                    <input class="btn-link fw-medium position-absolute top-0 end-0 h-100 px-4"
-                                        type="submit" value="APPLY COUPON">
+                                    <input class="form-control" type="text" name="coupon_code" placeholder="Coupon Code" required>
+                                    <input class="btn-link fw-medium position-absolute top-0 end-0 h-100 px-4" type="submit"
+                                        value="APPLY COUPON">
                                 </form>
                             @else
-                                <form action="{{ route('remove_coupon_code') }}" method="POST"
-                                    class="position-relative bg-body">
+                                <form action="{{ route('remove_coupon_code') }}" method="POST" class="position-relative bg-body">
                                     @method('DELETE')
                                     @csrf
                                     <input class="form-control" type="text" name="coupon_code"
                                         value="{{ session('coupon')['code'] . ' Applied!' }}" readonly>
-                                    <input class="btn-link fw-medium position-absolute top-0 end-0 h-100 px-4"
-                                        type="submit" value="REMOVE COUPON">
+                                    <input class="btn-link fw-medium position-absolute top-0 end-0 h-100 px-4" type="submit"
+                                        value="REMOVE COUPON">
                                 </form>
                             @endif
 
@@ -164,7 +164,7 @@
                                 <h3>Cart Totals</h3>
 
                                 {{-- @php
-                                    $vatPercentage = 15;
+                                $vatPercentage = 15;
                                 @endphp --}}
 
                                 @if (session()->has('discounts'))
@@ -205,7 +205,7 @@
                                 @else
                                     @php
                                         // $vat = ($subtotal * $vatPercentage) / 100;
-                                        $total = $subtotal ;
+                                        $total = $subtotal;
                                     @endphp
 
                                     <table class="checkout-totals">
@@ -256,14 +256,14 @@
 
 @push('scripts')
     <script>
-        $(function() {
-            $(".qty-control__increase").on("click", function() {
+        $(function () {
+            $(".qty-control__increase").on("click", function () {
                 $(this).closest('form').submit();
             });
-            $(".qty-control__reduce").on("click", function() {
+            $(".qty-control__reduce").on("click", function () {
                 $(this).closest('form').submit();
             });
-            $(".remove-cart").on("click", function() {
+            $(".remove-cart").on("click", function () {
                 $(this).closest('form').submit();
             });
         });

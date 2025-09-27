@@ -2,7 +2,6 @@
 
 @section('content')
     @include('user.components.navbar')
-
     <main class="pt-90">
         <div class="mb-4 pb-4"></div>
         <section class="shop-checkout container">
@@ -48,22 +47,58 @@
 
                         {{-- Address Check --}}
                         @if ($address)
-                            <div class="row">
+                            <div class="row mt-5">
                                 <div class="col-md-12">
-                                    <div class="my-account_address-list">
-                                        <div class="my-account_address-list-item">
-                                            <div class="my-account_address-item_detail">
-                                                <p>{{ $address->name }}</p>
-                                                <p>{{ $address->address }}</p>
-                                                <p>{{ $address->city }}, {{ $address->state }}</p>
-                                                <br>
-                                                <p>{{ $address->phone }}</p>
+                                    <div class="card shipping-card shadow-sm border-0">
+                                        <div class="card-header bg-primary text-white d-flex align-items-center">
+                                            <i class="bi bi-geo-alt-fill me-2 fs-5"></i>
+                                            <h5 class="mb-0" style="color: white;"> 📦 Shipping Address</h5>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <div class="row gy-4">
+
+                                                <div class="col-md-6 d-flex align-items-start">
+                                                    <i class="bi bi-person-fill icon-style"></i>
+                                                    <div>
+                                                        <div class="label">Name</div>
+                                                        <div class="value">{{ $address->name }}</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6 d-flex align-items-start">
+                                                    <i class="bi bi-telephone-fill icon-style"></i>
+                                                    <div>
+                                                        <div class="label">Phone</div>
+                                                        <div class="value">{{ $address->phone }}</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6 d-flex align-items-start">
+                                                    <i class="bi bi-house-door-fill icon-style"></i>
+                                                    <div>
+                                                        <div class="label">Address</div>
+                                                        <div class="value">{{ $address->address }}</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6 d-flex align-items-start">
+                                                    <i class="bi bi-globe2 icon-style"></i>
+                                                    <div>
+                                                        <div class="label">City & State</div>
+                                                        <div class="value">{{ $address->city }}, {{ $address->state }}</div>
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                         @else
+
+
                             {{-- Address Form --}}
                             <div class="row mt-5">
                                 <div class="col-md-6">
@@ -199,14 +234,72 @@
     </main>
     @include('user.components.footer')
 
-    {{-- Loader CSS & JS --}}
     <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        main {
+            padding-bottom: 0 !important;
+            margin-bottom: 0 !important;
+        }
+
+        .checkout-form {
+            padding-bottom: 0 !important;
+            margin-bottom: 0 !important;
+        }
+
+        .checkout__totals-wrapper,
+        .sticky-content {
+            padding-bottom: 0 !important;
+            margin-bottom: 0 !important;
+        }
+
+        .shipping-card {
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease-in-out;
+            box-shadow: #343a40 1px 1px 1px 1px;
+        }
+
+        .shipping-card .card-header {
+            background-color: #007bff;
+            padding: 16px 20px;
+            font-weight: 500;
+            font-size: 18px;
+        }
+
+        .shipping-card .card-body {
+            padding: 24px;
+        }
+
+        .icon-style {
+            font-size: 1.4rem;
+            color: #0d6efd;
+            margin-right: 12px;
+            flex-shrink: 0;
+            margin-top: 3px;
+        }
+
+        .label {
+            font-weight: 600;
+            color: #343a40;
+            font-size: 14px;
+        }
+
+        .value {
+            color: #6c757d;
+            font-size: 14px;
+        }
+
         #loader-overlay {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             background: rgba(255, 255, 255, 0.9);
             display: none;
             justify-content: center;
@@ -223,28 +316,47 @@
             animation: spin 1s linear infinite;
         }
 
-        .spinner-border {
-            vertical-align: middle;
-        }
-
         @keyframes spin {
             100% {
                 transform: rotate(360deg);
             }
         }
+
+        .spinner-border {
+            vertical-align: middle;
+        }
     </style>
 
+
     <script>
-        document.getElementById('checkout-form').addEventListener('submit', function () {
-            // Screen overlay loader
-            document.getElementById('loader-overlay').style.display = 'flex';
+        document.getElementById('checkout-form').addEventListener('submit', function (e) {
+            // Show full-page loader
+            const loader = document.getElementById('loader-overlay');
+            if (loader) {
+                loader.style.display = 'flex';
+            }
 
-            // Button loader
-            document.getElementById('btn-text').innerText = "Processing...";
-            document.getElementById('btn-loader').style.display = "inline-block";
+            // Disable button
+            const btn = document.getElementById('place-order-btn');
+            if (btn) {
+                btn.disabled = true;
+            }
 
-            // Button disable kar do taake dubara click na ho
-            document.getElementById('place-order-btn').disabled = true;
+            // Change button text
+            const btnText = document.getElementById('btn-text');
+            if (btnText) {
+                btnText.innerText = "Processing...";
+            }
+
+            // Show button loader
+            const btnLoader = document.getElementById('btn-loader');
+            if (btnLoader) {
+                btnLoader.style.display = "inline-block";
+            }
+
+            // Scroll to top for better UX
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     </script>
+
 @endsection

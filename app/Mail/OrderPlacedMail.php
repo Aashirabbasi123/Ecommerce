@@ -26,7 +26,7 @@ class OrderPlacedMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Order Confirmation - Ecommerce Website')
+        return $this->subject('Order Confirmation - IH SeaFood')
                     ->markdown('emails.orders.placed')
                     ->with([
                         'order' => $this->order,

@@ -1,5 +1,262 @@
 @extends('layouts.admin')
 @section('content')
+<style>
+    /* ====== Layout Base ====== */
+    .main-content-inner {
+        padding: 20px;
+    }
+
+    .main-content-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .tf-section-2,
+    .tf-section {
+        width: 100%;
+    }
+
+    /* ====== Revenue Box ====== */
+    .revenue-box {
+        padding: 25px;
+        border-radius: 14px;
+        background: #fff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        margin-top: 25px;
+    }
+
+    .revenue-box h5 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #212529;
+    }
+
+    .revenue-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        margin-bottom: 25px;
+    }
+
+    .stat-card {
+        background: #f9fbfd;
+        padding: 15px;
+        border-radius: 12px;
+        text-align: center;
+        transition: 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        background: #f1f5ff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-card .stat-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin: 0 auto 6px;
+    }
+
+    .stat-card.total .stat-dot {
+        background: #2377FC;
+    }
+
+    .stat-card.pending .stat-dot {
+        background: #FFA500;
+    }
+
+    .stat-card.delivered .stat-dot {
+        background: #078407;
+    }
+
+    .stat-card.canceled .stat-dot {
+        background: #FF0000;
+    }
+
+    .stat-label {
+        display: block;
+        font-size: 13px;
+        font-weight: 500;
+        color: #6c757d;
+        margin-bottom: 4px;
+    }
+
+    .stat-card h4 {
+        font-size: 20px;
+        font-weight: 600;
+        color: #212529;
+        margin: 0;
+    }
+
+    .chart-container {
+        height: 350px;
+    }
+
+    /* ====== Orders Summary Cards ====== */
+    .wg-chart-default {
+        padding: 20px;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        transition: 0.3s;
+    }
+
+    .wg-chart-default:hover {
+        transform: translateY(-3px);
+        background: #f9fafc;
+    }
+
+    .wg-chart-default .body-text {
+        font-size: 14px;
+        font-weight: 500;
+        color: #6c757d;
+    }
+
+    .wg-chart-default h4 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #212529;
+    }
+
+    .ic-bg {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: #eef3ff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        color: #2377FC;
+    }
+
+    /* ====== Recent Orders Table ====== */
+    .wg-table {
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .wg-table h5 {
+        font-size: 18px;
+        font-weight: 600;
+        color: #212529;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table thead th {
+        font-size: 14px;
+        font-weight: 600;
+        background: #f4f6f9;
+        color: #212529;
+        padding: 12px;
+        text-align: center;
+    }
+
+    .table tbody td {
+        font-size: 14px;
+        color: #495057;
+        padding: 12px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table-striped tbody tr:nth-child(odd) {
+        background-color: #fafbfc;
+    }
+
+    .badge {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .badge.bg-success {
+        background: #d1f7d6;
+        color: #078407;
+    }
+
+    .badge.bg-danger {
+        background: #ffd6d6;
+        color: #e60000;
+    }
+
+    .badge.bg-warning {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    /* ====== Responsive Design ====== */
+    @media (max-width: 1200px) {
+        .revenue-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .w-half {
+            width: 100%;
+        }
+
+        .revenue-stats {
+            grid-template-columns: 1fr;
+        }
+
+        .wg-chart-default {
+            padding: 15px;
+        }
+
+        .wg-chart-default h4 {
+            font-size: 18px;
+        }
+
+        .table thead {
+            display: none;
+        }
+
+        .table tbody tr {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .table tbody td {
+            text-align: left;
+            padding: 8px 5px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .main-content-inner {
+            padding: 10px;
+        }
+
+        .wg-chart-default,
+        .revenue-box,
+        .wg-table {
+            padding: 12px;
+        }
+
+        .wg-chart-default h4,
+        .stat-card h4 {
+            font-size: 16px;
+        }
+    }
+</style>
+
+
     <div class="main-content-inner">
 
         <div class="main-content-wrap">
@@ -146,7 +403,7 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap10">
-                                <h4>Rs{{ $TotalAmount }}</h4>
+                                <h4>${{ $TotalAmount }}</h4>
 
                             </div>
                         </div>
@@ -158,7 +415,7 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap10">
-                                <h4>Rs{{ $TotalOrderedAmount }}</h4>
+                                <h4>${{ $TotalOrderedAmount }}</h4>
 
                             </div>
                         </div>
@@ -170,7 +427,7 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap10">
-                                <h4>Rs{{ $TotalDeliveredAmount }}</h4>
+                                <h4>${{ $TotalDeliveredAmount }}</h4>
 
                             </div>
                         </div>
@@ -182,7 +439,7 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap10">
-                                <h4>Rs{{ $TotalCanceledAmount }}</h4>
+                                <h4>${{ $TotalCanceledAmount }}</h4>
 
                             </div>
                         </div>
@@ -227,9 +484,9 @@
                                             <td class="text-center">{{ $order->id }}</td>
                                             <td class="text-center">{{ $order->name }}</td>
                                             <td class="text-center">{{ $order->phone }}</td>
-                                            <td class="text-center">Rs{{ $order->subtotal }}</td>
-                                            <td class="text-center">Rs{{ $order->tax }}</td>
-                                            <td class="text-center">Rs{{ $order->total }}</td>
+                                            <td class="text-center">${{ $order->subtotal }}</td>
+                                            <td class="text-center">${{ $order->tax }}</td>
+                                            <td class="text-center">${{ $order->total }}</td>
                                             <td>
                                                 @if ($order->status == 'delivered')
                                                     <span class="badge bg-success">Delivered</span>
@@ -265,104 +522,99 @@
     </div>
 @endsection
 @push('scripts')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    (function ($) {
-        var tfLineChart = (function () {
-            var chartBar = function () {
-                var options = {
-                    series: [
-                        {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        (function ($) {
+            var tfLineChart = (function () {
+                var chartBar = function () {
+                    var options = {
+                        series: [{
                             name: 'Total',
-                            data: [{{ $AmountM }}]
+                            data: [{!! $AmountM !!}]
                         },
                         {
                             name: 'Pending',
-                            data: [{{ $OrderedAmountM }}]
+                            data: [{!! $OrderedAmountM !!}]
                         },
                         {
                             name: 'Delivered',
-                            data: [{{ $DeliveredAmountM }}]
+                            data: [{!! $DeliveredAmountM !!}]
                         },
                         {
                             name: 'Canceled',
-                            data: [{{ $CanceledAmountM }}]
+                            data: [{!! $CanceledAmountM !!}]
                         }
-                    ],
-                    chart: {
-                        type: 'bar',
-                        height: 325,
-                        toolbar: {
-                            show: false,
-                        },
-                    },
-                    plotOptions: {
-                        bar: {
-                            horizontal: false,
-                            columnWidth: '20px',
-                            endingShape: 'rounded'
-                        },
-                    },
-                    dataLabels: {
-                        enabled: false
-                    },
-                    legend: {
-                        show: true,
-                        position: 'top',
-                        horizontalAlign: 'center'
-                    },
-                    colors: ['#2377FC', '#FFA500', '#078407', '#FF0000'],
-                    stroke: {
-                        show: false,
-                    },
-                    xaxis: {
-                        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                        labels: {
-                            style: {
-                                colors: '#212529',
+                        ],
+                        chart: {
+                            type: 'bar',
+                            height: 325,
+                            toolbar: {
+                                show: false,
                             },
                         },
-                    },
-                    yaxis: {
-                        show: true,
-                        labels: {
-                            formatter: function (val) {
-                                return "Rs " + val;
+                        plotOptions: {
+                            bar: {
+                                horizontal: false,
+                                columnWidth: '10px',
+                                endingShape: 'rounded'
+                            },
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        legend: {
+                            show: false,
+                        },
+                        colors: ['#2377FC', '#FFA500', '#078407', '#FF0000'],
+                        stroke: {
+                            show: false,
+                        },
+                        xaxis: {
+                            labels: {
+                                style: {
+                                    colors: '#212529',
+                                },
+                            },
+                            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
+                                'Oct', 'Nov', 'Dec'
+                            ],
+                        },
+                        yaxis: {
+                            show: false,
+                        },
+                        fill: {
+                            opacity: 1
+                        },
+                        tooltip: {
+                            y: {
+                                formatter: function (val) {
+                                    return "$ " + val;
+                                }
                             }
                         }
-                    },
-                    tooltip: {
-                        y: {
-                            formatter: function (val) {
-                                return "Rs " + val;
-                            }
-                        }
-                    },
-                    fill: {
-                        opacity: 1
+                    };
+
+                    if ($("#line-chart-8").length > 0) {
+                        var chart = new ApexCharts(document.querySelector("#line-chart-8"), options);
+                        chart.render();
                     }
                 };
 
-                if ($("#line-chart-8").length > 0) {
-                    var chart = new ApexCharts(document.querySelector("#line-chart-8"), options);
-                    chart.render();
-                }
-            };
+                return {
+                    init: function () { },
+                    load: function () {
+                        chartBar();
+                    },
+                    resize: function () { }
+                };
+            })();
 
-            return {
-                init: function () { },
-                load: function () {
-                    chartBar();
-                },
-                resize: function () { }
-            };
-        })();
+            $(document).ready(function () { });
+            $(window).on("load", function () {
+                tfLineChart.load();
+            });
+            $(window).on("resize", function () { });
+        })(jQuery);
 
-        $(window).on("load", function () {
-            tfLineChart.load();
-        });
-    })(jQuery);
-</script>
+    </script>
 @endpush
-
-

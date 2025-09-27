@@ -187,44 +187,44 @@
                 </div> --}}
 
 
-                <div class="accordion" id="brand-filters">
-                    <div class="accordion-item mb-4 pb-3">
-                        <h5 class="accordion-header" id="accordion-heading-brand">
-                            <button class="accordion-button p-0 border-0 fs-5 text-uppercase" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#accordion-filter-brand" aria-expanded="true"
-                                aria-controls="accordion-filter-brand">
-                                Brands
-                                <svg class="accordion-button__icon type2" viewBox="0 0 10 6"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <g aria-hidden="true" stroke="none" fill-rule="evenodd">
-                                        <path
-                                            d="M5.35668 0.159286C5.16235 -0.053094 4.83769 -0.0530941 4.64287 0.159286L0.147611 5.05963C-0.0492049 5.27473 -0.049205 5.62357 0.147611 5.83813C0.344427 6.05323 0.664108 6.05323 0.860924 5.83813L5 1.32706L9.13858 5.83867C9.33589 6.05378 9.65507 6.05378 9.85239 5.83867C10.0492 5.62357 10.0492 5.27473 9.85239 5.06018L5.35668 0.159286Z" />
-                                    </g>
-                                </svg>
-                            </button>
-                        </h5>
-                        <div id="accordion-filter-brand" class="accordion-collapse collapse show border-0"
-                            aria-labelledby="accordion-heading-brand" data-bs-parent="#brand-filters">
-                            <div class="search-field multi-select accordion-body px-0 pb-0">
-                                <ul class="list list-inline mb-0 brand-list">
-                                    @foreach ($brands as $brand)
-                                        <li class="list-item">
-                                            <span class="menu-link py-1">
-                                                <input type="checkbox" name="brands" value="{{ $brand->id }}" class="chk-brand"
-                                                    @if (in_array($brand->id, explode(',', $f_brands ?? ''))) checked @endif>
-                                                {{ $brand->name }}
-                                            </span>
-                                            <span class="text-right float-end">
-                                                {{ $brand->products->count() }}
-                                            </span>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                  <div class="accordion" id="brand-filters">
+                      <div class="accordion-item mb-4 pb-3">
+                          <h5 class="accordion-header" id="accordion-heading-brand">
+                              <button class="accordion-button p-0 border-0 fs-5 text-uppercase" type="button"
+                                  data-bs-toggle="collapse" data-bs-target="#accordion-filter-brand" aria-expanded="true"
+                                  aria-controls="accordion-filter-brand">
+                                  Brands
+                                  <svg class="accordion-button__icon type2" viewBox="0 0 10 6"
+                                      xmlns="http://www.w3.org/2000/svg">
+                                      <g aria-hidden="true" stroke="none" fill-rule="evenodd">
+                                          <path
+                                              d="M5.35668 0.159286C5.16235 -0.053094 4.83769 -0.0530941 4.64287 0.159286L0.147611 5.05963C-0.0492049 5.27473 -0.049205 5.62357 0.147611 5.83813C0.344427 6.05323 0.664108 6.05323 0.860924 5.83813L5 1.32706L9.13858 5.83867C9.33589 6.05378 9.65507 6.05378 9.85239 5.83867C10.0492 5.62357 10.0492 5.27473 9.85239 5.06018L5.35668 0.159286Z" />
+                                      </g>
+                                  </svg>
+                              </button>
+                          </h5>
+                          <div id="accordion-filter-brand" class="accordion-collapse collapse show border-0"
+                              aria-labelledby="accordion-heading-brand" data-bs-parent="#brand-filters">
+                              <div class="search-field multi-select accordion-body px-0 pb-0">
+                                  <ul class="list list-inline mb-0 brand-list">
+                                      @foreach ($brands as $brand)
+                                          <li class="list-item">
+                                              <span class="menu-link py-1">
+                                                  <input type="checkbox" name="brands" value="{{ $brand->id }}"
+                                                      class="chk-brand" @if (in_array($brand->id, explode(',', $f_brands ?? ''))) checked @endif>
+                                                  {{ $brand->name }}
+                                              </span>
+                                              <span class="text-right float-end">
+                                                  {{ $brand->products->count() }}
+                                              </span>
+                                          </li>
+                                      @endforeach
+                                  </ul>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
 
             <div class="shop-list flex-grow-1">
                 <div class="swiper-container js-swiper-slider slideshow slideshow_small slideshow_split" data-settings='{
@@ -605,35 +605,35 @@
                                         </form>
                                     @endif
 
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                    <div class="divider">
-                        <div class="flex item-center jsutify-between flex-wrap gap10 wgp-pagination">
-                            {{ $products->withQueryString()->links('pagination::bootstrap-5') }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-    @include('user.components.footer')
-    <form id="frmfilter" method="GET" action="{{ route('shop') }}">
-        <input type="hidden" name="page" value="{{ $products->currentPage() }}" />
-        <input type="hidden" name="size" id="size" value="{{ $size }}" />
-        <input type="hidden" name="order" id="order" value="{{ $order }}" />
-        <input type="hidden" name="brands" id="hdnBrands" />
-        <input type="hidden" name="categories" id="hdnCategories" />
-    </form>
-@endsection
-@push('scripts')
-    <script>
-        $(function () {
-            $("#pagesize").on("change", function () {
-                $("#size").val($(this).val());
-                $("#frmfilter").submit();
-            });
+                                  </div>
+                              </div>
+                          </div>
+                      @endforeach
+                      <div class="divider">
+                          <div class="flex item-center jsutify-between flex-wrap gap10 wgp-pagination">
+                              {{ $products->withQueryString()->links('pagination::bootstrap-5') }}
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </section>
+      </main>
+      @include('user.components.footer')
+      <form id="frmfilter" method="GET" action="{{ route('shop') }}">
+          <input type="hidden" name="page" value="{{ $products->currentPage() }}" />
+          <input type="hidden" name="size" id="size" value="{{ $size }}" />
+          <input type="hidden" name="order" id="order" value="{{ $order }}" />
+          <input type="hidden" name="brands" id="hdnBrands" />
+          <input type="hidden" name="categories" id="hdnCategories" />
+      </form>
+  @endsection
+  @push('scripts')
+      <script>
+          $(function() {
+              $("#pagesize").on("change", function() {
+                  $("#size").val($(this).val());
+                  $("#frmfilter").submit();
+              });
 
             $("#orderby").on("change", function () {
                 $("#order").val($(this).val());

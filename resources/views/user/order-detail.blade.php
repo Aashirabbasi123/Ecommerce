@@ -72,14 +72,6 @@
                     @include('user.components.user_nav')
                 </div>
                 <div class="col-lg-10">
-                    @if (session('status'))
-                        @push('scripts')
-                            <script>
-                                swal("Success", "{{ session('status') }}", "success");
-                            </script>
-                        @endpush
-                    @endif
-
                     <div class="wg-box" style="overflow-x: auto;">
                         <div class="header-row">
                             <div class="wg-filter flex-grow">
@@ -236,10 +228,7 @@
                             </tbody>
                         </table>
                     </div>
-                    @php
-                        $cancelDeadline = $order->created_at->addMinutes(5);
-                    @endphp
-                    @if ($order->status == 'ordered' && now()->lessThan($cancelDeadline))
+                    @if ($order->status == 'ordered')
                         <div class="wg-box mt-5 text-right">
                             <form action="{{ route('user.cancel.order') }}" method="POST" class="cancel-form">
                                 @csrf
@@ -249,6 +238,7 @@
                             </form>
                         </div>
                     @endif
+
                 </div>
             </div>
         </section>
@@ -256,8 +246,6 @@
     @include('user.components.footer')
 @endsection
 @push('scripts')
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
     <script>
         $(function() {
             $('.cancel-order').on('click', function(e) {
@@ -275,22 +263,6 @@
                     }
                 });
             });
-            $('.cancel-order').on('click', function(e) {
-                e.preventDefault();
-                var form = $(this).closest('form');
-                swal({
-                    title: "Are you sure?",
-                    text: "You want to cancel this order?",
-                    icon: "warning",
-                    buttons: ["No", "Yes"],
-                    dangerMode: true,
-                }).then(function(willCancel) {
-                    if (willCancel) {
-                        form.submit();
-                    }
-                });
-            });
-
         });
     </script>
 @endpush

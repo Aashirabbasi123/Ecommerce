@@ -117,28 +117,10 @@ class ProductController extends Controller
         $product->brand_id = $request->brand_id;
 
         if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($product->image) {
-                $oldPath = public_path('uploads/product/' . $product->image);
-                if (file_exists($oldPath)) {
-                    unlink($oldPath);
-                }
-            }
             $product->image = $this->uploadProductImage($request->file('image'));
         }
 
         if ($request->hasFile('images')) {
-            // Step 1: Delete old gallery images from disk
-            if ($product->images) {
-                foreach (explode(',', $product->images) as $oldImage) {
-                    $oldPath = public_path('uploads/product/' . $oldImage);
-                    if (file_exists($oldPath)) {
-                        unlink($oldPath);
-                    }
-                }
-            }
-
-            // Step 2: Upload new gallery images
             $gallery = [];
             foreach ($request->file('images') as $imageFile) {
                 $gallery[] = $this->uploadProductImage($imageFile);
@@ -155,7 +137,6 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        // Delete main image
         if ($product->image) {
             $path = public_path('uploads/product/' . $product->image);
             if (file_exists($path)) {
@@ -163,7 +144,6 @@ class ProductController extends Controller
             }
         }
 
-        // Delete gallery images
         if ($product->images) {
             foreach (explode(',', $product->images) as $imageFile) {
                 $path = public_path('uploads/product/' . $imageFile);

@@ -30,8 +30,7 @@
                     </ul>
                 </div>
                 <!-- form-add-product -->
-                <form class="tf-section-2 form-add-product" action="{{ route('admin.product.update', $product->id) }}"
-                    method="POST" enctype="multipart/form-data">
+                <form class="tf-section-2 form-add-product" action="{{ route('admin.product.update', $product->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="wg-box">
@@ -146,7 +145,7 @@
                                 @if (!empty($product->images))
                                     @foreach (explode(',', $product->images) as $gallery)
                                         @if ($gallery != '')
-                                            <div class="item gallerypreview">
+                                            <div class="item" id="gallerypreview">
                                                 <img src="{{ asset('uploads/product/' . $gallery) }}" class="effect8"
                                                     alt="gallery image"
                                                     style="width: 100px; height: 100px; object-fit: cover;">
@@ -276,26 +275,17 @@
                     }
                 });
 
-                // ✅ Preview gallery images (clear previous ones)
+                // ✅ Preview gallery images
                 $("#gFile").on("change", function() {
                     const gphotos = this.files;
-
-                    // ❗ Remove all previous previews inside gallerypreview
-                    $(".gallerypreview").remove();
-
-                    // ❗ Also remove previously added JS previews
-                    $(".gitems").remove();
-
-                    // ✅ Show new previews
                     $.each(gphotos, function(key, val) {
-                        $("#galUpload").before(`
-                     <div class="items gitems gallerypreview">
-                        <img src="${URL.createObjectURL(val)}" style="width: 100px; height: 100px; object-fit: cover;" />
+                        $('#galUpload').prepend(`
+                    <div class="items gitems">
+                        <img src="${URL.createObjectURL(val)}"/>
                     </div>
                 `);
                     });
                 });
-
 
                 // ✅ Auto-generate slug from name
                 $("input[name='name']").on("change", function() {

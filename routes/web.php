@@ -45,6 +45,7 @@ Route::post('/admin/coupon/store', [AdminController::class, 'coupon_store'])->na
 Route::get('/admin/coupon/edit/{id}', [AdminController::class, 'edit_coupon'])->name('admin.coupon.edit');
 Route::put('/admin/coupon/update/{id}', [AdminController::class, 'update_coupon'])->name('admin.coupon.update');
 Route::delete('/admin/coupon/{id}/delete', [AdminController::class, 'delete_coupon'])->name('admin.coupon.delete');
+
 Route::get('/admin/contacts', [AdminController::class, 'contacts'])->name('admin.contacts');
 Route::delete('/admin/contact/{id}/delete', [AdminController::class, 'delete_contact'])->name('admin.contacts.delete');
 Route::get('/admin/search', [AdminController::class, 'search'])->name('admin.search');
@@ -55,7 +56,6 @@ Route::post('/admin/slide/store', [SlideController::class, 'slide_store'])->name
 Route::get('/admin/slide/edit/{id}', [SlideController::class, 'edit_slide'])->name('admin.slide.edit');
 Route::put('/admin/slide/update/{id}', [SlideController::class, 'update_slide'])->name('admin.slide.update');
 Route::delete('/admin/slide/{id}/delete', [SlideController::class, 'delete_slide'])->name('admin.slide.delete');
-
 
 
 // Login routes (probably outside middleware) and Brand Routes ///
@@ -122,9 +122,7 @@ Route::post('/wishlist/move-to-cart/{id}', [WishlistController::class, 'move_to_
 
 /// ----------------====================== User Controller ===================---------------------------\\\
 Route::get('/contact', [UserController::class, 'contact'])->name('contact');
-Route::post('/contact/store', [UserController::class, 'contact_store'])->name('user.contact.store');
-//// ---------------------------------------=======Serch query =============-------------------------\\\\\
-Route::get('/search', [UserController::class, 'search'])->name('user.search');
+Route::get('/contact/store', [UserController::class, 'contact_store'])->name('user.contact.store');
 
 
 /*

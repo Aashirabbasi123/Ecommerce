@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Address;
-use App\Models\Contact;
 use App\Models\Coupon;
 use App\Models\Order;
-use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 use App\Models\OrderItem;
 use App\Models\Transaction;
@@ -199,7 +197,7 @@ class AdminController extends Controller
 
         $results = Product::where('name', 'LIKE', "%{$query}%")
             ->take(8)
-            ->get(['id', 'name', 'slug', 'image']);
+            ->get(['id','name', 'slug', 'image']);
 
         return response()->json($results);
     }

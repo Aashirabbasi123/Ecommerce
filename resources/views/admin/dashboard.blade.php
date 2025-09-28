@@ -1,526 +1,362 @@
 @extends('layouts.admin')
 @section('content')
-<style>
-    /* ====== Layout Base ====== */
-    .main-content-inner {
-        padding: 20px;
-    }
-
-    .main-content-wrap {
-        display: flex;
-        flex-direction: column;
-        gap: 30px;
-    }
-
-    .tf-section-2,
-    .tf-section {
-        width: 100%;
-    }
-
-    /* ====== Revenue Box ====== */
-    .revenue-box {
-        padding: 25px;
-        border-radius: 14px;
-        background: #fff;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        margin-top: 25px;
-    }
-
-    .revenue-box h5 {
-        font-size: 18px;
-        font-weight: 600;
-        margin-bottom: 20px;
-        color: #212529;
-    }
-
-    .revenue-stats {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
-        margin-bottom: 25px;
-    }
-
-    .stat-card {
-        background: #f9fbfd;
-        padding: 15px;
-        border-radius: 12px;
-        text-align: center;
-        transition: 0.3s ease;
-    }
-
-    .stat-card:hover {
-        transform: translateY(-4px);
-        background: #f1f5ff;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .stat-card .stat-dot {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        margin: 0 auto 6px;
-    }
-
-    .stat-card.total .stat-dot {
-        background: #2377FC;
-    }
-
-    .stat-card.pending .stat-dot {
-        background: #FFA500;
-    }
-
-    .stat-card.delivered .stat-dot {
-        background: #078407;
-    }
-
-    .stat-card.canceled .stat-dot {
-        background: #FF0000;
-    }
-
-    .stat-label {
-        display: block;
-        font-size: 13px;
-        font-weight: 500;
-        color: #6c757d;
-        margin-bottom: 4px;
-    }
-
-    .stat-card h4 {
-        font-size: 20px;
-        font-weight: 600;
-        color: #212529;
-        margin: 0;
-    }
-
-    .chart-container {
-        height: 350px;
-    }
-
-    /* ====== Orders Summary Cards ====== */
-    .wg-chart-default {
-        padding: 20px;
-        border-radius: 12px;
-        background: #fff;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-        transition: 0.3s;
-    }
-
-    .wg-chart-default:hover {
-        transform: translateY(-3px);
-        background: #f9fafc;
-    }
-
-    .wg-chart-default .body-text {
-        font-size: 14px;
-        font-weight: 500;
-        color: #6c757d;
-    }
-
-    .wg-chart-default h4 {
-        font-size: 22px;
-        font-weight: 700;
-        color: #212529;
-    }
-
-    .ic-bg {
-        width: 42px;
-        height: 42px;
-        border-radius: 50%;
-        background: #eef3ff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
-        color: #2377FC;
-    }
-
-    /* ====== Recent Orders Table ====== */
-    .wg-table {
-        background: #fff;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-
-    .wg-table h5 {
-        font-size: 18px;
-        font-weight: 600;
-        color: #212529;
-    }
-
-    .table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .table thead th {
-        font-size: 14px;
-        font-weight: 600;
-        background: #f4f6f9;
-        color: #212529;
-        padding: 12px;
-        text-align: center;
-    }
-
-    .table tbody td {
-        font-size: 14px;
-        color: #495057;
-        padding: 12px;
-        text-align: center;
-        vertical-align: middle;
-    }
-
-    .table-striped tbody tr:nth-child(odd) {
-        background-color: #fafbfc;
-    }
-
-    .badge {
-        padding: 6px 12px;
-        border-radius: 6px;
-        font-size: 12px;
-        font-weight: 600;
-    }
-
-    .badge.bg-success {
-        background: #d1f7d6;
-        color: #078407;
-    }
-
-    .badge.bg-danger {
-        background: #ffd6d6;
-        color: #e60000;
-    }
-
-    .badge.bg-warning {
-        background: #fff3cd;
-        color: #856404;
-    }
-
-    /* ====== Responsive Design ====== */
-    @media (max-width: 1200px) {
-        .revenue-stats {
-            grid-template-columns: repeat(2, 1fr);
+    <style>
+        /* ====== Layout Base ====== */
+        .main-content-inner {
+            padding: 20px;
         }
-    }
 
-    @media (max-width: 768px) {
-        .w-half {
+        .main-content-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .tf-section-2,
+        .tf-section {
             width: 100%;
         }
 
-        .revenue-stats {
-            grid-template-columns: 1fr;
+        /* ====== Revenue Box ====== */
+        .revenue-box {
+            padding: 25px;
+            border-radius: 14px;
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-top: 25px;
         }
 
-        .wg-chart-default {
+        .revenue-box h5 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #212529;
+        }
+
+        .revenue-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #f9fbfd;
             padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            transition: 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            background: #f1f5ff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card .stat-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin: 0 auto 6px;
+        }
+
+        .stat-card.total .stat-dot {
+            background: #2377FC;
+        }
+
+        .stat-card.pending .stat-dot {
+            background: #FFA500;
+        }
+
+        .stat-card.delivered .stat-dot {
+            background: #078407;
+        }
+
+        .stat-card.canceled .stat-dot {
+            background: #FF0000;
+        }
+
+        .stat-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #6c757d;
+            margin-bottom: 4px;
+        }
+
+        .stat-card h4 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #212529;
+            margin: 0;
+        }
+
+        .chart-container {
+            height: 350px;
+        }
+
+        /* ====== Orders Summary Cards ====== */
+        .wg-chart-default {
+            padding: 20px;
+            border-radius: 12px;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            transition: 0.3s;
+        }
+
+        .wg-chart-default:hover {
+            transform: translateY(-3px);
+            background: #f9fafc;
+        }
+
+        .wg-chart-default .body-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: #6c757d;
         }
 
         .wg-chart-default h4 {
-            font-size: 18px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #212529;
         }
 
-        .table thead {
-            display: none;
-        }
-
-        .table tbody tr {
+        .ic-bg {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #eef3ff;
             display: flex;
-            flex-direction: column;
-            margin-bottom: 12px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #2377FC;
+        }
+
+        /* ====== Recent Orders Table ====== */
+        .wg-table {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .wg-table h5 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #212529;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table thead th {
+            font-size: 14px;
+            font-weight: 600;
+            background: #f4f6f9;
+            color: #212529;
+            padding: 12px;
+            text-align: center;
         }
 
         .table tbody td {
-            text-align: left;
-            padding: 8px 5px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .main-content-inner {
-            padding: 10px;
-        }
-
-        .wg-chart-default,
-        .revenue-box,
-        .wg-table {
+            font-size: 14px;
+            color: #495057;
             padding: 12px;
+            text-align: center;
+            vertical-align: middle;
         }
 
-        .wg-chart-default h4,
-        .stat-card h4 {
-            font-size: 16px;
+        .table-striped tbody tr:nth-child(odd) {
+            background-color: #fafbfc;
         }
-    }
-</style>
 
+        .badge {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
 
-    <div class="main-content-inner">
+        .badge.bg-success {
+            background: #d1f7d6;
+            color: #078407;
+        }
 
-        <div class="main-content-wrap">
-            <div class="tf-section-2 mb-30">
-                <div class="flex gap20 flex-wrap-mobile">
-                    <div class="w-half">
+        .badge.bg-danger {
+            background: #ffd6d6;
+            color: #e60000;
+        }
 
-                        <div class="wg-chart-default mb-20">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap14">
-                                    <div class="image ic-bg">
-                                        <i class="icon-shopping-bag"></i>
-                                    </div>
-                                    <div>
-                                        <div class="body-text mb-2">Total Orders</div>
-                                        <h4>{{ $dashboardDatas[0]->Total }}</h4>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        .badge.bg-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
 
+        /* ====== Responsive Design ====== */
+        @media (max-width: 1200px) {
+            .revenue-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
 
-                        <div class="wg-chart-default mb-20">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap14">
-                                    <div class="image ic-bg">
-                                        <i class="icon-dollar-sign"></i>
-                                    </div>
-                                    <div>
-                                        <div class="body-text mb-2">Total Amount</div>
-                                        <h4>{{ $dashboardDatas[0]->TotalAmount }}</h4>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        @media (max-width: 768px) {
+            .w-half {
+                width: 100%;
+            }
 
+            .revenue-stats {
+                grid-template-columns: 1fr;
+            }
 
-                        <div class="wg-chart-default mb-20">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap14">
-                                    <div class="image ic-bg">
-                                        <i class="icon-shopping-bag"></i>
-                                    </div>
-                                    <div>
-                                        <div class="body-text mb-2">Pending Orders</div>
-                                        <h4>{{ $dashboardDatas[0]->TotalOrdered }}</h4>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            .wg-chart-default {
+                padding: 15px;
+            }
 
+            .wg-chart-default h4 {
+                font-size: 18px;
+            }
 
-                        <div class="wg-chart-default">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap14">
-                                    <div class="image ic-bg">
-                                        <i class="icon-dollar-sign"></i>
-                                    </div>
-                                    <div>
-                                        <div class="body-text mb-2">Pending Orders Amount</div>
-                                        <h4>{{ $dashboardDatas[0]->TotalOrderedAmount }}</h4>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            .table thead {
+                display: none;
+            }
 
+            .table tbody tr {
+                display: flex;
+                flex-direction: column;
+                margin-bottom: 12px;
+                border-bottom: 1px solid #eee;
+                padding-bottom: 10px;
+            }
+
+            .table tbody td {
+                text-align: left;
+                padding: 8px 5px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content-inner {
+                padding: 10px;
+            }
+
+            .wg-chart-default,
+            .revenue-box,
+            .wg-table {
+                padding: 12px;
+            }
+
+            .wg-chart-default h4,
+            .stat-card h4 {
+                font-size: 16px;
+            }
+        }
+    </style>
+    <div class="container-fluid py-4">
+        <div class="row">
+            <!-- Total Orders -->
+            <div class="col-xl-3 col-sm-6 mb-4">
+                <div class="card shadow border-0">
+                    <div class="card-body">
+                        <h6 class="text-uppercase text-muted mb-1">Total Orders</h6>
+                        <h2 class="mb-0">{{ $dashboardDatas[0]->Total ?? 0 }}</h2>
                     </div>
-
-                    <div class="w-half">
-
-                        <div class="wg-chart-default mb-20">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap14">
-                                    <div class="image ic-bg">
-                                        <i class="icon-shopping-bag"></i>
-                                    </div>
-                                    <div>
-                                        <div class="body-text mb-2">Delivered Orders</div>
-                                        <h4>{{ $dashboardDatas[0]->TotalDelivered }}</h4>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="wg-chart-default mb-20">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap14">
-                                    <div class="image ic-bg">
-                                        <i class="icon-dollar-sign"></i>
-                                    </div>
-                                    <div>
-                                        <div class="body-text mb-2">Delivered Orders Amount</div>
-                                        <h4>{{ $dashboardDatas[0]->TotalDeliveredAmount }}</h4>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="wg-chart-default mb-20">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap14">
-                                    <div class="image ic-bg">
-                                        <i class="icon-shopping-bag"></i>
-                                    </div>
-                                    <div>
-                                        <div class="body-text mb-2">Canceled Orders</div>
-                                        <h4>{{ $dashboardDatas[0]->TotalCanceled }}</h4>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="wg-chart-default">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap14">
-                                    <div class="image ic-bg">
-                                        <i class="icon-dollar-sign"></i>
-                                    </div>
-                                    <div>
-                                        <div class="body-text mb-2">Canceled Orders Amount</div>
-                                        <h4>{{ $dashboardDatas[0]->TotalCanceledAmount }}</h4>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
                 </div>
-
-                <div class="wg-box">
-                    <div class="flex items-center justify-between">
-                        <h5>Monthly Revenue</h5>
-                    </div>
-                    <div class="flex flex-wrap gap40">
-                        <div>
-                            <div class="mb-2">
-                                <div class="block-legend">
-                                    <div class="dot t1"></div>
-                                    <div class="text-tiny">Total</div>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap10">
-                                <h4>${{ $TotalAmount }}</h4>
-
-                            </div>
-                        </div>
-                        <div>
-                            <div class="mb-2">
-                                <div class="block-legend">
-                                    <div class="dot t2"></div>
-                                    <div class="text-tiny">Pending</div>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap10">
-                                <h4>${{ $TotalOrderedAmount }}</h4>
-
-                            </div>
-                        </div>
-                        <div>
-                            <div class="mb-2">
-                                <div class="block-legend">
-                                    <div class="dot t2"></div>
-                                    <div class="text-tiny">Delivered</div>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap10">
-                                <h4>${{ $TotalDeliveredAmount }}</h4>
-
-                            </div>
-                        </div>
-                        <div>
-                            <div class="mb-2">
-                                <div class="block-legend">
-                                    <div class="dot t2"></div>
-                                    <div class="text-tiny">Canceled</div>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap10">
-                                <h4>${{ $TotalCanceledAmount }}</h4>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div id="line-chart-8"></div>
-                </div>
-
             </div>
-            <div class="tf-section mb-30">
 
-                <div class="wg-box">
-                    <div class="flex items-center justify-between">
-                        <h5>Recent orders</h5>
-                        <div class="dropdown default">
-                            <a class="btn btn-secondary dropdown-toggle" href="{{ route('admin.order') }}">
-                                <span class="view-all">View all</span>
-                            </a>
-                        </div>
+            <!-- Pending Orders -->
+            <div class="col-xl-3 col-sm-6 mb-4">
+                <div class="card shadow border-0">
+                    <div class="card-body">
+                        <h6 class="text-uppercase text-warning mb-1">Pending Orders</h6>
+                        <h2 class="mb-0">{{ $dashboardDatas[0]->TotalPending ?? 0 }}</h2>
+                        <small class="text-muted">Rs
+                            {{ number_format($dashboardDatas[0]->TotalPendingAmount ?? 0, 0) }}</small>
                     </div>
-                    <div class="wg-table table-all-user">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">OrderNo</th>
-                                        <th class="text-center">Name</th>
-                                        <th class="text-center">Phone</th>
-                                        <th class="text-center">Subtotal</th>
-                                        <th class="text-center">Tax</th>
-                                        <th class="text-center">Total</th>
+                </div>
+            </div>
 
-                                        <th class="text-center">Status</th>
-                                        <th class="text-center">Order Date</th>
-                                        <th class="text-center">Total Items</th>
-                                        <th class="text-center">Delivered On</th>
-                                        <th></th>
+            <!-- Delivered Orders -->
+            <div class="col-xl-3 col-sm-6 mb-4">
+                <div class="card shadow border-0">
+                    <div class="card-body">
+                        <h6 class="text-uppercase text-success mb-1">Delivered Orders</h6>
+                        <h2 class="mb-0">{{ $dashboardDatas[0]->TotalDelivered ?? 0 }}</h2>
+                        <small class="text-muted">Rs
+                            {{ number_format($dashboardDatas[0]->TotalDeliveredAmount ?? 0, 0) }}</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Canceled Orders -->
+            <div class="col-xl-3 col-sm-6 mb-4">
+                <div class="card shadow border-0">
+                    <div class="card-body">
+                        <h6 class="text-uppercase text-danger mb-1">Canceled Orders</h6>
+                        <h2 class="mb-0">{{ $dashboardDatas[0]->TotalCanceled ?? 0 }}</h2>
+                        <small class="text-muted">Rs
+                            {{ number_format($dashboardDatas[0]->TotalCanceledAmount ?? 0, 0) }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card shadow border-0">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Recent Orders</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table align-items-center table-bordered mb-0">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Order #</th>
+                                        <th>Name</th>
+                                        <th>Phone</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($orders as $order)
+                                    @forelse ($orders as $order)
                                         <tr>
-                                            <td class="text-center">{{ $order->id }}</td>
-                                            <td class="text-center">{{ $order->name }}</td>
-                                            <td class="text-center">{{ $order->phone }}</td>
-                                            <td class="text-center">${{ $order->subtotal }}</td>
-                                            <td class="text-center">${{ $order->tax }}</td>
-                                            <td class="text-center">${{ $order->total }}</td>
+                                            <td>{{ $order->id }}</td>
+                                            <td>{{ $order->name }}</td>
+                                            <td>{{ $order->phone }}</td>
+                                            <td>Rs {{ number_format($order->total, 0) }}</td>
                                             <td>
-                                                @if ($order->status == 'delivered')
+                                                @if($order->status == 'delivered')
                                                     <span class="badge bg-success">Delivered</span>
                                                 @elseif($order->status == 'canceled')
                                                     <span class="badge bg-danger">Canceled</span>
                                                 @else
-                                                    <span class="badge bg-warning">Ordered</span>
+                                                    <span class="badge bg-warning text-dark">Pending</span>
                                                 @endif
                                             </td>
-                                            <td class="text-center">{{ $order->created_at }}</td>
-                                            <td class="text-center">{{ $order->orderItems->count() }}</td>
-                                            <td class="text-center">{{ $order->delivered_date }}</td>
-                                            <td class="text-center">
-                                                <a href="{{ route('admin.order-detail', ['order_id' => $order->id]) }}">
-                                                    <div class="list-icon-function view-icon">
-                                                        <div class="item eye">
-                                                            <i class="icon-eye"></i>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </td>
+                                            <td>{{ $order->created_at->format('d M Y') }}</td>
                                         </tr>
-                                    @endforeach
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" class="text-center">No orders found</td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
-
     </div>
 @endsection
+
 @push('scripts')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -534,7 +370,7 @@
                         },
                         {
                             name: 'Pending',
-                            data: [{!! $OrderedAmountM !!}]
+                            data: [{!! $PendingAmountM !!}]
                         },
                         {
                             name: 'Delivered',
@@ -545,6 +381,7 @@
                             data: [{!! $CanceledAmountM !!}]
                         }
                         ],
+
                         chart: {
                             type: 'bar',
                             height: 325,

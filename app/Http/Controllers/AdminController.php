@@ -19,75 +19,75 @@ class AdminController extends Controller
     // Dashboard dikhane ke liye
     public function dashboard()
     {
-        $orders = Order::orderBy("created_at", "desc")->get()->take(10);
+        // Recent 10 orders
+        $orders = Order::orderBy("created_at", "desc")->take(10)->get();
 
-        $dashboardDatas = DB::select("SELECT
-        SUM(total) AS TotalAmount,
-        SUM(IF(status = 'ordered', total, 0)) AS TotalOrderedAmount,
-        SUM(IF(status = 'delivered', total, 0)) AS TotalDeliveredAmount,
-        SUM(IF(status = 'canceled', total, 0)) AS TotalCanceledAmount,
-        COUNT(*) AS Total,
-        SUM(IF(status = 'ordered', 1, 0)) AS TotalOrdered,
-        SUM(IF(status = 'delivered', 1, 0)) AS TotalDelivered,
-        SUM(IF(status = 'canceled', 1, 0)) AS TotalCanceled
-        FROM Orders
+        // Summary Counts & Amounts
+        $dashboardDatas = DB::select("
+        SELECT
+            COUNT(*) AS Total,
+            SUM(total) AS TotalAmount,
+            SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) AS TotalPending,
+            SUM(CASE WHEN status = 'pending' THEN total ELSE 0 END) AS TotalPendingAmount,
+            SUM(CASE WHEN status = 'delivered' THEN 1 ELSE 0 END) AS TotalDelivered,
+            SUM(CASE WHEN status = 'delivered' THEN total ELSE 0 END) AS TotalDeliveredAmount,
+            SUM(CASE WHEN status = 'canceled' THEN 1 ELSE 0 END) AS TotalCanceled,
+            SUM(CASE WHEN status = 'canceled' THEN total ELSE 0 END) AS TotalCanceledAmount
+        FROM orders
     ");
 
-        $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
-        IFNULL(D.TotalAmount, 0) AS TotalAmount,
-        IFNULL(D.TotalOrderedAmount, 0) AS TotalOrderedAmount,
-        IFNULL(D.TotalDeliveredAmount, 0) AS TotalDeliveredAmount,
-        IFNULL(D.TotalCanceledAmount, 0) AS TotalCanceledAmount
-        FROM month_names M
-        LEFT JOIN (
-            SELECT
-                MONTH(created_at) AS MonthNo,
-                SUM(total) AS TotalAmount,
-                SUM(IF(status='ordered', total, 0)) AS TotalOrderedAmount,
-                SUM(IF(status='delivered', total, 0)) AS TotalDeliveredAmount,
-                SUM(IF(status='canceled', total, 0)) AS TotalCanceledAmount
-            FROM Orders
-            WHERE YEAR(created_at) = YEAR(NOW())
-            GROUP BY MONTH(created_at)
-        ) D ON D.MonthNo = M.id
-        ORDER BY M.id
-    ");
+        // Monthly stats (for chart)
+        $AmountM = Order::selectRaw("MONTH(created_at) as month, COALESCE(SUM(total),0) as total")
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('total')
+            ->implode(',');
 
-        // ✅ Ensure every array has 12 values (Jan to Dec), with 0s if empty
-        $AmountM = implode(',', collect($monthlyDatas)->pluck('TotalAmount')->pad(12, 0)->toArray());
-        $OrderedAmountM = implode(',', collect($monthlyDatas)->pluck('TotalOrderedAmount')->pad(12, 0)->toArray());
-        $DeliveredAmountM = implode(',', collect($monthlyDatas)->pluck('TotalDeliveredAmount')->pad(12, 0)->toArray());
-        $CanceledAmountM = implode(',', collect($monthlyDatas)->pluck('TotalCanceledAmount')->pad(12, 0)->toArray());
+        $PendingAmountM = Order::selectRaw("MONTH(created_at) as month, COALESCE(SUM(total),0) as total")
+            ->where('status', 'pending')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('total')
+            ->implode(',');
 
-        $TotalAmount = collect($monthlyDatas)->sum('TotalAmount');
-        $TotalOrderedAmount = collect($monthlyDatas)->sum('TotalOrderedAmount');
-        $TotalDeliveredAmount = collect($monthlyDatas)->sum('TotalDeliveredAmount');
-        $TotalCanceledAmount = collect($monthlyDatas)->sum('TotalCanceledAmount');
+        $DeliveredAmountM = Order::selectRaw("MONTH(created_at) as month, COALESCE(SUM(total),0) as total")
+            ->where('status', 'delivered')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('total')
+            ->implode(',');
 
-        return view('admin.dashboard', compact(
+        $CanceledAmountM = Order::selectRaw("MONTH(created_at) as month, COALESCE(SUM(total),0) as total")
+            ->where('status', 'canceled')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('total')
+            ->implode(',');
+
+        return view("admin.dashboard", compact(
             'orders',
             'dashboardDatas',
             'AmountM',
-            'OrderedAmountM',
+            'PendingAmountM',
             'DeliveredAmountM',
-            'CanceledAmountM',
-            'TotalAmount',
-            'TotalOrderedAmount',
-            'TotalDeliveredAmount',
-            'TotalCanceledAmount'
+            'CanceledAmountM'
         ));
     }
- // ✅ New Users Page (Track Registered Users)
+
+
+    // ✅ New Users Page (Track Registered Users)
     public function users()
     {
         $users = User::orderBy('created_at', 'desc')->paginate(10);
         return view('admin.user', compact('users'));
     }
+
     // Login page dikhane ke liye
     public function login()
     {
         return view('auth.login1');
     }
+
     public function coupons()
     {
         $coupons = Coupon::latest()->paginate(10);
@@ -205,7 +205,7 @@ class AdminController extends Controller
 
         $results = Product::where('name', 'LIKE', "%{$query}%")
             ->take(8)
-            ->get(['id','name', 'slug', 'image']);
+            ->get(['id', 'name', 'slug', 'image']);
 
         return response()->json($results);
     }

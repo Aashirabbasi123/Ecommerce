@@ -10,6 +10,7 @@ use App\Models\OrderItem;
 use App\Models\Transaction;
 use App\Models\Contact;
 use App\Models\Product;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -76,7 +77,12 @@ class AdminController extends Controller
             'TotalCanceledAmount'
         ));
     }
-
+ // ✅ New Users Page (Track Registered Users)
+    public function users()
+    {
+        $users = User::orderBy('created_at', 'desc')->paginate(10);
+        return view('admin.user', compact('users'));
+    }
     // Login page dikhane ke liye
     public function login()
     {

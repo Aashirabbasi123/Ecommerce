@@ -38,6 +38,7 @@ Route::get('/', function () {
 // */
 Route::middleware(['auth:admin', 'admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
 });
 ////----------------==============Coupon Code ==========---------------------------\\\
 Route::get('/admin/coupons', [AdminController::class, 'coupons'])->name('admin.coupons');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\CuttingOption;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -20,8 +21,9 @@ class ProductController extends Controller
     {
         $categories = Category::select('id', 'name')->orderBy('name')->get();
         $brands = Brand::select('id', 'name')->orderBy('name')->get();
-        return view('admin.add_product', compact('categories', 'brands'));
+        return view('admin.add_product', compact('categories', 'brands', ));
     }
+
 
     public function product_store(Request $request)
     {
@@ -68,6 +70,14 @@ class ProductController extends Controller
             $product->images = implode(',', $gallery);
         }
 
+        // ✅ ADD THIS BLOCK HERE
+        if ($request->has('cutting_options')) {
+            $product->cutting_options = json_encode($request->cutting_options);
+        } else {
+            $product->cutting_options = json_encode([]);
+        }
+
+        // ✅ Now Save
         $product->save();
 
         return redirect()->route('admin.products')->with('status', 'Product Added Successfully!');
@@ -115,8 +125,15 @@ class ProductController extends Controller
         $product->category_id = $request->category_id;
         $product->brand_id = $request->brand_id;
 
+        // ✅ Save cutting options (admin checkboxes)
+        if ($request->has('cutting_options')) {
+            $product->cutting_options = json_encode($request->cutting_options);
+        } else {
+            $product->cutting_options = json_encode([]);
+        }
+
+        // ✅ Update main image
         if ($request->hasFile('image')) {
-            // Delete old image if exists
             if ($product->image) {
                 $oldPath = public_path('uploads/product/' . $product->image);
                 if (file_exists($oldPath)) {
@@ -126,30 +143,31 @@ class ProductController extends Controller
             $product->image = $this->uploadProductImage($request->file('image'));
         }
 
+        // ✅ Update gallery images
         if ($request->hasFile('images')) {
-            // Step 1: Delete old gallery images from disk
+            // Delete old gallery images from disk
             if ($product->images) {
                 foreach (explode(',', $product->images) as $oldImage) {
                     $oldPath = public_path('uploads/product/' . $oldImage);
                     if (file_exists($oldPath)) {
-                        unlink($oldPath); // پرانی images delete ہو جاتی ہیں
+                        unlink($oldPath);
                     }
                 }
             }
 
-            // Step 2: Upload new gallery images
+            // Upload new gallery images
             $gallery = [];
             foreach ($request->file('images') as $imageFile) {
-                $gallery[] = $this->uploadProductImage($imageFile); // نئی images copy ہوتی ہیں
+                $gallery[] = $this->uploadProductImage($imageFile);
             }
             $product->images = implode(',', $gallery);
         }
-
 
         $product->save();
 
         return redirect()->route('admin.products')->with('status', 'Product Updated Successfully!');
     }
+
 
     public function delete_product($id)
     {

@@ -1,600 +1,959 @@
 @stack('style')
 <main>
-    @stack('style')
-    <main>
-        <style>
-            /* Root and Typography */
-            :root {
-                --ocean-blue: #0077b6;
-                --light-blue: #00c4ff;
-                --dark-blue: #023e8a;
-                --light-gray: #f7f9fb;
-                --text-dark: #001219;
-                --text-light: #f0f0f0;
-            }
+    <style>
+        /* Modern CSS Reset and Variables */
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #3b82f6;
+            --secondary: #f59e0b;
+            --accent: #ef4444;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+            --white: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --radius: 12px;
+            --radius-lg: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-            body {
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                background-color: var(--light-gray);
-                color: var(--text-dark);
-                margin: 0;
-                padding: 0;
-                font-size: 16px;
-                line-height: 1.5;
-            }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-            body,
-            html {
-                overflow-x: hidden !important;
-            }
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-            /* 🛍️ Product Card */
-            .product-card {
-                background: #fff;
-                border-radius: 16px;
-                overflow: hidden;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-                transition: all 0.3s ease;
-                text-align: center;
-                position: relative;
-                max-width: 100%;
-                /* Mobile friendly width */
-                margin: 1rem auto;
-                /* Center on mobile */
-                padding: 0 1rem;
-                /* Mobile padding */
-            }
+        main {
+            flex: 1;
+        }
 
-            .product-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-            }
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
-            /* 📸 Product Image */
-            .pc__img-wrapper {
-                position: relative;
-                overflow: hidden;
-                border-bottom: 1px solid #eee;
-            }
+        /* Hero Slider */
+        .hero-slider {
+            position: relative;
+            width: 100%;
+            height: 80vh;
+            min-height: 600px;
+            overflow: hidden;
+            margin-bottom: 4rem;
+        }
 
-            .pc__img {
-                width: 100%;
-                height: auto;
-                border-radius: 12px;
-                transition: transform 0.5s ease;
-            }
+        .swiper-container {
+            width: 100%;
+            height: 100%;
+        }
 
-            .product-card:hover .pc__img {
-                transform: scale(1.05);
-            }
+        .swiper-slide {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
 
-            /* 🔖 Discount Badge */
-            .discount-badge {
-                position: absolute;
-                top: 12px;
-                left: 12px;
-                background: var(--light-blue);
-                color: #fff;
-                font-size: 0.75rem;
-                font-weight: bold;
-                padding: 4px 10px;
-                border-radius: 20px;
-            }
+        .hero-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            filter: brightness(0.7);
+            display: block;
+        }
 
-            /* 📝 Title */
-            .pc__title {
-                margin: 12px 0 6px;
-                font-size: 1rem;
-                font-weight: 600;
-                color: var(--dark-blue);
-            }
+        .hero-content {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            transform: translateY(-50%);
+            max-width: 600px;
+            color: var(--white);
+            z-index: 10;
+        }
 
-            .pc__title a {
-                text-decoration: none;
-                color: inherit;
-                transition: color 0.3s;
-            }
+        .hero-badge {
+            display: inline-block;
+            background: var(--secondary);
+            color: var(--dark);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-            .pc__title a:hover {
-                color: var(--ocean-blue);
-            }
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            color: var(--white);
+        }
 
-            /* 💲 Price */
-            .product-card__price {
-                font-size: 0.95rem;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                gap: 8px;
-            }
+        .hero-subtitle {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.6;
+            color: var(--white);
+        }
 
-            .price-old {
-                text-decoration: line-through;
-                color: #999;
-                font-size: 0.9rem;
-            }
+        .hero-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--primary);
+            color: var(--white);
+            padding: 15px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            box-shadow: var(--shadow-lg);
+        }
 
-            .price-new,
-            .text-secondary {
-                color: var(--ocean-blue);
-                font-weight: 700;
-            }
+        .hero-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
 
-            /* HERO SLIDER */
-            .mySlider {
-                width: 100vw;
-                max-width: 100vw;
-                margin-left: calc(-50vw + 50%);
-                height: 100vh;
-                position: relative;
-                background-color: var(--dark-blue);
-                overflow: hidden !important;
-            }
+        /* Section Headings */
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
 
-            /* Slide background */
-            .hero-bg {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                filter: brightness(0.6);
-                transition: filter 0.5s ease;
-            }
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 1rem;
+            position: relative;
+        }
 
-            .swiper-slide:hover .hero-bg {
-                filter: brightness(0.8);
-            }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
 
-            /* Overlay for readability */
-            .hero-slide-overlay {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                overflow: hidden;
-                height: 100%;
-                background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.2));
-            }
+        .section-subtitle {
+            color: var(--gray);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
 
-            /* Hero content */
-            .hero-content {
-                position: absolute;
-                top: 50%;
-                left: 10%;
-                transform: translateY(-50%);
-                max-width: 600px;
-                color: var(--text-light);
-                z-index: 2;
-                text-align: left;
-                padding-right: 1rem;
-            }
+        /* Simple Category Grid - NO SLIDER */
+        .category-section {
+            margin-bottom: 4rem;
+        }
 
-            .hero-tagline {
-                font-size: 1rem;
-                font-weight: 700;
-                letter-spacing: 2px;
-                margin-bottom: 0.8rem;
-                text-transform: uppercase;
-                color: var(--light-blue);
-            }
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1.5rem;
+        }
 
+        .category-card {
+            background: var(--white);
+            padding: 1.5rem 1rem;
+            border-radius: var(--radius);
+            text-align: center;
+            text-decoration: none;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-light);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-light);
+        }
+
+        .category-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            background: var(--light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            padding: 15px;
+            overflow: hidden;
+        }
+
+        .category-card:hover .category-icon {
+            background: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .category-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        .category-name {
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        /* Products Section */
+        .products-section {
+            margin-bottom: 4rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Product Card */
+        .product-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            height: 100%;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: var(--accent);
+            color: var(--white);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            z-index: 2;
+        }
+
+        .product-image {
+            position: relative;
+            height: 250px;
+            overflow: hidden;
+            background: var(--light);
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            height: calc(100% - 250px);
+        }
+
+        .product-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+            flex-grow: 1;
+        }
+
+        .product-title a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .product-title a:hover {
+            color: var(--primary);
+        }
+
+        .product-price {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .current-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .original-price {
+            font-size: 1rem;
+            color: var(--gray);
+            text-decoration: line-through;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--light);
+            color: var(--dark);
+            border: 1px solid var(--gray-light);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-light);
+            transform: translateY(-2px);
+        }
+
+        /* Deals Banner */
+        .deals-banner {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+            padding: 4rem 2rem;
+            border-radius: var(--radius-lg);
+            margin-bottom: 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .deals-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" opacity="0.1"><polygon fill="white" points="0,1000 1000,0 1000,1000"/></svg>');
+            background-size: cover;
+        }
+
+        .banner-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .banner-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .banner-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+            color: var(--white);
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .countdown-item {
+            background: rgba(255,255,255,0.2);
+            padding: 1.5rem 1rem;
+            border-radius: var(--radius);
+            min-width: 100px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .countdown-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            display: block;
+            font-family: 'Courier New', monospace;
+            color: var(--white);
+        }
+
+        .countdown-label {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+            color: var(--white);
+        }
+
+        .timer-running {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Footer Space */
+        .footer-space {
+            height: 100px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .hero-slider {
+                height: 70vh;
+                min-height: 500px;
+            }
+            
             .hero-title {
                 font-size: 3rem;
-                font-weight: 800;
-                margin-bottom: 0.5rem;
-                line-height: 1.2;
             }
+            
+            .category-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
 
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 2.8rem;
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1.5rem;
+            }
+            
+            .banner-title {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-slider {
+                height: 60vh;
+                min-height: 400px;
+            }
+            
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            
+            .hero-content {
+                left: 5%;
+                max-width: 90%;
+                text-align: center;
+                padding: 0 20px;
+            }
+            
             .hero-subtitle {
-                font-size: 1.25rem;
-                font-weight: 400;
-                margin-bottom: 1.5rem;
+                font-size: 1.1rem;
             }
-
-            /* Hero Button */
-            .hero-btn,
-            .btn {
-                display: inline-block;
-                padding: 0.75rem 1.5rem;
-                background: var(--light-blue);
-                color: var(--text-light);
-                font-weight: 600;
-                border-radius: 30px;
-                text-decoration: none;
-                transition: all 0.3s ease;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-                cursor: pointer;
-                border: none;
-            }
-
-            .hero-btn:hover,
-            .btn:hover {
-                background: var(--ocean-blue);
-                transform: translateY(-2px);
-            }
-
-            /* Section Headings */
+            
             .section-title {
                 font-size: 2rem;
-                font-weight: 700;
+            }
+            
+            .category-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1rem;
+            }
+            
+            .category-icon {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .category-name {
+                font-size: 0.85rem;
+            }
+            
+            .banner-title {
+                font-size: 2rem;
+            }
+            
+            .banner-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .countdown {
+                gap: 1rem;
+            }
+            
+            .countdown-item {
+                min-width: 80px;
+                padding: 1rem 0.5rem;
+            }
+            
+            .countdown-number {
+                font-size: 2rem;
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            
+            .product-image {
+                height: 200px;
+            }
+            
+            .product-info {
+                padding: 1rem;
+            }
+            
+            .product-actions {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .category-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-slider {
+                height: 50vh;
+                min-height: 300px;
+            }
+            
+            .hero-title {
+                font-size: 1.8rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .hero-btn {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+            
+            .section-title {
+                font-size: 1.75rem;
+            }
+            
+            .section-subtitle {
+                font-size: 1rem;
+            }
+            
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.8rem;
+            }
+            
+            .category-card {
+                padding: 1rem 0.5rem;
+            }
+            
+            .category-icon {
+                width: 60px;
+                height: 60px;
+                padding: 10px;
+            }
+            
+            .category-name {
+                font-size: 0.8rem;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .countdown {
+                gap: 0.5rem;
+                flex-wrap: wrap;
+            }
+            
+            .countdown-item {
+                min-width: 70px;
+                padding: 0.75rem 0.5rem;
+            }
+            
+            .countdown-number {
+                font-size: 1.5rem;
+            }
+            
+            .countdown-label {
+                font-size: 0.875rem;
+            }
+            
+            .deals-banner {
+                padding: 2rem 1rem;
+            }
+            
+            .banner-title {
+                font-size: 1.8rem;
+            }
+            
+            .banner-subtitle {
+                font-size: 1rem;
                 margin-bottom: 2rem;
-                color: var(--dark-blue);
             }
+        }
 
-            /* Category Banner */
-            .category-banner__item {
-                position: relative;
-                overflow: hidden;
-                border-radius: 12px;
+        @media (max-width: 360px) {
+            .hero-title {
+                font-size: 1.6rem;
             }
-
-            .category-banner__item img {
-                width: 100%;
-                height: auto;
-                object-fit: cover;
-                border-radius: 12px;
-                transition: transform 0.5s ease;
+            
+            .products-grid {
+                grid-template-columns: 1fr;
             }
-
-            .category-banner__item:hover img {
-                transform: scale(1.05);
+            
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
             }
+        }
+    </style>
 
-            .category-banner__item-content {
-                position: absolute;
-                bottom: 20px;
-                left: 20px;
-                color: #fff;
-            }
-
-            .btn-link {
-                color: var(--light-blue);
-                text-decoration: underline;
-                font-weight: 600;
-            }
-
-            /* Responsive Adjustments */
-            @media (max-width: 992px) {
-                .mySlider {
-                    height: 350px;
-                }
-
-                .hero-title {
-                    font-size: 2.2rem;
-                }
-
-                .hero-subtitle {
-                    font-size: 1rem;
-                }
-            }
-
-            @media (max-width: 768px) {
-                .mySlider {
-                    height: 300px;
-
-                }
-
-                .hero-content {
-                    left: 50%;
-                    top: 55%;
-                    transform: translate(-50%, -55%);
-                    text-align: center;
-                    max-width: 90%;
-                    padding: 0 1rem;
-                }
-
-                .hero-title {
-                    font-size: 1.8rem;
-                }
-
-                .hero-subtitle {
-                    font-size: 1rem;
-                }
-
-                .hero-tagline {
-                    font-size: 0.85rem;
-                }
-            }
-
-            @media (max-width: 480px) {
-                body {
-                    padding-left: 1rem;
-                    padding-right: 1rem;
-                    font-size: 14px;
-                    line-height: 1.4;
-
-                }
-
-                .mySlider {
-                    height: 250px;
-                }
-
-                .hero-content {
-                    left: 50%;
-                    top: 55%;
-                    transform: translate(-50%, -55%);
-                    text-align: center;
-                    max-width: 90%;
-                    padding: 0 1rem;
-                }
-
-                .hero-title {
-                    font-size: 1.3rem;
-                    line-height: 1.3;
-                }
-
-                .hero-subtitle {
-                    font-size: 1rem;
-                }
-
-                .hero-btn {
-                    display: block;
-                    margin: 1rem auto 0 auto;
-                    font-size: 1rem;
-                    padding: 0.85rem 1.5rem;
-                    width: 90%;
-                    max-width: 300px;
-                    box-sizing: border-box;
-                }
-
-                .product-card {
-                    padding: 0;
-                    margin: 1rem 0;
-
-                }
-
-                .pc__title {
-                    font-size: 0.85rem;
-                    padding: 0 0.5rem;
-                }
-
-                .product-card__price {
-                    font-size: 0.8rem;
-                }
-            }
-        </style>
-        <!-- HERO SLIDER -->
-        <section class="swiper-container js-swiper-slider swiper-number-pagination slideshow mySlider" data-settings='{
-        "autoplay": { "delay": 5000 },
-        "slidesPerView": 1,
-        "effect": "fade",
-        "loop": true
-        }'>
+    <!-- Hero Slider -->
+    <section class="hero-slider">
+        <div class="swiper-container hero-main-slider">
             <div class="swiper-wrapper">
                 @foreach ($slides as $slide)
-                    <div class="swiper-slide position-relative">
-                        <img class="hero-bg" src="{{ asset('uploads/slides/' . $slide->image) }}" alt="{{ $slide->title }}">
-
+                    <div class="swiper-slide">
+                        <img class="hero-bg" src="{{ asset('uploads/slides/' . $slide->image) }}" alt="{{ $slide->title }}" loading="lazy">
                         <div class="hero-content">
-                            <div class="hero-tagline">New Arrivals</div>
-                            <div class="hero-title">{{ $slide->title }}</div>
-                            <div class="hero-subtitle">{{ $slide->subtitle }}</div>
-                            <a href="{{ $slide->link }}" class="btn">Shop Now</a>
+                            <span class="hero-badge">New Arrivals</span>
+                            <h1 class="hero-title">{{ $slide->title }}</h1>
+                            <p class="hero-subtitle">{{ $slide->subtitle }}</p>
+                            <a href="{{ $slide->link }}" class="hero-btn">
+                                Shop Now
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                            </a>
                         </div>
                     </div>
                 @endforeach
             </div>
-            <div class="container">
-                <div
-                    class="slideshow-pagination slideshow-number-pagination d-flex align-items-center position-absolute bottom-0 mb-5">
-                </div>
-            </div>
-        </section>
-
-        <!-- CATEGORY CAROUSEL -->
-        <section class="category-carousel container mt-5">
-            <h2 class="section-title text-center">You Might Like</h2>
-            <div class="position-relative">
-                <div class="swiper-container js-swiper-slider" data-settings='{
-            "autoplay": { "delay": 5000 },
-            "slidesPerView": 8,
-            "slidesPerGroup": 1,
-            "loop": true,
-            "navigation": {
-                "nextEl": ".products-carousel__next-1",
-                "prevEl": ".products-carousel__prev-1"
-            },
-            "breakpoints": {
-                "320": { "slidesPerView": 2, "slidesPerGroup": 2, "spaceBetween": 15 },
-                "768": { "slidesPerView": 4, "slidesPerGroup": 4, "spaceBetween": 30 },
-                "992": { "slidesPerView": 6, "slidesPerGroup": 1, "spaceBetween": 45 },
-                "1200": { "slidesPerView": 8, "slidesPerGroup": 1, "spaceBetween": 60 }
-            }
-        }'>
-                    <div class="swiper-wrapper">
-                        @foreach ($categories as $category)
-                            <div class="swiper-slide text-center category-banner__item"
-                                style="display: flex; flex-direction: column;">
-                                <div>
-                                    <img src="{{ asset('uploads/category/' . $category->image) }}"
-                                        alt="{{ $category->name }}"
-                                        style="width: 124px; height: 124px; object-fit: contain; display: block;">
-                                </div>
-
-                                <div>
-                                    <a href="{{ route('shop', ['categories' => $category->id]) }}" class="menu-link">
-                                        {{ $category->name }}
-                                    </a>
-                                </div>
-                            </div>
-
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- HOT DEALS -->
-        <section class="hot-deals container mt-5">
-            <h2 class="section-title text-center">Deals</h2>
-            <div class="swiper-container js-swiper-slider" data-settings='{
-            "autoplay": { "delay": 5000 },
-            "slidesPerView": 4,
-            "slidesPerGroup": 4,
-            "loop": false,
-            "breakpoints": {
-                "0": { "slidesPerView": 1, "slidesPerGroup": 1, "spaceBetween": 10 },
-                "480": { "slidesPerView": 1, "slidesPerGroup": 1, "spaceBetween": 14 },
-                "768": { "slidesPerView": 2, "slidesPerGroup": 2, "spaceBetween": 24 },
-                "992": { "slidesPerView": 3, "slidesPerGroup": 1, "spaceBetween": 30 },
-                "1200": { "slidesPerView": 4, "slidesPerGroup": 1, "spaceBetween": 30 }
-            }
-
-        }'>
-                <div class="swiper-wrapper">
-                    @foreach ($products as $product)
-                        @php
-                            $discount = 0;
-                            if ($product->sale_price && $product->sale_price < $product->regular_price) {
-                                $discount = round((($product->regular_price - $product->sale_price) / $product->regular_price) * 100);
-                            }
-                        @endphp
-
-                        <div class="swiper-slide product-card product-card_style3">
-                            <div class="pc__img-wrapper position-relative">
-                                @if ($discount > 0)
-                                    <div
-                                        style="position: absolute; top: 10px; left: 10px; background-color: red; color: white; padding: 5px 8px; font-size: 13px; font-weight: bold; border-radius: 4px; z-index: 5;">
-                                        -{{ $discount }}%
-                                    </div>
-                                @endif
-                                <a href="{{ route('detailpage', ['product_slug' => $product->slug]) }}">
-                                    <img src="{{ asset('uploads/product/' . $product->image) }}" alt="{{ $product->name }}"
-                                        class="pc__img">
-                                </a>
-                            </div>
-                            <div class="pc__info">
-                                <h6 class="pc__title">
-                                    <a
-                                        href="{{ route('detailpage', ['product_slug' => $product->slug]) }}">{{ $product->name }}</a>
-                                </h6>
-                                <div class="product-card__price">
-                                    @if ($product->sale_price && $product->sale_price < $product->regular_price)
-                                        <span class="price price-old">Rs{{ number_format($product->regular_price, 2) }}</span>
-                                        <span class="text-secondary">Rs{{ number_format($product->sale_price, 2) }}</span>
-                                    @else
-                                        <span class="text-secondary">Rs{{ number_format($product->regular_price, 2) }}</span>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-
-            </div>
-        </section>
-
-        <!-- CATEGORY BANNER -->
-        <section class="category-banner container mt-5">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="category-banner__item">
-                        <img src="images/Homepage.png" alt="SeaFood" />
-                        <div class="category-banner__item-content">
-                            <h3>SeaFood</h3>
-                            <a href="#" class="btn-link">Shop Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="category-banner__item">
-                        <img src="images/Homepage2.png" alt="Sea Fish" />
-                        <div class="category-banner__item-content">
-                            <h3>Sea Fish</h3>
-                            <a href="#" class="btn-link">Shop Now</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- FEATURED PRODUCTS -->
-        <section class="products-grid container">
-            <h2 class="section-title text-center mb-3 pb-xl-3 mb-xl-4">Featured Products</h2>
-
-            <div class="row">
-                @foreach ($products as $product)
-                    @php
-                        $discount = 0;
-                        if ($product->sale_price && $product->sale_price < $product->regular_price) {
-                            $discount = round((($product->regular_price - $product->sale_price) / $product->regular_price) * 100);
-                        }
-                    @endphp
-
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
-                        <div class="product-card product-card_style3 h-100">
-                            <div class="pc__img-wrapper position-relative">
-                                {{-- Discount Badge --}}
-                                @if ($discount > 0)
-                                    <div
-                                        style="position: absolute; top: 10px; left: 10px; background-color: red; color: white; padding: 5px 8px; font-size: 13px; font-weight: bold; border-radius: 4px; z-index: 5;">
-                                        -{{ $discount }}%
-                                    </div>
-                                @endif
-
-                                <a href="{{ route('detailpage', ['product_slug' => $product->slug]) }}">
-                                    <img loading="lazy" src="{{ asset('uploads/product/' . $product->image) }}" width="330"
-                                        height="400" alt="{{ $product->name }}" class="pc__img img-fluid">
-                                </a>
-                            </div>
-                            <div class="pc__info position-relative text-center">
-                                <h6 class="pc__title">
-                                    <a href="{{ route('detailpage', ['product_slug' => $product->slug]) }}">
-                                        {{ $product->name }}
-                                    </a>
-                                </h6>
-                                <div class="product-card__price d-flex align-items-center justify-content-center">
-                                    @if ($product->sale_price && $product->sale_price < $product->regular_price)
-                                        <span class="money price price-old">
-                                            Rs{{ number_format($product->regular_price, 2) }}
-                                        </span>
-                                        <span class="money price text-secondary ms-2">
-                                            Rs{{ number_format($product->sale_price, 2) }}
-                                        </span>
-                                    @else
-                                        <span class="money price text-secondary">
-                                            Rs{{ number_format($product->regular_price, 2) }}
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </section>
-
-
+            <!-- Add Pagination -->
+            <div class="swiper-pagination"></div>
         </div>
-        <div class="mb-3 mb-xl-5 pt-1 pb-4"></div>
+    </section>
 
-    </main>
+    <!-- Simple Category Grid - NO SLIDER -->
+    <section class="container category-section">
+        <div class="section-header">
+            <h2 class="section-title">Categories</h2>
+            <p class="section-subtitle">Discover our wide range of products across different categories</p>
+        </div>
+        <div class="category-grid">
+            @foreach ($categories as $category)
+                <a href="{{ route('shop', ['categories' => $category->id]) }}" class="category-card">
+                    <div class="category-icon">
+                        <img src="{{ asset('uploads/category/' . $category->image) }}" alt="{{ $category->name }}" loading="lazy">
+                    </div>
+                    <div class="category-name">{{ $category->name }}</div>
+                </a>
+            @endforeach
+        </div>
+    </section>
 
-    <div class="mb-3 mb-xl-5 pt-1 pb-4"></div>
+    <!-- Deals Banner -->
+    <section class="container">
+        <div class="deals-banner">
+            <div class="banner-content">
+                <h2 class="banner-title">🔥 Deals of the Day</h2>
+                <p class="banner-subtitle">Hurry up! These amazing offers are ending soon. Don't miss your chance!</p>
+                <div class="countdown">
+                    <div class="countdown-item timer-running">
+                        <span class="countdown-number" id="days">00</span>
+                        <span class="countdown-label">Days</span>
+                    </div>
+                    <div class="countdown-item timer-running">
+                        <span class="countdown-number" id="hours">00</span>
+                        <span class="countdown-label">Hours</span>
+                    </div>
+                    <div class="countdown-item timer-running">
+                        <span class="countdown-number" id="minutes">00</span>
+                        <span class="countdown-label">Minutes</span>
+                    </div>
+                    <div class="countdown-item timer-running">
+                        <span class="countdown-number" id="seconds">00</span>
+                        <span class="countdown-label">Seconds</span>
+                    </div>
+                </div>
+                <a href="{{ route('shop') }}" class="btn btn-secondary" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">
+                    Shop All Deals
+                </a>
+            </div>
+        </div>
+    </section>
 
+    <!-- Featured Products -->
+    <section class="container products-section">
+        <div class="section-header">
+            <h2 class="section-title">Featured Products</h2>
+            <p class="section-subtitle">Handpicked items just for you</p>
+        </div>
+        <div class="products-grid">
+            @foreach ($products as $product)
+                @php
+                    $discount = 0;
+                    if ($product->sale_price && $product->sale_price < $product->regular_price) {
+                        $discount = round((($product->regular_price - $product->sale_price) / $product->regular_price) * 100);
+                    }
+                @endphp
+
+                <div class="product-card">
+                    @if ($discount > 0)
+                        <div class="product-badge">-{{ $discount }}% OFF</div>
+                    @endif
+                    
+                    <div class="product-image">
+                        <img src="{{ asset('uploads/product/' . $product->image) }}" alt="{{ $product->name }}" loading="lazy">
+                    </div>
+                    
+                    <div class="product-info">
+                        <h3 class="product-title">
+                            <a href="{{ route('detailpage', ['product_slug' => $product->slug]) }}">
+                                {{ $product->name }}
+                            </a>
+                        </h3>
+                        
+                        <div class="product-price">
+                            @if ($product->sale_price && $product->sale_price < $product->regular_price)
+                                <span class="current-price">Rs{{ number_format($product->sale_price, 2) }}</span>
+                                <span class="original-price">Rs{{ number_format($product->regular_price, 2) }}</span>
+                            @else
+                                <span class="current-price">Rs{{ number_format($product->regular_price, 2) }}</span>
+                            @endif
+                        </div>
+                        
+                        <div class="product-actions">
+                            <a href="{{ route('detailpage', ['product_slug' => $product->slug]) }}" class="btn btn-primary">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                                </svg>
+                                Add to Cart
+                            </a>
+                            <button class="btn btn-secondary">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </section>
+
+    <!-- Deals Products -->
+    <section class="container products-section">
+        <div class="products-grid">
+            @foreach ($products->where('sale_price', '<', \DB::raw('regular_price'))->take(8) as $product)
+                @php
+                    $discount = round((($product->regular_price - $product->sale_price) / $product->regular_price) * 100);
+                @endphp
+
+                <div class="product-card">
+                    <div class="product-badge">-{{ $discount }}% OFF</div>
+                    
+                    <div class="product-image">
+                        <img src="{{ asset('uploads/product/' . $product->image) }}" alt="{{ $product->name }}" loading="lazy">
+                    </div>
+                    
+                    <div class="product-info">
+                        <h3 class="product-title">
+                            <a href="{{ route('detailpage', ['product_slug' => $product->slug]) }}">
+                                {{ $product->name }}
+                            </a>
+                        </h3>
+                        
+                        <div class="product-price">
+                            <span class="current-price">Rs{{ number_format($product->sale_price, 2) }}</span>
+                            <span class="original-price">Rs{{ number_format($product->regular_price, 2) }}</span>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <a href="{{ route('detailpage', ['product_slug' => $product->slug]) }}" class="btn btn-primary">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                                </svg>
+                                Buy Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </section>
+
+    <!-- Footer Space -->
+    <div class="footer-space"></div>
 </main>
-<script>
-    document.querySelectorAll('.js-swiper-slider').forEach(slider => {
-        const settings = JSON.parse(slider.getAttribute('data-settings'));
-        new Swiper(slider, settings);
-    });
-    var swiper = new Swiper(".swiper-container", {
-        slidesPerView: 4,
-        spaceBetween: 20,
-        breakpoints: {
-            0: {
-                slidesPerView: 1,
-                spaceBetween: 10,
-            },
-            768: {
-                slidesPerView: 2,
-                spaceBetween: 15,
-            },
-            1024: {
-                slidesPerView: 4,
-                spaceBetween: 20,
-            },
-        },
-    });
 
+<!-- Add Swiper JS and CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<script>
+    // Initialize Hero Slider Only
+    document.addEventListener('DOMContentLoaded', function() {
+        // Hero Slider
+        const heroSwiper = new Swiper('.hero-main-slider', {
+            direction: 'horizontal',
+            loop: true,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            },
+            effect: 'fade',
+            fadeEffect: {
+                crossFade: true
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            }
+        });
+
+        // Countdown Timer
+        function updateCountdown() {
+            const now = new Date();
+            const target = new Date();
+            target.setHours(23, 59, 59, 999);
+            
+            if (now > target) {
+                target.setDate(target.getDate() + 1);
+            }
+            
+            const diff = target - now;
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            
+            const secondsElement = document.getElementById('seconds');
+            secondsElement.classList.add('timer-running');
+            setTimeout(() => {
+                secondsElement.classList.remove('timer-running');
+            }, 500);
+        }
+        
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+        
+        // Image loading handling
+        const images = document.querySelectorAll('img');
+        images.forEach(img => {
+            img.onerror = function() {
+                this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjBGMEYwIi8+CjxwYXRoIGQ9Ik04MCA2MEgxMjBWMTIwSDgwVjYwWiIgZmlsbD0iI0Q4RDhEOCIvPgo8cGF0aCBkPSJNNjAgODBIMTQwVjEwMEg2MFY4MFpNNjAgMTIwSDE0MFYxNDBINjBWMTIwWiIgZmlsbD0iI0Q4RDhEOCIvPgo8L3N2Zz4K';
+            };
+            
+            if (img.complete) {
+                img.style.opacity = '1';
+            } else {
+                img.addEventListener('load', function() {
+                    this.style.opacity = '1';
+                });
+                img.style.opacity = '0';
+                img.style.transition = 'opacity 0.3s ease';
+            }
+        });
+    });
 </script>

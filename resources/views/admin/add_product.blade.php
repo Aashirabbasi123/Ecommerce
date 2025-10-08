@@ -223,6 +223,33 @@
                                 <span class="alert alert-danger text-center">{{ $message }}</span>
                             @enderror
                         </div>
+                        <div class="form-group">
+                            <label for="cuttingOptions">Cutting Options (Select Available Options)</label><br>
+
+                            @php
+                                $allOptions = [
+                                    'whole_uncleaned' => 'Whole & Uncleaned',
+                                    'whole_gutted' => 'Whole & Gutted',
+                                    'headless_gutted' => 'Headless & Gutted',
+                                    'slices_with_skin_bone' => 'Slices with Skin & Centre Bone',
+                                    'boneless_biscuits' => 'Boneless Biscuits',
+                                    'boneless_fillet' => 'Boneless Fillet',
+                                    'boneless_fingers' => 'Boneless Fingers',
+                                ];
+
+                                $selectedOptions = isset($product)
+                                    ? json_decode($product->cutting_options ?? '[]', true)
+                                    : [];
+                            @endphp
+
+                            @foreach ($allOptions as $value => $label)
+                                <label style="display:block;">
+                                    <input type="checkbox" name="cutting_options[]" value="{{ $value }}" {{ in_array($value, $selectedOptions) ? 'checked' : '' }}>
+                                    {{ $label }}
+                                </label>
+                            @endforeach
+                        </div>
+
 
                         <!-- Submit Button -->
                         <div class="cols gap10">
@@ -261,10 +288,10 @@
                     const gphotos = this.files;
                     $.each(gphotos, function (key, val) {
                         $('#galUpload').prepend(`
-                                                            <div class="items gitems">
-                                                                <img src="${URL.createObjectURL(val)}" style="width: 80px; height: 80px; object-fit: cover; margin: 5px;" />
-                                                            </div>
-                                                        `);
+                                                                                    <div class="items gitems">
+                                                                                        <img src="${URL.createObjectURL(val)}" style="width: 80px; height: 80px; object-fit: cover; margin: 5px;" />
+                                                                                    </div>
+                                                                                `);
                     });
                 });
 
@@ -280,7 +307,7 @@
                         .replace(/ +/g, "-");
                 }
 
-            });or
+            }); or
         </script>
     @endpush
 @endsection

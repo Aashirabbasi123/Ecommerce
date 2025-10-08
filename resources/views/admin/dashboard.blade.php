@@ -303,6 +303,61 @@
                 </div>
             </div>
         </div>
+        <div class="wg-box">
+            <div class="flex items-center justify-between">
+                <h5>Monthly Revenue</h5>
+            </div>
+            <div class="flex flex-wrap gap40">
+                <div>
+                    <div class="mb-2">
+                        <div class="block-legend">
+                            <div class="dot t1"></div>
+                            <div class="text-tiny">Total</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap10">
+                        <h4>Rs {{ number_format($TotalAmount, 0) }}</h4>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="mb-2">
+                        <div class="block-legend">
+                            <div class="dot t2"></div>
+                            <div class="text-tiny">Pending</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap10">
+                        <h4>Rs {{ number_format($TotalOrderedAmount, 0) }}</h4>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="mb-2">
+                        <div class="block-legend">
+                            <div class="dot t2"></div>
+                            <div class="text-tiny">Delivered</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap10">
+                        <h4>Rs {{ number_format($TotalDeliveredAmount, 0) }}</h4>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="mb-2">
+                        <div class="block-legend">
+                            <div class="dot t2"></div>
+                            <div class="text-tiny">Canceled</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap10">
+                        <h4>Rs {{ number_format($TotalCanceledAmount, 0) }}</h4>
+                    </div>
+                </div>
+            </div>
+            <div id="line-chart-8"></div>
+        </div>
 
         <!-- Recent Orders -->
         <div class="row mt-4">
@@ -407,15 +462,14 @@
                             show: false,
                         },
                         xaxis: {
+                            categories: @json($months), // ["Sep-2025", "Oct-2025", ...]
                             labels: {
                                 style: {
                                     colors: '#212529',
                                 },
                             },
-                            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
-                                'Oct', 'Nov', 'Dec'
-                            ],
                         },
+
                         yaxis: {
                             show: false,
                         },
@@ -452,6 +506,12 @@
             });
             $(window).on("resize", function () { });
         })(jQuery);
+        var labels = @json($months);
+        var totalData = @json($AmountM);
+        var pendingData = @json($PendingAmountM);
+        var deliveredData = @json($DeliveredAmountM);
+        var canceledData = @json($CanceledAmountM);
 
+        console.log(labels, totalData, pendingData, deliveredData, canceledData);
     </script>
 @endpush

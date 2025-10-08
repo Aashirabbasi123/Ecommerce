@@ -196,7 +196,7 @@
                                         </tr>
                                         <tr>
                                             <th>SHIPPING</th>
-                                            <td align="right">Free shipping</td>
+                                            <td align="right">{{ $checkout['shipping_message'] }} - Rs {{ $checkout['shipping'] }}</td>
                                         </tr>
                                         <tr>
                                             <th>TOTAL</th>

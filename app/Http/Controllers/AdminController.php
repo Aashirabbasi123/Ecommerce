@@ -22,7 +22,7 @@ class AdminController extends Controller
         // Recent 10 orders
         $orders = Order::orderBy("created_at", "desc")->take(10)->get();
 
-        // Summary Counts & Amounts
+        // Summary Counts & Amounts (single row)
         $dashboardDatas = DB::select("
         SELECT
             COUNT(*) AS Total,
@@ -36,43 +36,91 @@ class AdminController extends Controller
         FROM orders
     ");
 
-        // Monthly stats (for chart)
-        $AmountM = Order::selectRaw("MONTH(created_at) as month, COALESCE(SUM(total),0) as total")
-            ->groupBy('month')
-            ->orderBy('month')
-            ->pluck('total')
-            ->implode(',');
+        // make sure we have a safe object
+        $stats = $dashboardDatas[0] ?? (object) [
+            'Total' => 0,
+            'TotalAmount' => 0,
+            'TotalPending' => 0,
+            'TotalPendingAmount' => 0,
+            'TotalDelivered' => 0,
+            'TotalDeliveredAmount' => 0,
+            'TotalCanceled' => 0,
+            'TotalCanceledAmount' => 0,
+        ];
 
-        $PendingAmountM = Order::selectRaw("MONTH(created_at) as month, COALESCE(SUM(total),0) as total")
-            ->where('status', 'pending')
-            ->groupBy('month')
-            ->orderBy('month')
-            ->pluck('total')
-            ->implode(',');
+        // Variables used in your blade Monthly Revenue boxes (match blade names)
+        $TotalAmount = $stats->TotalAmount ?? 0;
+        // blade expects $TotalOrderedAmount as "Pending" total — keep that name for compatibility
+        $TotalOrderedAmount = $stats->TotalPendingAmount ?? 0;
+        $TotalDeliveredAmount = $stats->TotalDeliveredAmount ?? 0;
+        $TotalCanceledAmount = $stats->TotalCanceledAmount ?? 0;
 
-        $DeliveredAmountM = Order::selectRaw("MONTH(created_at) as month, COALESCE(SUM(total),0) as total")
-            ->where('status', 'delivered')
-            ->groupBy('month')
+        // Monthly rows grouped by label + status
+        $rows = Order::selectRaw("
+            YEAR(created_at) AS year,
+            MONTH(created_at) AS month,
+            DATE_FORMAT(created_at, '%b-%Y') AS label,
+            status,
+            COALESCE(SUM(total),0) AS total
+        ")
+            ->groupBy('year', 'month', 'label', 'status')
+            ->orderBy('year')
             ->orderBy('month')
-            ->pluck('total')
-            ->implode(',');
+            ->get();
 
-        $CanceledAmountM = Order::selectRaw("MONTH(created_at) as month, COALESCE(SUM(total),0) as total")
-            ->where('status', 'canceled')
-            ->groupBy('month')
-            ->orderBy('month')
-            ->pluck('total')
-            ->implode(',');
+        // group rows by label (e.g. "Sep-2025", "Oct-2025")
+        $grouped = $rows->groupBy('label');
+
+        $months = $grouped->keys()->toArray();
+
+        $amounts = [];
+        $pendingAmounts = [];
+        $deliveredAmounts = [];
+        $canceledAmounts = [];
+
+        foreach ($months as $label) {
+            $sub = $grouped[$label];
+
+            // total for this month (sum of all statuses)
+            $amounts[] = (float) $sub->sum('total');
+
+            // per status sums (if not present returns 0)
+            $pendingAmounts[] = (float) $sub->where('status', 'pending')->sum('total');
+            $deliveredAmounts[] = (float) $sub->where('status', 'delivered')->sum('total');
+            $canceledAmounts[] = (float) $sub->where('status', 'canceled')->sum('total');
+        }
+
+        // if no months found, provide a safe default so chart won't break
+        if (empty($months)) {
+            $months = [date('M-Y')];
+            $AmountM = '0';
+            $PendingAmountM = '0';
+            $DeliveredAmountM = '0';
+            $CanceledAmountM = '0';
+        } else {
+            // create comma-separated numbers for ApexCharts usage in blade (kept same style as your blade)
+            $AmountM = implode(',', $amounts);
+            $PendingAmountM = implode(',', $pendingAmounts);
+            $DeliveredAmountM = implode(',', $deliveredAmounts);
+            $CanceledAmountM = implode(',', $canceledAmounts);
+        }
 
         return view("admin.dashboard", compact(
             'orders',
             'dashboardDatas',
+            'months',
             'AmountM',
             'PendingAmountM',
             'DeliveredAmountM',
-            'CanceledAmountM'
+            'CanceledAmountM',
+            'TotalAmount',
+            'TotalOrderedAmount',
+            'TotalDeliveredAmount',
+            'TotalCanceledAmount'
         ));
     }
+
+
 
 
     // ✅ New Users Page (Track Registered Users)
@@ -211,3 +259,4 @@ class AdminController extends Controller
     }
 
 }
+

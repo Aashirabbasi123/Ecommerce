@@ -11,6 +11,7 @@ use App\Http\Controllers\SlideController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\CuttingOptionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -165,10 +166,23 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+/*
+|--------------------------------------------------------------------------
+| Cutting Guide
+|--------------------------------------------------------------------------
+*/
+// Cutting Options Routes
+Route::get('/admin/cutting-options', [CuttingOptionController::class, 'index'])->name('admin.cutting_options.index');
+Route::get('/admin/cutting-options/create', [CuttingOptionController::class, 'create'])->name('admin.cutting_options.create');
+Route::post('/admin/cutting-options/store', [CuttingOptionController::class, 'store'])->name('admin.cutting_options.store');
+Route::get('/admin/cutting-options/edit/{id}', [CuttingOptionController::class, 'edit'])->name('admin.cutting_options.edit');
+Route::post('/admin/cutting-options/update/{id}', [CuttingOptionController::class, 'update'])->name('admin.cutting_options.update');
+Route::delete('/admin/cutting-options/delete/{id}', [CuttingOptionController::class, 'destroy'])->name('admin.cutting_options.delete');
 
 /*
 |--------------------------------------------------------------------------
 | Auth Routes (from Laravel Breeze)
 |--------------------------------------------------------------------------
 */
+
 require __DIR__ . '/auth.php';

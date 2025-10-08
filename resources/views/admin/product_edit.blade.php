@@ -245,6 +245,35 @@
                             @enderror
                         </div>
 
+<!-- ✅ Cutting Options Section -->
+<div class="form-group mt-4">
+    <div class="body-title mb-10">Cutting Options (Select Available Options)</div>
+
+    @php
+        $allOptions = [
+            'whole_uncleaned' => 'Whole & Uncleaned',
+            'whole_gutted' => 'Whole & Gutted',
+            'headless_gutted' => 'Headless & Gutted',
+            'slices_with_skin_bone' => 'Slices with Skin & Centre Bone',
+            'boneless_biscuits' => 'Boneless Biscuits',
+            'boneless_fillet' => 'Boneless Fillet',
+            'boneless_fingers' => 'Boneless Fingers',
+        ];
+
+        $selectedOptions = json_decode($product->cutting_options ?? '[]', true);
+    @endphp
+
+    <div class="grid grid-cols-2 gap-2">
+        @foreach ($allOptions as $value => $label)
+            <label style="display:block; font-weight:500;">
+                <input type="checkbox" name="cutting_options[]" value="{{ $value }}"
+                    {{ in_array($value, $selectedOptions) ? 'checked' : '' }}>
+                {{ $label }}
+            </label>
+        @endforeach
+    </div>
+</div>
+<!-- ✅ /Cutting Options Section -->
                         <!-- Submit Button -->
                         <div class="cols gap10">
                             <button class="tf-button w-full" type="submit">Update product</button>

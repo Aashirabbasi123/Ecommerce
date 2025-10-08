@@ -22,8 +22,22 @@ class CartController extends Controller
     {
         $items = session()->get('cart', []);
         $categories = Category::all();
-        return view('user.cart', compact('items', 'categories'));
+
+        // Ensure checkout session is calculated
+        $this->setAmountForCheckout();
+
+        // Get checkout with a safe default
+        $checkout = session()->get('checkout', [
+            'discount' => 0,
+            'subtotal' => 0,
+            'shipping' => 0,
+            'shipping_message' => 'Free Shipping',
+            'total' => 0,
+        ]);
+
+        return view('user.cart', compact('items', 'categories', 'checkout'));
     }
+
 
     public function add_to_cart(Request $request)
     {
@@ -52,7 +66,7 @@ class CartController extends Controller
         }
 
         session()->put('cart', $cart);
-        return redirect()->back()->with('success', 'Product Added to Cart!');
+        return redirect()->route('cart')->with('success', 'Product added to cart!');
     }
 
 
@@ -187,9 +201,21 @@ class CartController extends Controller
             return redirect()->route('login');
         }
 
+        // ensure checkout session calculate ho
+        $this->setAmountForCheckout();
+
         $address = Address::where('user_id', Auth::user()->id)->where('isdefault', 1)->first();
-        return view('user.checkout', compact('address'));
+        $checkout = session()->get('checkout', [
+            'discount' => 0,
+            'subtotal' => 0,
+            'shipping' => 0,
+            'shipping_message' => 'Free Shipping',
+            'total' => 0,
+        ]);
+
+        return view('user.checkout', compact('address', 'checkout'));
     }
+
 
     public function place_an_order(Request $request)
     {
@@ -236,6 +262,7 @@ class CartController extends Controller
         $order->user_id = $user_id;
         $order->subtotal = $checkout['subtotal'];
         $order->discount = $checkout['discount'];
+        $order->shipping = $checkout['shipping'];
         $order->total = $checkout['total'];
         $order->tax = 0;
         $order->name = $address->name;
@@ -301,20 +328,34 @@ class CartController extends Controller
             $subtotal += $item['price'] * $item['quantity'];
         }
 
-        if (Session::has('coupon') && Session::has('discounts')) {
-            Session::put('checkout', [
-                'discount' => Session::get('discounts')['discount'],
-                'subtotal' => Session::get('discounts')['subtotal'],
-                'total' => Session::get('discounts')['total'],
-            ]);
-        } else {
-            Session::put('checkout', [
-                'discount' => 0,
-                'subtotal' => round($subtotal, 2),
-                'total' => round($subtotal, 2),
-            ]);
+        // ✅ Discount check
+        $discount = 0;
+        if (Session::has('discounts')) {
+            $discount = Session::get('discounts')['discount'];
+            $subtotal = Session::get('discounts')['subtotal'];
         }
+
+        // ✅ Shipping logic
+        if ($subtotal >= 5000) {
+            $shipping = 0;
+            $shipping_message = "Free Shipping";
+        } else {
+            $shipping = 250;
+            $shipping_message = "";
+        }
+
+        // ✅ Total after shipping
+        $total = $subtotal - $discount + $shipping;
+
+        Session::put('checkout', [
+            'discount' => $discount,
+            'subtotal' => round($subtotal, 2),
+            'shipping' => $shipping,
+            'shipping_message' => $shipping_message,
+            'total' => round($total, 2),
+        ]);
     }
+
 
     public function order_confirm()
     {

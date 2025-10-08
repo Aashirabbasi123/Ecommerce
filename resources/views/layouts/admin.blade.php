@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
 
 <head>
-    <title>SurfsideMedia</title>
+    <title>IH SeaFood</title>
     <meta charset="utf-8">
     <meta name="author" content="themesflat.com">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -18,9 +18,29 @@
     <link rel="stylesheet" href="{{ asset('assets/css/sweetalert.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}">
     <link rel="apple-touch-icon-precomposed" href="{{ asset('images/favicon.ico') }}">
+    <style>
+        #logo_header_mobile {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* public/assets/css/custom.css */
+        #logo_header_mobile {
+            max-width: 150px;
+            /* موبائل کے لیے */
+            height: auto;
+        }
+
+        @media screen and (max-width: 768px) {
+            #logo_header_mobile {
+                max-width: 120px;
+            }
+        }
+    </style>
 </head>
 
 <body class="body">
@@ -36,10 +56,8 @@
 
                 <div class="section-menu-left">
                     <div class="box-logo">
-                        <a href={{ route('admin.dashboard') }} id="site-logo-inner">
-                            <img class="" id="logo_header" alt="" src="{{ asset('assets/images/logo/logo.png') }}"
-                                data-light="{{ asset('assets/images/logo/logo.png') }}"
-                                data-dark="{{ asset('assets/images/logo/logo.png') }}">
+                        <a href={{ route('admin.dashboard') }}id="logo_header" >
+                            <img src="{{ asset('images/logo2.png') }}" id="logo_header" alt="Logo">
                         </a>
                         <div class="button-show-hide">
                             <i class="icon-menu-left"></i>
@@ -156,13 +174,20 @@
                                         <div class="text">User</div>
                                     </a>
                                 </li>
-
                                 <li class="menu-item">
-                                    <a href="#" class="">
-                                        <div class="icon"><i class="icon-settings"></i></div>
-                                        <div class="text">Settings</div>
-                                    </a>
+                                    <form method="POST" action="{{ route('admin.logout') }}"
+                                        style="margin: 0; padding: 0; width: 100%;">
+                                        @csrf
+                                        <button type="submit"
+                                            style="all: unset; display: flex; align-items: center; width: 100px; padding: 15px 6px; font-weight: bold; font-size: 1.1rem; border-radius: 6px; background-color: #f44336; color: white; justify-content: center; ">
+                                            <div class="icon" style="margin-right: 10px;">
+                                                <i class="fa-solid fa-right-from-bracket"></i>
+                                            </div>
+                                            <div class="text">Logout</div>
+                                        </button>
+                                    </form>
                                 </li>
+
                             </ul>
                         </div>
                     </div>
@@ -173,10 +198,7 @@
                         <div class="wrap">
                             <div class="header-left">
                                 <a href="{{route('admin.dashboard')}}">
-                                    <img id="logo_header_mobile" alt="" src="{{ asset('assets/images/logo/logo.png') }}"
-                                        data-light="images/logo/logo.png" data-dark="images/logo/logo.png"
-                                        data-width="154px" data-height="52px"
-                                        data-retina="{{ asset('assets/images/logo/logo.png') }}">
+                                    <img src="{{ asset('images/logo2.png') }}" id="logo_header" alt="Logo" width="150">
                                 </a>
                                 <div class="button-show-hide">
                                     <i class="icon-menu-left"></i>
@@ -267,10 +289,6 @@
                                         </ul>
                                     </div>
                                 </div>
-
-
-
-
                                 <div class="popup-wrap user type-header">
                                     <div class="dropdown">
                                         <button class="btn btn-secondary dropdown-toggle" type="button"
@@ -280,8 +298,7 @@
                                                     <img src="{{ asset('assets/images/avatar/user-1.png') }}" alt="">
                                                 </span>
                                                 <span class="flex flex-column">
-                                                    <span class="body-title mb-2">Kristin Watson</span>
-                                                    <span class="text-tiny">Admin</span>
+                                                    <span class="body-title mb-2">Admin</span>
                                                 </span>
                                             </span>
                                         </button>
@@ -340,7 +357,7 @@
                     <div class="main-content">
                         @yield('content')
                         <div class="bottom-page">
-                            <div class="body-text">Copyright © 2024 SurfsideMedia</div>
+                            <div class="body-text">Copyright © 2024 Ih SeaFood</div>
                         </div>
                     </div>
 

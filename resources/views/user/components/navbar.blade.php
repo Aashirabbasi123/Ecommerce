@@ -74,7 +74,7 @@
 </style>
 <div class="top-bar">
     <div class="top-bar-text">
-        Shipping All Over Karachi | Minimum Order: 3kg | Free Delivery on Orders Above PKR 5,000. 🚚
+        Shipping All Over Pakistan | Minimum Order: 3kg | Free Delivery on Orders Above PKR 5,000. 🚚
     </div>
 </div>
 <svg class="d-none">

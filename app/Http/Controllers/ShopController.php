@@ -43,12 +43,12 @@ class ShopController extends Controller
         $products = Product::when($f_brands, function ($query) use ($f_brands) {
             $query->whereIn('brand_id', explode(',', $f_brands));
         })
-        ->when($f_categories, function ($query) use ($f_categories) {
-        $query->whereIn('category_id', explode(',', $f_categories));
-        })
-        ->orderBy($o_column, $o_order)->paginate($size);
+            ->when($f_categories, function ($query) use ($f_categories) {
+                $query->whereIn('category_id', explode(',', $f_categories));
+            })
+            ->orderBy($o_column, $o_order)->paginate($size);
 
-        return view('user.shop', compact('products', 'size', 'order', 'brands', 'f_brands','categories','f_categories'));
+        return view('user.shop', compact('products', 'size', 'order', 'brands', 'f_brands', 'categories', 'f_categories'));
     }
 
 
@@ -60,7 +60,23 @@ class ShopController extends Controller
         $previous = Product::where('id', '<', $product->id)->orderBy('id', 'desc')->first();
         $next = Product::where('id', '>', $product->id)->orderBy('id', 'asc')->first();
         $categories = Category::all();
-        return view('user.detail', compact('product', 'rproducts', 'previous', 'next','categories'));
+
+        // ✅ Reviews system
+        $reviews = $product->reviews()->latest()->get();
+        $averageRating = $product->reviews()->avg('rating');
+        $reviewCount = $product->reviews()->count();
+
+        return view('user.detail', compact(
+            'product',
+            'rproducts',
+            'previous',
+            'next',
+            'categories',
+            'reviews',
+            'averageRating',
+            'reviewCount'
+        ));
     }
+
 
 }

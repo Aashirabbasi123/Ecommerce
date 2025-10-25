@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
 
     <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}">
     <link rel="apple-touch-icon-precomposed" href="{{ asset('images/favicon.ico') }}">
@@ -40,6 +41,10 @@
                 max-width: 120px;
             }
         }
+
+        body {
+            font-family: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', sans-serif;
+        }
     </style>
 </head>
 
@@ -56,7 +61,7 @@
 
                 <div class="section-menu-left">
                     <div class="box-logo">
-                        <a href={{ route('admin.dashboard') }}id="logo_header" >
+                        <a href={{ route('admin.dashboard') }}id="logo_header">
                             <img src="{{ asset('images/logo2.png') }}" id="logo_header" alt="Logo">
                         </a>
                         <div class="button-show-hide">
@@ -197,8 +202,9 @@
                     <div class="header-dashboard">
                         <div class="wrap">
                             <div class="header-left">
-                                <a href="{{route('admin.dashboard')}}">
-                                    <img src="{{ asset('images/logo2.png') }}" id="logo_header" alt="Logo" width="150">
+                                <a href="{{ route('admin.dashboard') }}">
+                                    <img src="{{ asset('images/logo2.png') }}" id="logo_header" alt="Logo"
+                                        width="150">
                                 </a>
                                 <div class="button-show-hide">
                                     <i class="icon-menu-left"></i>
@@ -207,9 +213,9 @@
 
                                 <form class="form-search flex-grow">
                                     <fieldset class="name">
-                                        <input type="text" placeholder="Search here..." class="show-search" name="name"
-                                            id="search-input" tabindex="2" value="" aria-required="true" required=""
-                                            autocomplete="off">
+                                        <input type="text" placeholder="Search here..." class="show-search"
+                                            name="name" id="search-input" tabindex="2" value=""
+                                            aria-required="true" required="" autocomplete="off">
                                     </fieldset>
                                     <div class="button-submit">
                                         <button class="" type="submit"><i class="icon-search"></i></button>
@@ -295,7 +301,8 @@
                                             id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
                                             <span class="header-user wg-user">
                                                 <span class="image">
-                                                    <img src="{{ asset('assets/images/avatar/user-1.png') }}" alt="">
+                                                    <img src="{{ asset('assets/images/avatar/user-1.png') }}"
+                                                        alt="">
                                                 </span>
                                                 <span class="flex flex-column">
                                                     <span class="body-title mb-2">Admin</span>
@@ -373,8 +380,8 @@
     <script src="{{ asset('assets/js/apexcharts/apexcharts.js') }}"></script>
     <script src="{{ asset('assets/js/main.js') }}"></script>
     <script>
-        $(function () {
-            $("#search-input").on("keyup", function () {
+        $(function() {
+            $("#search-input").on("keyup", function() {
                 var searchQuery = $(this).val();
                 if (searchQuery.length > 2) {
                     $.ajax({
@@ -384,14 +391,14 @@
                             query: searchQuery
                         },
                         dataType: 'json',
-                        success: function (data) {
+                        success: function(data) {
                             $("#box-content-search").html("");
 
                             if (data.length === 0) {
                                 $("#box-content-search").append(`<li>No results found.</li>`);
                             }
 
-                            $.each(data, function (index, item) {
+                            $.each(data, function(index, item) {
                                 var url =
                                     "{{ route('admin.product.edit', ['id' => 'product_id']) }}";
                                 var link = url.replace('product_id', item.id);
@@ -413,7 +420,7 @@
                             `);
                             });
                         },
-                        error: function (xhr) {
+                        error: function(xhr) {
                             console.log("Error: ", xhr.responseText);
                         }
                     });

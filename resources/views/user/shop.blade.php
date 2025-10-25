@@ -3,125 +3,7 @@
 @section('content')
     @include('user.components.navbar')
     @stack('styles')
-    <style>
-        /* ===== Swiper Slide Border with Hover Effect ===== */
-        .swiper-slide .slide-split {
-            border: 4px solid #0077b6;
-            /* Ocean Blue */
-            border-radius: 14px;
-            /* Slightly more rounded */
-            overflow: hidden;
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-            /* No shadow initially */
-            background-color: #fff;
-            /* White bg for contrast */
-        }
-
-        .swiper-slide .slide-split:hover {
-            border-color: #0096c7;
-            /* Light aqua-blue hover */
-            transform: translateY(-6px);
-            box-shadow: 0 10px 25px rgba(0, 102, 153, 0.3);
-        }
-
-        /* ===== Quantity Input Group ===== */
-        .input-group {
-            display: inline-flex;
-            align-items: center;
-            border: 1.8px solid #ccc;
-            border-radius: 8px;
-            overflow: hidden;
-            width: 140px;
-            /* Slightly wider for comfort */
-            background-color: #fafafa;
-            box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.1);
-            transition: border-color 0.3s ease;
-        }
-
-        .input-group:focus-within {
-            border-color: #007bff;
-            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
-        }
-
-        .input-group button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 20px;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            user-select: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 42px;
-        }
-
-        .input-group button:hover {
-            background-color: #0056b3;
-        }
-
-        .quantity-input {
-            width: 60px;
-            border: none;
-            text-align: center;
-            font-size: 18px;
-            padding: 10px 0;
-            outline: none;
-            background-color: transparent;
-            font-weight: 600;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #333;
-            -moz-appearance: textfield;
-            /* Firefox: remove number input arrows */
-        }
-
-        .quantity-input::-webkit-inner-spin-button,
-        .quantity-input::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        /* Mobile first: chhoti screen ke liye base styles pehle se hain */
-
-        /* Medium screens (tablets) ke liye tweaks */
-        @media (min-width: 600px) {
-            .input-group {
-                width: 180px;
-                /* thoda aur wide */
-            }
-
-            .quantity-input {
-                width: 80px;
-                font-size: 20px;
-            }
-
-            .input-group button {
-                min-width: 50px;
-                font-size: 22px;
-            }
-        }
-
-        /* Large screens (desktops) ke liye */
-        @media (min-width: 992px) {
-            .input-group {
-                width: 220px;
-            }
-
-            .quantity-input {
-                width: 100px;
-                font-size: 22px;
-            }
-
-            .input-group button {
-                min-width: 60px;
-                font-size: 24px;
-            }
-        }
-    </style>
+<link rel="stylesheet" href="{{ asset('css/shop.css') }}" type="text/css" />
     <main class="pt-90">
         <section class="shop-main container d-flex pt-4 pt-xl-5">
             <div class="shop-sidebar side-sticky bg-body" id="shopFilter">
@@ -210,7 +92,7 @@
             </div>
 
             <div class="shop-list flex-grow-1">
-                <div class="swiper-container js-swiper-slider slideshow slideshow_small slideshow_split" data-settings='{
+                <div class="swiper-container js-swiper-slider slideshow slideshow_small" data-settings='{
                                                 "autoplay": {
                                                   "delay": 5000
                                                 },
@@ -239,7 +121,6 @@
                                         <p class="mb-0 animate animate_fade animate_btt animate_delay-5">
                                             Black Pomfret (Paplet) is a popular seafood fish with delicate flavor and soft
                                             meat.
-                                            Best enjoyed grilled, fried, or in spicy curries, rich in protein and omega-3.
                                         </p>
                                     </div>
                                 </div>
@@ -262,7 +143,7 @@
                                             class="text-uppercase section-title fw-normal mb-3 animate animate_fade animate_btt animate_delay-2">
                                             Juicy <br /><strong>PRAWNS</strong>
                                         </h2>
-                                        <p class="mb-0 animate animate_fade animate_btt animate_delay-5">
+                                        <p class="mb-0 animate animate_fade animate_btt animate_delay-5 w-100">
                                             Fresh prawns – tender, juicy and full of flavor.
                                             Perfect for grilling, sizzling platters, or cooked in spicy curry.
                                         </p>
@@ -301,82 +182,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Red Snapper Slide -->
-                        <div class="swiper-slide">
-                            <div class="slide-split h-100 d-block d-md-flex overflow-hidden">
-                                <div class="slide-split_text position-relative d-flex align-items-center"
-                                    style="background-color: #e6f0f5;">
-                                    <div class="slideshow-text container p-3 p-xl-5">
-                                        <h2
-                                            class="text-uppercase section-title fw-normal mb-3 animate animate_fade animate_btt animate_delay-2">
-                                            Grilled <br /><strong>RED SNAPPER</strong>
-                                        </h2>
-                                        <p class="mb-0 animate animate_fade animate_btt animate_delay-5">
-                                            Red Snapper is a flavorful fish, perfect for grilling with spices.
-                                            Firm texture and mild taste make it a true seafood favorite.
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="slide-split_media position-relative">
-                                    <div class="slideshow-bg" style="background-color: #e6f0f5;">
-                                        <img loading="lazy" src="images/shop/banner.jpg" width="630" height="450"
-                                            alt="Grilled Red Snapper" class="slideshow-bg__img object-fit-cover" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Crab Slide -->
-                        <div class="swiper-slide">
-                            <div class="slide-split h-100 d-block d-md-flex overflow-hidden">
-                                <div class="slide-split_text position-relative d-flex align-items-center"
-                                    style="background-color: #f5f0e6;">
-                                    <div class="slideshow-text container p-3 p-xl-5">
-                                        <h2
-                                            class="text-uppercase section-title fw-normal mb-3 animate animate_fade animate_btt animate_delay-2">
-                                            Fresh <br /><strong>CRAB</strong>
-                                        </h2>
-                                        <p class="mb-0 animate animate_fade animate_btt animate_delay-5">
-                                            Sweet, juicy crab meat served in butter garlic or masala.
-                                            A special seafood delicacy enjoyed worldwide.
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="slide-split_media position-relative">
-                                    <div class="slideshow-bg" style="background-color: #f5f0e6;">
-                                        <img loading="lazy" src="images/shop/banner.jpg" width="630" height="450"
-                                            alt="Fresh Crab" class="slideshow-bg__img object-fit-cover" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Calamari Slide -->
-                        <div class="swiper-slide">
-                            <div class="slide-split h-100 d-block d-md-flex overflow-hidden">
-                                <div class="slide-split_text position-relative d-flex align-items-center"
-                                    style="background-color: #eaf5f0;">
-                                    <div class="slideshow-text container p-3 p-xl-5">
-                                        <h2
-                                            class="text-uppercase section-title fw-normal mb-3 animate animate_fade animate_btt animate_delay-2">
-                                            Crispy <br /><strong>CALAMARI</strong>
-                                        </h2>
-                                        <p class="mb-0 animate animate_fade animate_btt animate_delay-5">
-                                            Calamari (Squid) fried golden, crunchy outside and tender inside.
-                                            Served with lemon wedges and tangy sauces.
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="slide-split_media position-relative">
-                                    <div class="slideshow-bg" style="background-color: #eaf5f0;">
-                                        <img loading="lazy" src="images/shop/banner.jpg" width="630" height="450"
-                                            alt="Crispy Calamari" class="slideshow-bg__img object-fit-cover" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
 
 

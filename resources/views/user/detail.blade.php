@@ -1,855 +1,7 @@
 @extends('user.components.master')
 @section('content')
     @include('user.components.navbar')
-    <style>
-        .discount-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: #e63946;
-            color: #fff;
-            padding: 5px 10px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            border-radius: 6px;
-            z-index: 5;
-        }
-
-        .avatar-circle {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: #007bff;
-            color: #fff;
-            font-weight: bold;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-transform: uppercase;
-        }
-
-        .product-single__addtocart,
-        .cart-or-guide-wrapper {
-            margin-top: 15px;
-        }
-
-        .btn-addtocart,
-        .btn-warning {
-            width: 100%;
-            max-width: 220px;
-            padding: 12px 20px;
-            font-weight: 600;
-            font-size: 14px;
-            display: block;
-            margin-top: 10px;
-            text-align: center;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-addtocart:hover,
-        .btn-warning:hover {
-            transform: scale(1.05);
-        }
-
-        .cart-or-guide-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-        }
-
-        /* Modal container */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow-y: auto;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .cutting-guide-link {
-            color: #0077be;
-            font-weight: 600;
-            text-decoration: none;
-            font-size: 14px;
-            display: inline-block;
-            margin-top: 10px;
-            cursor: pointer;
-            transition: text-decoration 0.3s ease;
-        }
-
-        .cutting-guide-link:hover {
-            text-decoration: underline;
-        }
-
-        .modal-content {
-            background-color: #fff;
-            margin: 5% auto;
-            padding: 20px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 800px;
-            position: relative;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Close button */
-        .close {
-            color: #aaa;
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-        }
-
-        /* Cutting images grid */
-        .modal-content>div>div {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 12px;
-            margin-top: 0px;
-        }
-
-        .cutting-image {
-            width: 100%;
-            height: auto;
-            border-radius: 6px;
-            object-fit: cover;
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Title below first image */
-        .image-title {
-            text-align: center;
-            font-weight: bold;
-            margin-top: 5px;
-            font-size: 14px;
-        }
-
-        .loader {
-            --s: 20px;
-            height: calc(var(--s)*0.9);
-            width: calc(var(--s)*5);
-            --v1: transparent, #000 0.5deg 108deg, #0000 109deg;
-            --v2: transparent, #000 0.5deg 36deg, #0000 37deg;
-            -webkit-mask:
-                conic-gradient(from 54deg at calc(var(--s)*0.68) calc(var(--s)*0.57), var(--v1)),
-                conic-gradient(from 90deg at calc(var(--s)*0.02) calc(var(--s)*0.35), var(--v2)),
-                conic-gradient(from 126deg at calc(var(--s)*0.5) calc(var(--s)*0.7), var(--v1)),
-                conic-gradient(from 162deg at calc(var(--s)*0.5) 0, var(--v2));
-            -webkit-mask-size: var(--s) var(--s);
-            -webkit-mask-composite: xor, destination-over;
-            mask-composite: exclude, add;
-            -webkit-mask-repeat: repeat-x;
-            background: linear-gradient(#ffb940 0 0) left/0% 100% #ddd no-repeat;
-            animation: l20 8s infinite linear;
-        }
-
-        .product-single__image {
-            width: 100%;
-            max-width: 100%;
-            overflow: hidden;
-        }
-
-        .product-single__image img {
-            width: 100%;
-            height: auto;
-            display: block;
-            object-fit: cover;
-        }
-
-        @media (max-width: 768px) {
-            .product-single__image {
-                padding: 0 10px;
-            }
-
-            .product-single__image img {
-                height: auto;
-            }
-        }
-
-        @keyframes l20 {
-
-            90%,
-            100% {
-                background-size: 100% 100%
-            }
-        }
-
-        /* 📱 Small screens (mobiles) */
-        @media screen and (max-width: 576px) {
-            .avatar-circle {
-                width: 40px;
-                height: 40px;
-                font-size: 16px;
-            }
-
-            .btn-addtocart,
-            .btn-warning {
-                max-width: 100%;
-                font-size: 13px;
-                padding: 10px 15px;
-            }
-
-            .cart-or-guide-wrapper {
-                align-items: center;
-            }
-
-            .modal-content {
-                width: 95%;
-                padding: 15px;
-                margin-top: 18%;
-            }
-
-            .modal-content>div>div {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            }
-
-            .image-title {
-                font-size: 12px;
-            }
-        }
-
-        /* 📱 Tablets */
-        @media screen and (min-width: 577px) and (max-width: 992px) {
-            .avatar-circle {
-                width: 45px;
-                height: 45px;
-                font-size: 18px;
-            }
-
-            .btn-addtocart,
-            .btn-warning {
-                max-width: 180px;
-                font-size: 13px;
-            }
-
-            .modal-content {
-                width: 90%;
-            }
-        }
-
-        /* 💻 Desktops */
-        @media screen and (min-width: 993px) {
-            .avatar-circle {
-                width: 50px;
-                height: 50px;
-                font-size: 20px;
-            }
-
-            .btn-addtocart,
-            .btn-warning {
-                max-width: 220px;
-                font-size: 14px;
-            }
-        }
-
-        /* ===== Container & General ===== */
-        .product-single__addtolinks {
-            margin-bottom: 25px;
-            display: flex;
-            gap: 15px;
-        }
-
-        .product-single__addtolinks form {
-            margin: 0;
-        }
-
-        .menu-link.filled-heart {
-            color: orange !important;
-            border-color: orange !important;
-        }
-
-        .menu-link.filled-heart:hover {
-            background-color: orange !important;
-            color: white !important;
-        }
-
-        /* ===== Meta Info Section ===== */
-        .product-single__meta-info {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            font-size: 0.95rem;
-            color: #555;
-            border-top: 1px solid #eee;
-            border-bottom: 1px solid #eee;
-            padding: 15px 0;
-            margin-bottom: 30px;
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            min-width: 150px;
-        }
-
-        .meta-item label {
-            font-weight: 700;
-            color: #333;
-            min-width: 85px;
-        }
-
-        .review-star {
-            width: 16px;
-            height: 16px;
-            fill: black;
-        }
-
-        /* ===== Tabs ===== */
-        .product-single__detailpages-tab {
-            margin-top: 30px;
-        }
-
-        .nav-tabs {
-            display: flex;
-            border-bottom: 2px solid #ddd;
-            margin-bottom: 0;
-        }
-
-        .nav-tabs .nav-item {
-            margin-bottom: -2px;
-        }
-
-        .nav-tabs .nav-link {
-            color: #333;
-            padding: 10px 20px;
-            border: 1px solid transparent;
-            border-bottom: none;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        .nav-tabs .nav-link:hover {
-            background-color: #f5f5f5;
-            color: #0d6efd;
-        }
-
-        .nav-tabs .nav-link.active {
-            color: #0d6efd;
-            border-color: #ddd #ddd white;
-            background-color: white;
-            border-radius: 5px 5px 0 0;
-        }
-
-        .thumbnail-slider .swiper-slide img {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 6px;
-            border: 1px solid #eee;
-        }
-
-        /* Tab content area */
-        .tab-content {
-            border: 1px solid #ddd;
-            border-top: none;
-            padding: 25px 20px;
-            background-color: #fff;
-            border-radius: 0 5px 5px 5px;
-            min-height: 280px;
-        }
-
-        /* ===== Description ===== */
-        .product-single__description {
-            color: #444;
-        }
-
-        .product-single__tittle {
-            margin-top: 0;
-            margin-bottom: 15px;
-            font-weight: 700;
-            font-size: 1.8rem;
-            color: #222;
-        }
-
-        .product-single__description p.content {
-            line-height: 1.6;
-            font-size: 1rem;
-        }
-
-        /* ===== Reviews ===== */
-        .product-single__reviews-title {
-            font-size: 1.6rem;
-            font-weight: 700;
-            margin-bottom: 25px;
-            color: #222;
-        }
-
-        .product-single__reviews-list {
-            max-height: 400px;
-            overflow-y: auto;
-            margin-bottom: 30px;
-            padding-right: 10px;
-            border-top: 1px solid #eee;
-            border-bottom: 1px solid #eee;
-        }
-
-        .product-single__reviews-item {
-            display: flex;
-            gap: 15px;
-            padding: 15px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .customer-avatar .avatar-circle {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: #0d6efd;
-            color: white;
-            font-weight: 700;
-            font-size: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            user-select: none;
-            text-transform: uppercase;
-        }
-
-        .customer-review {
-            flex-grow: 1;
-        }
-
-        .customer-name h6 {
-            margin: 0 0 8px 0;
-            font-weight: 700;
-            font-size: 1.15rem;
-            color: #0d6efd;
-        }
-
-        .reviews-group {
-            display: flex;
-            gap: 4px;
-            margin-bottom: 8px;
-        }
-
-        .review-star {
-            width: 18px;
-            height: 18px;
-        }
-
-        .review-date {
-            font-size: 0.85rem;
-            color: #777;
-            margin-bottom: 10px;
-        }
-
-        .review-text p {
-            margin: 0;
-            font-size: 1rem;
-            line-height: 1.4;
-            color: #333;
-        }
-
-        /* ===== Review Form ===== */
-        .product-single__review-form h5 {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: #222;
-        }
-
-        .product-single__review-form p {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .select-star-rating label {
-            font-weight: 600;
-            margin-bottom: 6px;
-            display: block;
-            font-size: 1rem;
-        }
-
-        .select-star-rating select {
-            width: 100%;
-            padding: 10px 12px;
-            font-size: 1rem;
-            border-radius: 6px;
-            border: 1.5px solid #ccc;
-            appearance: none;
-            background: white url("data:image/svg+xml;utf8,<svg fill='%23666' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>") no-repeat right 15px center;
-            background-size: 14px;
-            cursor: pointer;
-        }
-
-        .mb-4 {
-            margin-bottom: 1.5rem !important;
-        }
-
-        textarea.form-control {
-            width: 100%;
-            padding: 12px 15px;
-            font-size: 1rem;
-            border-radius: 6px;
-            border: 1.5px solid #ccc;
-            resize: vertical;
-            font-family: inherit;
-            color: #333;
-            transition: border-color 0.3s ease;
-        }
-
-        textarea.form-control:focus {
-            border-color: #0d6efd;
-            outline: none;
-        }
-
-        .thumbnail-slider {
-            /* max-height: 400px; */
-            /* ya jitni height mein sab thumbnails aa jayein */
-            /* overflow-y: auto; */
-        }
-
-        .form-label-fixed label {
-            font-weight: 600;
-            margin-bottom: 6px;
-            display: block;
-            font-size: 1rem;
-            color: #333;
-        }
-
-        .form-label-fixed input {
-            width: 100%;
-            padding: 10px 12px;
-            font-size: 1rem;
-            border-radius: 6px;
-            border: 1.5px solid #ccc;
-            font-family: inherit;
-            color: #333;
-            transition: border-color 0.3s ease;
-            box-sizing: border-box;
-        }
-
-        .form-label-fixed input:focus {
-            border-color: #0d6efd;
-            outline: none;
-        }
-
-        .form-action {
-            margin-top: 20px;
-        }
-
-        .form-action button.btn {
-            background-color: #0d6efd;
-            border: none;
-            color: white;
-            font-weight: 700;
-            font-size: 1.1rem;
-            padding: 12px 25px;
-            border-radius: 6px;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.3s ease;
-        }
-
-        .form-action button.btn:hover {
-            background-color: #084cd6;
-        }
-
-        /* ===== Responsive ===== */
-        @media (max-width: 768px) {
-            .product-single__addtolinks {
-                flex-direction: column;
-            }
-
-            .product-single__meta-info {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .nav-tabs {
-                flex-wrap: wrap;
-            }
-
-            .tab-content {
-                min-height: auto;
-            }
-
-            .product-single__reviews-list {
-                max-height: 300px;
-                padding-right: 5px;
-            }
-        }
-
-        /* Make sure slider container shows overflow */
-        .product-single__media .swiper-container,
-        .product-single__media .swiper-wrapper {
-            overflow: visible !important;
-        }
-
-        /* Slides ki width / image fit achhi ho */
-        .product-single__image-item img {
-            width: 100%;
-            height: auto;
-            object-fit: contain;
-            display: block;
-        }
-
-        /* Ensure active slide over other slides when overflow */
-        .swiper-slide {
-            position: relative;
-        }
-
-        .swiper-slide-active,
-        .swiper-slide-next,
-        .swiper-slide-prev {
-            z-index: 10;
-        }
-
-        /* If parent `.product-single__media` had overflow hidden, override it */
-        .product-single__media {
-            overflow: visible !important;
-        }
-
-        .thumbnail-slider {
-            display: flex;
-            flex-direction: row;
-            gap: 10px;
-            flex-wrap: nowrap;
-            overflow-x: auto;
-        }
-
-        .thumbnail-slider img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            flex-shrink: 0;
-            border-radius: 6px;
-        }
-
-        /* Mobile View */
-        @media (max-width: 768px) {
-            .thumbnail-slider {
-                flex-direction: column !important;
-            }
-
-            .thumbnail-slider img {
-                width: 80px;
-                height: 80px;
-            }
-        }
-
-        .main-slider {
-            width: 100%;
-            height: auto;
-            max-height: 500px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .main-slider .swiper-slide img {
-            width: 100%;
-            height: auto;
-            object-fit: contain;
-            display: block;
-        }
-
-        .product-single__media,
-        .product-single__media .swiper-container,
-        .product-single__media .swiper-wrapper {
-            overflow: visible !important;
-        }
-
-        /* ================== Navbar Fix ================== */
-        .navbar {
-            width: 100%;
-            overflow-x: hidden;
-        }
-
-        .navbar-nav {
-            flex-wrap: wrap;
-        }
-
-        .navbar-toggler {
-            border: none;
-            background: transparent;
-        }
-
-        .navbar-collapse {
-            width: 100%;
-        }
-
-        /* ================== Image Overflow Fix ================== */
-        .product-single__image,
-        .product-single__media {
-            max-width: 100%;
-            overflow: hidden;
-        }
-
-        .product-single__image img,
-        .main-slider .swiper-slide img,
-        .thumbnail-slider img {
-            max-width: 100%;
-            height: auto;
-            object-fit: contain;
-            display: block;
-        }
-
-        /* Thumbnail Slider Row */
-        .thumbnail-slider {
-            display: flex;
-            flex-direction: row;
-            gap: 10px;
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .thumbnail-slider img {
-            width: 80px;
-            height: 80px;
-            border-radius: 6px;
-            flex-shrink: 0;
-        }
-
-        /* ================== Responsive Fix ================== */
-        @media (max-width: 768px) {
-            .thumbnail-slider {
-                flex-direction: row;
-                overflow-x: auto;
-            }
-
-            .thumbnail-slider img {
-                width: 70px;
-                height: 70px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .navbar-nav {
-                text-align: center;
-            }
-
-            .thumbnail-slider img {
-                width: 60px;
-                height: 60px;
-            }
-        }
-
-        /* ✅ Extra Safety */
-        html,
-        body {
-            overflow-x: hidden !important;
-            max-width: 100%;
-        }
-
-        /* ================== SIMPLIFIED SLIDER STYLES ================== */
-        .product-single__media {
-            position: relative;
-            max-width: 100%;
-        }
-
-        .main-slider {
-            width: 100%;
-            height: 400px;
-            position: relative;
-            overflow: hidden;
-            border-radius: 10px;
-        }
-
-        .main-slider .swiper-slide {
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f8f9fa;
-        }
-
-        .zoom-container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            cursor: crosshair;
-        }
-
-        .zoom-image {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            transition: transform 0.1s ease;
-            transform-origin: center center;
-        }
-
-        /* Simple thumbnail slider */
-        .product-single__thumbnail {
-            margin-top: 15px;
-        }
-
-        .thumbnail-slider {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding: 10px 0;
-            justify-content: center;
-        }
-
-        .thumbnail-slider .swiper-slide {
-            width: 80px;
-            height: 80px;
-            flex-shrink: 0;
-            cursor: pointer;
-            border: 2px solid transparent;
-            border-radius: 6px;
-            overflow: hidden;
-            opacity: 0.6;
-            transition: all 0.3s ease;
-        }
-
-        .thumbnail-slider .swiper-slide:hover,
-        .thumbnail-slider .swiper-slide-thumb-active {
-            border-color: #007bff;
-            opacity: 1;
-        }
-
-        .thumbnail-slider .swiper-slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Simple navigation */
-        .swiper-button-next,
-        .swiper-button-prev {
-            background: rgba(255, 255, 255, 0.9);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .swiper-button-next:after,
-        .swiper-button-prev:after {
-            font-size: 16px;
-            color: #333;
-            font-weight: bold;
-        }
-
-        .swiper-button-next:hover,
-        .swiper-button-prev:hover {
-            background: rgba(255, 255, 255, 1);
-        }
-    </style>
-
+    <link rel="stylesheet" href="{{ asset('css/detail.css') }}" type="text/css" />
     <main class="pt-90">
         <div class="mb-md-1 pb-md-3"></div>
         <section class="product-single container">
@@ -860,7 +12,9 @@
                         @php
                             $discount = 0;
                             if ($product->sale_price && $product->sale_price < $product->regular_price) {
-                                $discount = round((($product->regular_price - $product->sale_price) / $product->regular_price) * 100);
+                                $discount = round(
+                                    (($product->regular_price - $product->sale_price) / $product->regular_price) * 100,
+                                );
                             }
                         @endphp
 
@@ -875,9 +29,7 @@
                                         @endif
                                         <div class="zoom-container">
                                             <img src="{{ asset('uploads/product/' . $product->image) }}"
-                                                 alt="{{ $product->name }}"
-                                                 class="zoom-image"
-                                                 data-zoomable="true">
+                                                alt="{{ $product->name }}" class="zoom-image" data-zoomable="true">
                                         </div>
                                     </div>
 
@@ -891,57 +43,54 @@
                                                 @endif
                                                 <div class="zoom-container">
                                                     <img src="{{ asset('uploads/product/' . $imageFile) }}"
-                                                         alt="{{ $product->name }}"
-                                                         class="zoom-image"
-                                                         data-zoomable="true">
+                                                        alt="{{ $product->name }}" class="zoom-image" data-zoomable="true">
                                                 </div>
                                             </div>
                                         @endif
                                     @endforeach
                                 </div>
 
-                                <!-- Simple Navigation -->
+                                <!-- Swiper Navigation -->
                                 <div class="swiper-button-next">
-                                    <svg width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
+                                    <svg width="12" height="12" viewBox="0 0 12 12"
+                                        xmlns="http://www.w3.org/2000/svg">
                                         <use href="#icon_next_sm" />
                                     </svg>
                                 </div>
                                 <div class="swiper-button-prev">
-                                    <svg width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
+                                    <svg width="12" height="12" viewBox="0 0 12 12"
+                                        xmlns="http://www.w3.org/2000/svg">
                                         <use href="#icon_prev_sm" />
                                     </svg>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- SIMPLIFIED THUMBNAILS -->
-                        <div class="product-single__thumbnail">
-                            <div class="swiper thumbnail-slider">
-                                <div class="swiper-wrapper">
-                                    <div class="swiper-slide">
-                                        <img loading="lazy"
-                                             src="{{ asset('uploads/product/' . $product->image) }}"
-                                             alt="{{ $product->name }}">
+                            {{-- Thumbnail Slider --}}
+                            <div class="product-single__thumbnail">
+                                <div class="swiper thumbnail-slider">
+                                    <div class="swiper-wrapper">
+                                        <div class="swiper-slide">
+                                            <img src="{{ asset('uploads/product/' . $product->image) }}"
+                                                alt="{{ $product->name }}">
+                                        </div>
+                                        @foreach (explode(',', $product->images ?? '') as $imageFile)
+                                            @php $imageFile = trim($imageFile); @endphp
+                                            @if (!empty($imageFile))
+                                                <div class="swiper-slide">
+                                                    <img src="{{ asset('uploads/product/' . $imageFile) }}"
+                                                        alt="{{ $product->name }}">
+                                                </div>
+                                            @endif
+                                        @endforeach
                                     </div>
-                                    @foreach (explode(',', $product->images ?? '') as $imageFile)
-                                        @php $imageFile = trim($imageFile); @endphp
-                                        @if (!empty($imageFile))
-                                            <div class="swiper-slide">
-                                                <img loading="lazy"
-                                                     src="{{ asset('uploads/product/' . $imageFile) }}"
-                                                     alt="{{ $product->name }}">
-                                            </div>
-                                        @endif
-                                    @endforeach
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
                 <div class="col-lg-5">
-                    <div class="d-flex justify-content-between mb-4 pb-md-2">
+                    <div class="d-flex justify-content-between mb-1 pb-md-1">
                         <div class="breadcrumb mb-0 d-none d-md-block flex-grow-1">
                             <a href="{{ route('dashboard') }}"
                                 class="menu-link menu-link_us-s text-uppercase fw-medium">Home</a>
@@ -956,7 +105,8 @@
                             @if ($previous)
                                 <a href="{{ route('detailpage', ['product_slug' => $previous->slug]) }}"
                                     class="text-uppercase fw-medium">
-                                    <svg width="10" height="10" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg">
+                                    <svg width="10" height="10" viewBox="0 0 25 25"
+                                        xmlns="http://www.w3.org/2000/svg">
                                         <use href="#icon_prev_md" />
                                     </svg>
                                     <span class="menu-link menu-link_us-s">Prev</span>
@@ -980,11 +130,29 @@
                     <h1 class="product-single__name">{{ $product->name }}</h1>
 
                     <div class="product-single__rating">
-                        <div class="loader"></div>
-                        <span class="reviews-note text-secondary ms-1">
-                            Reviews
+                        @php
+                            $roundedRating = round($averageRating ?? 0, 1);
+                            $filledStars = floor($roundedRating);
+                            $halfStar = $roundedRating - $filledStars >= 0.5;
+                        @endphp
+
+                        <div class="star-display" style="font-size: 22px; color: #FFD700;">
+                            @for ($i = 1; $i <= 5; $i++)
+                                @if ($i <= $filledStars)
+                                    ★
+                                @elseif ($halfStar && $i == $filledStars + 1)
+                                    <span style="color: #ccc;">★</span>
+                                @else
+                                    <span style="color: #ccc;">☆</span>
+                                @endif
+                            @endfor
+                        </div>
+
+                        <span class="reviews-note text-secondary ms-2">
+                            {{ $roundedRating }}/5 ({{ $reviewCount }} Reviews)
                         </span>
                     </div>
+
                     <div class="product-single__price">
                         <span class="current-price">
                             @if ($product->sale_price)
@@ -1006,13 +174,19 @@
                         $cuttingOptions = json_decode($product->cutting_options ?? '[]', true);
 
                         $optionLabels = [
-                            'whole_uncleaned' => 'Whole & Uncleaned',
-                            'whole_gutted' => 'Whole & Gutted',
-                            'headless_gutted' => 'Headless & Gutted',
-                            'slices_with_skin_bone' => 'Slices with Skin & Centre Bone',
-                            'boneless_biscuits' => 'Boneless Biscuits',
-                            'boneless_fillet' => 'Boneless Fillet',
-                            'boneless_fingers' => 'Boneless Fingers',
+                            'whole_uncleaned' => 'Whole & Uncleaned - ثابت (بغیر صفائی کے)',
+                            'whole_gutted' => 'Whole & Gutted - مکمل (صاف شدہ)',
+                            'headless_gutted' => 'Headless & Gutted - بغیر سر کے (صاف شدہ)',
+                            'slices_with_skin_bone' => 'Slices with Skin & Centre Bone - ٹکڑے (چمڑی اور ہڈی سمیت)',
+                            'boneless_biscuits' => 'Boneless Biscuits - بغیر ہڈی کے بسکٹ کٹ',
+                            'boneless_fillet' => 'Boneless Fillet - بغیر ہڈی کے فلٹ',
+                            'boneless_fingers' => 'Boneless Fingers - بغیر ہڈی کے فنگرز',
+                            'headless_but_shell_on' => 'Headless but shell on - بغیر سر کے مگر چھلکے سمیت',
+                            'peeled_and_Deveined_with_tail_on' =>
+                                'Peeled and Deveined with tail on - چھلا ہوا اور صاف شدہ (دم سمیت)',
+                            'fully_Peeled_and_Deveined' =>
+                                'Fully Peeled and Deveined - مکمل طور پر چھلا ہوا اور صاف شدہ',
+                            'tempura_Cut_Prawns' => 'Tempura Cut Prawns - ٹیمپورا کٹ جھینگے',
                         ];
 
                         $optionPrices = [
@@ -1029,21 +203,31 @@
                     <form name="addtocart-form" method="post" action="{{ route('add.cart') }}">
                         @csrf
                         <div class="cutting-option mb-3">
-                            <h4>Cutting Option
-                                <a href="#" id="openModalBtn" class="cutting-guide-link" style="margin-left: 10px;">Cutting
-                                    Guide</a>
+                            <h4>
+                                Cutting Option
+                                <a href="#" id="openModalBtn" class="cutting-guide-link" style="margin-left: 10px;">
+                                    Cutting Guide
+                                </a>
                             </h4>
+
                             <select class="form-control" id="cuttingOption" name="cutting_option" required>
                                 <option value="">Choose an option</option>
+
                                 @foreach ($cuttingOptions as $option)
-                                    @if(isset($optionLabels[$option]))
-                                        <option value="{{ $option }}" data-price="{{ $optionPrices[$option] }}">
-                                            {{ $optionLabels[$option] }}
+                                    @if (isset($optionLabels[$option]))
+                                        <option value="{{ $option }}"
+                                            data-price="{{ $optionPrices[$option] ?? 0 }}">
+                                            {!! $optionLabels[$option] !!}
+                                        </option>
+                                    @else
+                                        {{-- fallback in case label missing --}}
+                                        <option value="{{ $option }}">{{ ucfirst(str_replace('_', ' ', $option)) }}
                                         </option>
                                     @endif
                                 @endforeach
                             </select>
                         </div>
+
 
                         <div class="product-single__addtocart">
                             <div class="qty-control position-relative" style="display: inline-block; position: relative;">
@@ -1073,7 +257,8 @@
                             <h2>Cutting Guide</h2>
                             <div>
                                 <div>
-                                    <img src="/images/cuttingGuide/new1.jpg" class="cutting-image" alt="Whole & Uncleaned">
+                                    <img src="/images/cuttingGuide/new1.jpg" class="cutting-image"
+                                        alt="Whole & Uncleaned">
                                     <div>
                                         <img src="/images/cuttingGuide/new.jpg" class="cutting-image"
                                             alt="Whole & Uncleaned">
@@ -1111,8 +296,8 @@
                             <a href="javascript:void(0)" class="menu-link menu-link_us-s add-to-wishlist filled-heart"
                                 style="color:orange;" onclick="document.getElementById('remove-wishlist-frm').submit();">
 
-                                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"
-                                    style="margin-right: 6px;">
+                                <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg" style="margin-right: 6px;">
                                     <use href="#icon_heart" />
                                 </svg>
 
@@ -1126,11 +311,12 @@
                             <input type="hidden" name="name" value="{{ $product->name }}">
                             <input type="hidden" name="quantity" value="3">
                             <input type="hidden" name="image" value="{{ $product->image }}">
-                            <input type="hidden" name="price" value="{{ $product->sale_price ?? $product->regular_price }}">
+                            <input type="hidden" name="price"
+                                value="{{ $product->sale_price ?? $product->regular_price }}">
                             <a href="javascript:void(0)" class="menu-link menu-link_us-s add-to-wishlist"
                                 onclick="document.getElementById('wishlist-form').submit();">
-                                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"
-                                    style="margin-right: 6px;">
+                                <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg" style="margin-right: 6px;">
                                     <use href="#icon_heart" />
                                 </svg>
                                 <span>Add to Wishlist</span>
@@ -1186,7 +372,6 @@
                     <!-- Reviews Tab -->
                     <div class="tab-pane fade" id="tab-reviews" role="tabpanel" aria-labelledby="tab-reviews-tab">
                         <h2 class="product-single__reviews-title">Reviews</h2>
-
                         <!-- Dynamic Reviews List -->
                         <div class="product-single__reviews-list">
                             @forelse($product->reviews as $review)
@@ -1201,7 +386,8 @@
                                         <div class="customer-name">
                                             <h6>{{ $review->name }}</h6>
                                             <div class="reviews-group d-flex">
-                                                @for ($i = 1; $i <= 5; $i++) <svg class="review-star" viewBox="0 0 9 9"
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    <svg class="review-star" viewBox="0 0 9 9"
                                                         xmlns="http://www.w3.org/2000/svg"
                                                         style="fill: {{ $i <= $review->rating ? '#ffc107' : '#ccc' }};">
                                                         <use href="#icon_star" />
@@ -1228,22 +414,31 @@
                                 <p>Your email address will not be published. Required fields are marked *</p>
 
                                 <!-- Rating -->
-                                <div class="select-star-rating">
-                                    <label>Your rating *</label>
-                                    <select name="rating" class="form-control" required>
-                                        <option value="">Select Rating</option>
-                                        <option value="5">★★★★★</option>
-                                        <option value="4">★★★★☆</option>
-                                        <option value="3">★★★☆☆</option>
-                                        <option value="2">★★☆☆☆</option>
-                                        <option value="1">★☆☆☆☆</option>
-                                    </select>
+                                <div class="rating-container">
+                                    <label>Your Rating *</label>
+                                    <div class="star-rating">
+                                        <input type="radio" id="star5" name="rating" value="5" required />
+                                        <label for="star5">★</label>
+
+                                        <input type="radio" id="star4" name="rating" value="4" />
+                                        <label for="star4">★</label>
+
+                                        <input type="radio" id="star3" name="rating" value="3" />
+                                        <label for="star3">★</label>
+
+                                        <input type="radio" id="star2" name="rating" value="2" />
+                                        <label for="star2">★</label>
+
+                                        <input type="radio" id="star1" name="rating" value="1" />
+                                        <label for="star1">★</label>
+                                    </div>
                                 </div>
+
 
                                 <!-- Review -->
                                 <div class="mb-4">
-                                    <textarea name="review" class="form-control form-control_gray" placeholder="Your Review"
-                                        cols="30" rows="8" required></textarea>
+                                    <textarea name="review" class="form-control form-control_gray" placeholder="Your Review" cols="30"
+                                        rows="8" required></textarea>
                                 </div>
 
                                 <!-- Name -->
@@ -1302,14 +497,18 @@
                             @php
                                 $discount = 0;
                                 if ($rproduct->sale_price && $rproduct->sale_price < $rproduct->regular_price) {
-                                    $discount = round((($rproduct->regular_price - $rproduct->sale_price) / $rproduct->regular_price) * 100);
+                                    $discount = round(
+                                        (($rproduct->regular_price - $rproduct->sale_price) /
+                                            $rproduct->regular_price) *
+                                            100,
+                                    );
                                 }
                             @endphp
 
                             <div class="swiper-slide product-card">
                                 <div class="pc__img-wrapper position-relative">
                                     {{-- Discount Badge --}}
-                                    @if($discount > 0)
+                                    @if ($discount > 0)
                                         <div class="discount-badge"
                                             style="position:absolute; top:10px; left:10px; background:red; color:white; padding:5px 10px; font-weight:bold; border-radius:4px; z-index:5;">
                                             -{{ $discount }}%
@@ -1317,13 +516,14 @@
                                     @endif
 
                                     <a href="{{ route('detailpage', ['product_slug' => $rproduct->slug]) }}">
-                                        <img loading="lazy" src="{{ asset('uploads/product/' . $rproduct->image) }}" width="330"
-                                            height="400" alt="{{ $rproduct->name }}" class="pc__img">
+                                        <img loading="lazy" src="{{ asset('uploads/product/' . $rproduct->image) }}"
+                                            width="330" height="400" alt="{{ $rproduct->name }}" class="pc__img">
 
                                         @foreach (explode(',', $rproduct->images ?? '') as $imageFile)
                                             @if (!empty($imageFile))
-                                                <img loading="lazy" src="{{ asset('uploads/product/' . $imageFile) }}" width="330"
-                                                    height="400" alt="{{ $rproduct->name }}" class="pc__img pc__img-second">
+                                                <img loading="lazy" src="{{ asset('uploads/product/' . $imageFile) }}"
+                                                    width="330" height="400" alt="{{ $rproduct->name }}"
+                                                    class="pc__img pc__img-second">
                                             @endif
                                         @endforeach
                                     </a>
@@ -1362,7 +562,8 @@
                                     {{-- ✅ Price Section --}}
                                     <div class="product-card__price">
                                         @if ($rproduct->sale_price && $rproduct->sale_price < $rproduct->regular_price)
-                                            <span class="money price price-old text-muted" style="text-decoration: line-through;">
+                                            <span class="money price price-old text-muted"
+                                                style="text-decoration: line-through;">
                                                 Rs{{ $rproduct->regular_price }}
                                             </span>
                                             <span class="money price text-danger fw-bold">
@@ -1437,7 +638,12 @@
                 const container = img.parentElement;
 
                 img.addEventListener('mousemove', function(e) {
-                    const { left, top, width, height } = container.getBoundingClientRect();
+                    const {
+                        left,
+                        top,
+                        width,
+                        height
+                    } = container.getBoundingClientRect();
                     const x = (e.clientX - left) / width;
                     const y = (e.clientY - top) / height;
 
@@ -1446,7 +652,8 @@
                     const translateX = (0.5 - x) * 100;
                     const translateY = (0.5 - y) * 100;
 
-                    img.style.transform = `scale(${zoomLevel}) translate(${translateX}%, ${translateY}%)`;
+                    img.style.transform =
+                        `scale(${zoomLevel}) translate(${translateX}%, ${translateY}%)`;
                     img.style.transition = 'transform 0.1s ease';
                 });
 
@@ -1472,15 +679,15 @@
             const span = document.getElementById("closeModalBtn");
 
             if (btn && modal && span) {
-                btn.onclick = function () {
+                btn.onclick = function() {
                     modal.style.display = "block";
                 }
 
-                span.onclick = function () {
+                span.onclick = function() {
                     modal.style.display = "none";
                 }
 
-                window.onclick = function (event) {
+                window.onclick = function(event) {
                     if (event.target == modal) {
                         modal.style.display = "none";
                     }
@@ -1492,33 +699,10 @@
             const btnIncrease = document.querySelector(".qty-control__increase");
             const btnDecrease = document.querySelector(".qty-control__reduce");
 
-            if (qtyInput && btnIncrease && btnDecrease) {
-                btnIncrease.addEventListener("click", function () {
-                    let current = parseInt(qtyInput.value) || 3;
-                    qtyInput.value = current + 3;
-                });
-
-                btnDecrease.addEventListener("click", function () {
-                    let current = parseInt(qtyInput.value) || 3;
-                    if (current > 3) {
-                        qtyInput.value = current - 3;
-                    } else {
-                        qtyInput.value = 3;
-                    }
-                });
-
-                qtyInput.addEventListener("input", function () {
-                    let current = parseInt(qtyInput.value);
-                    if (isNaN(current) || current < 3) {
-                        qtyInput.value = 3;
-                    }
-                });
-            }
-
             // Add to cart form validation
             const addToCartForm = document.querySelector('form[name="addtocart-form"]');
             if (addToCartForm) {
-                addToCartForm.addEventListener("submit", function (e) {
+                addToCartForm.addEventListener("submit", function(e) {
                     let cuttingOption = document.getElementById("cuttingOption").value;
                     if (cuttingOption === "") {
                         e.preventDefault();

@@ -70,14 +70,13 @@ class ProductController extends Controller
             $product->images = implode(',', $gallery);
         }
 
-        // ✅ ADD THIS BLOCK HERE
+
         if ($request->has('cutting_options')) {
-            $product->cutting_options = json_encode($request->cutting_options);
+            $product->cutting_options = json_encode($request->cutting_options, JSON_UNESCAPED_UNICODE);
         } else {
             $product->cutting_options = json_encode([]);
         }
 
-        // ✅ Now Save
         $product->save();
 
         return redirect()->route('admin.products')->with('status', 'Product Added Successfully!');
@@ -208,4 +207,27 @@ class ProductController extends Controller
         $image->move($uploadPath, $fileName);
         return $fileName;
     }
+    public function addReview(Request $request, $id)
+    {
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'review' => 'required|string',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+        ]);
+
+        // Save review in "reviews" table
+        \DB::table('reviews')->insert([
+            'product_id' => $id,
+            'name' => $request->name,
+            'email' => $request->email,
+            'rating' => $request->rating,
+            'review' => $request->review,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return back()->with('success', 'Thank you for your review!');
+    }
+
 }

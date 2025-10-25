@@ -3,7 +3,7 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
-use App\Http\Controllers\productController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
@@ -82,13 +82,13 @@ Route::put('/admin/category/update/{id}', [CategoryController::class, 'update_ca
 Route::get('/admin/category/{id}/delete', [CategoryController::class, 'delete_category'])->name('admin.category.delete');
 Route::delete('/admin/category/{id}/delete', [CategoryController::class, 'delete_category'])->name('admin.category.delete');
 ///-----------------Product Routes --------------------------------\\\\
-Route::get('/admin/products', [productController::class, 'products'])->name('admin.products');
-Route::get('/admin/add_product', [productController::class, 'add_product'])->name('admin.add_product');
-Route::post('/admin/product/store', [productController::class, 'product_store'])->name('admin.product.store');
-Route::get('/admin/product/edit/{id}', [productController::class, 'product_edit'])->name('admin.product.edit');
-Route::put('/admin/product/update/{id}', [productController::class, 'update_product'])->name('admin.product.update');
-Route::get('/admin/product/{id}/delete', [productController::class, 'delete_product'])->name('admin.product.delete');
-Route::delete('/admin/product/{id}/delete', [productController::class, 'delete_product'])->name('admin.product.delete');
+Route::get('/admin/products', [ProductController::class, 'products'])->name('admin.products');
+Route::get('/admin/add_product', [ProductController::class, 'add_product'])->name('admin.add_product');
+Route::post('/admin/product/store', [ProductController::class, 'product_store'])->name('admin.product.store');
+Route::get('/admin/product/edit/{id}', [ProductController::class, 'product_edit'])->name('admin.product.edit');
+Route::put('/admin/product/update/{id}', [ProductController::class, 'update_product'])->name('admin.product.update');
+Route::get('/admin/product/{id}/delete', [ProductController::class, 'delete_product'])->name('admin.product.delete');
+Route::delete('/admin/product/{id}/delete', [ProductController::class, 'delete_product'])->name('admin.product.delete');
 Route::post('/product/{id}/review', [ProductController::class, 'addReview'])->name('product.addReview');
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
 /////--------------=============----Shop Page -------------==================--------------------\\\
@@ -148,7 +148,7 @@ Route::middleware(['auth:web', 'user'])->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::get('/', [UserController::class, 'dashboard'])->name('dashboard');
-Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
+Route::get('/home', [UserController::class, 'dashboard'])->name('dashboard');
 Route::get('/about', [UserController::class, 'about'])->name('about');
 Route::get('/register', [UserController::class, 'register'])->name('register');
 Route::post('/register', [RegisteredUserController::class, 'store'])->name('register');

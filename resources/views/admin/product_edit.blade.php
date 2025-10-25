@@ -146,11 +146,11 @@
                                 @if (!empty($product->images))
                                     @foreach (explode(',', $product->images) as $gallery)
                                         @if ($gallery != '')
-                                            <div class="item gallerypreview" style="width: 100px; height: 100px; overflow: hidden; border: 1px solid #ccc;">
-                                                   <img src="{{ asset('uploads/product/' . $gallery) }}" alt="gallery image"
-                                                        style="width: 100%; height: 100%; object-fit: contain;">
+                                            <div class="item gallerypreview"
+                                                style="width: 100px; height: 100px; overflow: hidden; border: 1px solid #ccc;">
+                                                <img src="{{ asset('uploads/product/' . $gallery) }}" alt="gallery image"
+                                                    style="width: 100%; height: 100%; object-fit: contain;">
                                             </div>
-
                                         @endif
                                     @endforeach
                                 @endif
@@ -245,35 +245,42 @@
                             @enderror
                         </div>
 
-<!-- ✅ Cutting Options Section -->
-<div class="form-group mt-4">
-    <div class="body-title mb-10">Cutting Options (Select Available Options)</div>
+                        <!-- ✅ Cutting Options Section -->
+                        <div class="form-group mt-4">
+                            <div class="body-title mb-10">Cutting Options (Select Available Options)</div>
 
-    @php
-        $allOptions = [
-            'whole_uncleaned' => 'Whole & Uncleaned',
-            'whole_gutted' => 'Whole & Gutted',
-            'headless_gutted' => 'Headless & Gutted',
-            'slices_with_skin_bone' => 'Slices with Skin & Centre Bone',
-            'boneless_biscuits' => 'Boneless Biscuits',
-            'boneless_fillet' => 'Boneless Fillet',
-            'boneless_fingers' => 'Boneless Fingers',
-        ];
+                            @php
+                                $allOptions = [
+                                    'whole_uncleaned' => 'Whole & Uncleaned - ثابت (بغیر صفائی کے)',
+                                    'whole_gutted' => 'Whole & Gutted - مکمل (صاف شدہ)',
+                                    'headless_gutted' => 'Headless & Gutted - بغیر سر کے (صاف شدہ)',
+                                    'slices_with_skin_bone' =>
+                                        'Slices with Skin & Centre Bone - ٹکڑے (چمڑی اور ہڈی سمیت)',
+                                    'boneless_biscuits' => 'Boneless Biscuits - بغیر ہڈی کے بسکٹ کٹ',
+                                    'boneless_fillet' => 'Boneless Fillet - بغیر ہڈی کے فلٹ',
+                                    'boneless_fingers' => 'Boneless Fingers - بغیر ہڈی کے فنگرز',
+                                    'headless_but_shell_on' => 'Headless but shell on - بغیر سر کے مگر چھلکے سمیت',
+                                    'peeled_and_Deveined_with_tail_on' =>
+                                        'Peeled and Deveined with tail on - چھلا ہوا اور صاف شدہ (دم سمیت)',
+                                    'fully_Peeled_and_Deveined' =>
+                                        'Fully Peeled and Deveined - مکمل طور پر چھلا ہوا اور صاف شدہ',
+                                    'tempura_Cut_Prawns' => 'Tempura Cut Prawns - ٹیمپورا کٹ جھینگے',
+                                ];
 
-        $selectedOptions = json_decode($product->cutting_options ?? '[]', true);
-    @endphp
+                                $selectedOptions = json_decode($product->cutting_options ?? '[]', true);
+                            @endphp
 
-    <div class="grid grid-cols-2 gap-2">
-        @foreach ($allOptions as $value => $label)
-            <label style="display:block; font-weight:500;">
-                <input type="checkbox" name="cutting_options[]" value="{{ $value }}"
-                    {{ in_array($value, $selectedOptions) ? 'checked' : '' }}>
-                {{ $label }}
-            </label>
-        @endforeach
-    </div>
-</div>
-<!-- ✅ /Cutting Options Section -->
+                            <div class="grid grid-cols-2 gap-2">
+                                @foreach ($allOptions as $value => $label)
+                                    <label style="display:block; font-weight:500;">
+                                        <input type="checkbox" name="cutting_options[]" value="{{ $value }}"
+                                            {{ in_array($value, $selectedOptions) ? 'checked' : '' }}>
+                                        {{ $label }}
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
+                        <!-- ✅ /Cutting Options Section -->
                         <!-- Submit Button -->
                         <div class="cols gap10">
                             <button class="tf-button w-full" type="submit">Update product</button>

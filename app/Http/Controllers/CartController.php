@@ -89,11 +89,12 @@ class CartController extends Controller
     {
         $cart = session()->get('cart', []);
 
-        if (isset($cart[$id])) {
-            // ✅ quantity ko freely increase kar sakta hai
-            $cart[$id]['quantity'] += 1;
-            session()->put('cart', $cart);
-            return redirect()->back()->with('success', 'Quantity Increased!');
+        foreach ($cart as $key => $item) {
+            if ($item['id'] == $id) {
+                $cart[$key]['quantity'] += 1;
+                session()->put('cart', $cart);
+                return redirect()->back()->with('success', 'Quantity Increased!');
+            }
         }
 
         return redirect()->back()->with('error', 'Product not found in cart!');
@@ -103,36 +104,43 @@ class CartController extends Controller
     {
         $cart = session()->get('cart', []);
 
-        if (isset($cart[$id])) {
-            $currentQty = $cart[$id]['quantity'];
+        foreach ($cart as $key => $item) {
+            if ($item['id'] == $id) {
+                $currentQty = $item['quantity'];
 
-            // ✅ agar 5 se zyada hai to 1 kam karo
-            if ($currentQty > 3) {
-                $cart[$id]['quantity'] = $currentQty - 1;
-            } else {
-                // ✅ agar 5 ya 5 se kam hai to fix 5 hi rakho
-                $cart[$id]['quantity'] = 3;
+                // Minimum 3 rakho
+                if ($currentQty > 3) {
+                    $cart[$key]['quantity'] = $currentQty - 1;
+                } else {
+                    $cart[$key]['quantity'] = 3;
+                }
+
+                session()->put('cart', $cart);
+                return redirect()->back()->with('success', 'Quantity Updated!');
             }
-
-            session()->put('cart', $cart);
-            return redirect()->back()->with('success', 'Quantity Updated!');
         }
 
         return redirect()->back()->with('error', 'Product not found in cart!');
     }
 
 
+
     public function remove($id)
     {
         $cart = session()->get('cart', []);
 
-        if (isset($cart[$id])) {
-            unset($cart[$id]);
-            session()->put('cart', $cart);
+        foreach ($cart as $key => $item) {
+            if ($item['id'] == $id) {
+                unset($cart[$key]);
+                break;
+            }
         }
+
+        session()->put('cart', $cart);
 
         return redirect()->back()->with('success', 'Item Removed from Cart!');
     }
+
 
     public function empty_cart()
     {

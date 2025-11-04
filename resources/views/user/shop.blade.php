@@ -302,15 +302,51 @@
                                             </svg></span>
                                     </div>
 
+                                    @php
+                                        // Decode admin-defined cutting options for this product
+                                        $cuttingOptions = json_decode($product->cutting_options ?? '[]', true);
+
+                                        // Option labels (English + Urdu)
+                                        $optionLabels = [
+                                            'whole_uncleaned' => 'Whole & Uncleaned - ثابت (بغیر صفائی کے)',
+                                            'whole_gutted' => 'Whole & Gutted - مکمل (صاف شدہ)',
+                                            'headless_gutted' => 'Headless & Gutted - بغیر سر کے (صاف شدہ)',
+                                            'slices_with_skin_bone' =>
+                                                'Slices with Skin & Centre Bone - ٹکڑے (چمڑی اور ہڈی سمیت)',
+                                            'boneless_biscuits' => 'Boneless Biscuits - بغیر ہڈی کے بسکٹ کٹ',
+                                            'boneless_fillet' => 'Boneless Fillet - بغیر ہڈی کے فلٹ',
+                                            'boneless_fingers' => 'Boneless Fingers - بغیر ہڈی کے فنگرز',
+                                            'headless_but_shell_on' =>
+                                                'Headless but shell on - بغیر سر کے مگر چھلکے سمیت',
+                                            'peeled_and_Deveined_with_tail_on' =>
+                                                'Peeled and Deveined with tail on - چھلا ہوا اور صاف شدہ (دم سمیت)',
+                                            'fully_Peeled_and_Deveined' =>
+                                                'Fully Peeled and Deveined - مکمل طور پر چھلا ہوا اور صاف شدہ',
+                                            'tempura_Cut_Prawns' => 'Tempura Cut Prawns - ٹیمپورا کٹ جھینگے',
+                                        ];
+
+                                        // Optional: Price difference for each cutting type
+                                        $optionPrices = [
+                                            'whole_uncleaned',
+                                            'whole_gutted',
+                                            'headless_gutted',
+                                            'slices_with_skin_bone',
+                                            'boneless_biscuits',
+                                            'boneless_fillet',
+                                            'boneless_fingers',
+                                        ];
+                                    @endphp
+
                                     @if (session()->has('cart') && array_key_exists($product->id, session('cart')))
+                                        <!-- Already in Cart -->
                                         <a href="{{ route('cart') }}"
-                                            class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium btn btn-warning mb-3">
+                                            class="pc__atc btn anim_appear-bottom position-absolute border-0 text-uppercase fw-medium btn btn-warning mb-3">
                                             Go To Cart
                                         </a>
                                     @else
-                                        <!-- Trigger Modal -->
+                                        <!-- Add To Cart Trigger Button -->
                                         <button type="button"
-                                            class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium"
+                                            class="pc__atc btn anim_appear-bottom position-absolute border-0 text-uppercase fw-medium"
                                             data-bs-toggle="modal"
                                             data-bs-target="#cuttingOptionModal{{ $product->id }}">
                                             Add To Cart
@@ -324,27 +360,34 @@
                                                     <form method="POST" action="{{ route('add.cart') }}"
                                                         class="cutting-form">
                                                         @csrf
+
                                                         <div class="modal-header">
                                                             <h5 class="modal-title">Select Cutting Option</h5>
                                                             <button type="button" class="btn-close"
                                                                 data-bs-dismiss="modal"></button>
                                                         </div>
+
                                                         <div class="modal-body">
+                                                            <!-- ✅ Dynamic Cutting Option Dropdown -->
                                                             <select class="form-control cutting_option"
                                                                 name="cutting_option" required>
                                                                 <option value="">Choose an option</option>
-                                                                <option value="whole_uncleaned">Whole & Uncleaned</option>
-                                                                <option value="whole_gutted">Whole & Gutted</option>
-                                                                <option value="headless_gutted">Headless & Gutted</option>
-                                                                <option value="slices_with_skin_bone">Slices with Skin &
-                                                                    Centre Bone
-                                                                </option>
-                                                                <option value="boneless_biscuits">Boneless Biscuits
-                                                                </option>
-                                                                <option value="boneless_fillet">Boneless Fillet</option>
-                                                                <option value="boneless_fingers">Boneless Fingers</option>
+                                                                @foreach ($cuttingOptions as $optionKey)
+                                                                    @if (isset($optionLabels[$optionKey]))
+                                                                        @php
+                                                                            $extra = $optionPrices[$optionKey] ?? 0;
+                                                                        @endphp
+                                                                        <option value="{{ $optionKey }}">
+                                                                            {{ $optionLabels[$optionKey] }}
+                                                                            @if ($extra > 0)
+                                                                                (+Rs.{{ $extra }})
+                                                                            @endif
+                                                                        </option>
+                                                                    @endif
+                                                                @endforeach
                                                             </select>
 
+                                                            <!-- Hidden Inputs -->
                                                             <input type="hidden" name="id"
                                                                 value="{{ $product->id }}">
                                                             <input type="hidden" name="name"
@@ -354,14 +397,18 @@
                                                             <input type="hidden" name="price"
                                                                 value="{{ $product->sale_price == '' ? $product->regular_price : $product->sale_price }}">
 
-                                                            <!-- ✅ Quantity Selector -->
-                                                            <div class="input-group">
-                                                                <button type="button" class="decrease-btn">-</button>
+                                                            <!-- Quantity Selector -->
+                                                            <div class="input-group mt-3">
+                                                                <button type="button"
+                                                                    class="decrease-btn btn btn-outline-secondary">-</button>
                                                                 <input type="number" name="quantity"
-                                                                    class="quantity-input" value="3" min="3">
-                                                                <button type="button" class="increase-btn">+</button>
+                                                                    class="quantity-input form-control text-center"
+                                                                    value="3" min="3">
+                                                                <button type="button"
+                                                                    class="increase-btn btn btn-outline-secondary">+</button>
                                                             </div>
                                                         </div>
+
                                                         <div class="modal-footer">
                                                             <button type="submit" class="btn btn-primary">Add to
                                                                 Cart</button>
@@ -371,6 +418,7 @@
                                             </div>
                                         </div>
                                     @endif
+
                                 </div>
                                 <div class="pc__info position-relative">
                                     <p class="pc__category">{{ $product->category->name }}</p>

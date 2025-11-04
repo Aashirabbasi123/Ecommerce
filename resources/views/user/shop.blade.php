@@ -3,7 +3,7 @@
 @section('content')
     @include('user.components.navbar')
     @stack('styles')
-<link rel="stylesheet" href="{{ asset('css/shop.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('css/shop.css') }}" type="text/css" />
     <main class="pt-90">
         <section class="shop-main container d-flex pt-4 pt-xl-5">
             <div class="shop-sidebar side-sticky bg-body" id="shopFilter">
@@ -20,7 +20,7 @@
                             <button class="accordion-button p-0 border-0 fs-5 text-uppercase" type="button"
                                 data-bs-toggle="collapse" data-bs-target="#accordion-filter-1" aria-expanded="true"
                                 aria-controls="accordion-filter-1">
-                                Product Categories
+                                Categories
                                 <svg class="accordion-button__icon type2" viewBox="0 0 10 6"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <g aria-hidden="true" stroke="none" fill-rule="evenodd">
@@ -38,7 +38,8 @@
                                         <li class="list-item">
                                             <span class="menu-link py-1">
                                                 <input type="checkbox" class="chk-brand" name="categories"
-                                                    value="{{ $Category->id }}" @if (in_array($Category->id, explode(',', $f_categories ?? ''))) checked @endif />
+                                                    value="{{ $Category->id }}"
+                                                    @if (in_array($Category->id, explode(',', $f_categories ?? ''))) checked @endif />
                                                 {{ $Category->name }}
                                             </span>
                                             <span class="text-right float-end">
@@ -58,7 +59,7 @@
                             <button class="accordion-button p-0 border-0 fs-5 text-uppercase" type="button"
                                 data-bs-toggle="collapse" data-bs-target="#accordion-filter-brand" aria-expanded="true"
                                 aria-controls="accordion-filter-brand">
-                                Brands
+                                Product
                                 <svg class="accordion-button__icon type2" viewBox="0 0 10 6"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <g aria-hidden="true" stroke="none" fill-rule="evenodd">
@@ -75,8 +76,8 @@
                                     @foreach ($brands as $brand)
                                         <li class="list-item">
                                             <span class="menu-link py-1">
-                                                <input type="checkbox" name="brands" value="{{ $brand->id }}" class="chk-brand"
-                                                    @if (in_array($brand->id, explode(',', $f_brands ?? ''))) checked @endif>
+                                                <input type="checkbox" name="brands" value="{{ $brand->id }}"
+                                                    class="chk-brand" @if (in_array($brand->id, explode(',', $f_brands ?? ''))) checked @endif>
                                                 {{ $brand->name }}
                                             </span>
                                             <span class="text-right float-end">
@@ -92,7 +93,8 @@
             </div>
 
             <div class="shop-list flex-grow-1">
-                <div class="swiper-container js-swiper-slider slideshow slideshow_small" data-settings='{
+                <div class="swiper-container js-swiper-slider slideshow slideshow_small"
+                    data-settings='{
                                                 "autoplay": {
                                                   "delay": 5000
                                                 },
@@ -186,7 +188,8 @@
 
 
                     <div class="container p-3 p-xl-5">
-                        <div class="slideshow-pagination d-flex align-items-center position-absolute bottom-0 mb-4 pb-xl-2">
+                        <div
+                            class="slideshow-pagination d-flex align-items-center position-absolute bottom-0 mb-4 pb-xl-2">
                         </div>
 
                     </div>
@@ -235,8 +238,8 @@
                         <div class="shop-filter d-flex align-items-center order-0 order-md-3 d-lg-none">
                             <button class="btn-link btn-link_f d-flex align-items-center ps-0 js-open-aside"
                                 data-aside="shopFilter">
-                                <svg class="d-inline-block align-middle me-2" width="14" height="10" viewBox="0 0 14 10"
-                                    fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <svg class="d-inline-block align-middle me-2" width="14" height="10"
+                                    viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <use href="#icon_filter" />
                                 </svg>
                                 <span class="text-uppercase fw-medium d-inline-block align-middle">Filter</span>
@@ -250,13 +253,15 @@
                         @php
                             $discount = 0;
                             if ($product->sale_price && $product->sale_price < $product->regular_price) {
-                                $discount = round((($product->regular_price - $product->sale_price) / $product->regular_price) * 100);
+                                $discount = round(
+                                    (($product->regular_price - $product->sale_price) / $product->regular_price) * 100,
+                                );
                             }
                         @endphp
                         <div class="product-card-wrapper">
                             <div class="product-card mb-3 mb-md-4 mb-xxl-5">
                                 <div class="pc__img-wrapper" style="position: relative;">
-                                    @if($discount > 0)
+                                    @if ($discount > 0)
                                         <div
                                             style="position: absolute; top: 10px; left: 10px; background: red; color: white; padding: 5px 8px; font-weight: bold; border-radius: 4px; z-index: 10;">
                                             -{{ $discount }}%
@@ -268,25 +273,31 @@
                                         <div class="swiper-wrapper">
                                             <div class="swiper-slide">
                                                 <a href="{{ route('detailpage', ['product_slug' => $product->slug]) }}">
-                                                    <img loading="lazy" src="{{ asset('uploads/product/' . $product->image) }}"
+                                                    <img loading="lazy"
+                                                        src="{{ asset('uploads/product/' . $product->image) }}"
                                                         height="400" alt="{{ $product->name }}" class="pc__img">
                                                 </a>
                                             </div>
                                             @foreach (explode(',', $product->images ?? '') as $imageFile)
                                                 @if (!empty($imageFile))
                                                     <div class="swiper-slide">
-                                                        <a href="{{ route('detailpage', ['product_slug' => $product->slug]) }}">
-                                                            <img loading="lazy" src="{{ asset('uploads/product/' . $imageFile) }}"
-                                                                width="330" height="400" alt="{{ $product->name }}" class="pc__img">
+                                                        <a
+                                                            href="{{ route('detailpage', ['product_slug' => $product->slug]) }}">
+                                                            <img loading="lazy"
+                                                                src="{{ asset('uploads/product/' . $imageFile) }}"
+                                                                width="330" height="400" alt="{{ $product->name }}"
+                                                                class="pc__img">
                                                         </a>
                                                     </div>
                                                 @endif
                                             @endforeach
                                         </div>
-                                        <span class="pc__img-prev"><svg width="7" height="11" viewBox="0 0 7 11">
+                                        <span class="pc__img-prev"><svg width="7" height="11"
+                                                viewBox="0 0 7 11">
                                                 <use href="#icon_prev_sm" />
                                             </svg></span>
-                                        <span class="pc__img-next"><svg width="7" height="11" viewBox="0 0 7 11">
+                                        <span class="pc__img-next"><svg width="7" height="11"
+                                                viewBox="0 0 7 11">
                                                 <use href="#icon_next_sm" />
                                             </svg></span>
                                     </div>
@@ -300,15 +311,18 @@
                                         <!-- Trigger Modal -->
                                         <button type="button"
                                             class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium"
-                                            data-bs-toggle="modal" data-bs-target="#cuttingOptionModal{{ $product->id }}">
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#cuttingOptionModal{{ $product->id }}">
                                             Add To Cart
                                         </button>
 
                                         <!-- Cutting Option Modal -->
-                                        <div class="modal fade" id="cuttingOptionModal{{ $product->id }}" tabindex="-1">
+                                        <div class="modal fade" id="cuttingOptionModal{{ $product->id }}"
+                                            tabindex="-1">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
-                                                    <form method="POST" action="{{ route('add.cart') }}" class="cutting-form">
+                                                    <form method="POST" action="{{ route('add.cart') }}"
+                                                        class="cutting-form">
                                                         @csrf
                                                         <div class="modal-header">
                                                             <h5 class="modal-title">Select Cutting Option</h5>
@@ -316,41 +330,46 @@
                                                                 data-bs-dismiss="modal"></button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <select class="form-control cutting_option" name="cutting_option"
-                                                                required>
+                                                            <select class="form-control cutting_option"
+                                                                name="cutting_option" required>
                                                                 <option value="">Choose an option</option>
                                                                 <option value="whole_uncleaned">Whole & Uncleaned</option>
                                                                 <option value="whole_gutted">Whole & Gutted</option>
                                                                 <option value="headless_gutted">Headless & Gutted</option>
-                                                                <option value="slices_with_skin_bone">Slices with Skin & Centre Bone
+                                                                <option value="slices_with_skin_bone">Slices with Skin &
+                                                                    Centre Bone
                                                                 </option>
-                                                                <option value="boneless_biscuits">Boneless Biscuits</option>
+                                                                <option value="boneless_biscuits">Boneless Biscuits
+                                                                </option>
                                                                 <option value="boneless_fillet">Boneless Fillet</option>
                                                                 <option value="boneless_fingers">Boneless Fingers</option>
                                                             </select>
 
-                                                            <input type="hidden" name="id" value="{{ $product->id }}">
-                                                            <input type="hidden" name="name" value="{{ $product->name }}">
-                                                            <input type="hidden" name="image" value="{{ $product->image }}">
+                                                            <input type="hidden" name="id"
+                                                                value="{{ $product->id }}">
+                                                            <input type="hidden" name="name"
+                                                                value="{{ $product->name }}">
+                                                            <input type="hidden" name="image"
+                                                                value="{{ $product->image }}">
                                                             <input type="hidden" name="price"
                                                                 value="{{ $product->sale_price == '' ? $product->regular_price : $product->sale_price }}">
 
                                                             <!-- ✅ Quantity Selector -->
                                                             <div class="input-group">
                                                                 <button type="button" class="decrease-btn">-</button>
-                                                                <input type="number" name="quantity" class="quantity-input"
-                                                                    value="3" min="3">
+                                                                <input type="number" name="quantity"
+                                                                    class="quantity-input" value="3" min="3">
                                                                 <button type="button" class="increase-btn">+</button>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="submit" class="btn btn-primary">Add to Cart</button>
+                                                            <button type="submit" class="btn btn-primary">Add to
+                                                                Cart</button>
                                                         </div>
                                                     </form>
                                                 </div>
                                             </div>
                                         </div>
-
                                     @endif
                                 </div>
                                 <div class="pc__info position-relative">
@@ -360,25 +379,68 @@
                                             href="{{ route('detailpage', ['product_slug' => $product->slug]) }}">{{ $product->name }}</a>
                                     </h6>
                                     <div class="product-card__price d-flex">
-                                        @if ($product->sale_price && $product->sale_price < $product->regular_price)
-                                            <span class="money price price-old">
-                                                <s>Rs{{ $product->regular_price }}</s>
-                                            </span>
-                                            <span class="money price text-secondary">
-                                                Rs{{ $product->sale_price }}
-                                            </span>
-                                        @else
-                                            <span class="money price text-secondary">
-                                                Rs{{ $product->regular_price }}
-                                            </span>
-                                        @endif
+                                        @php
+                                            $sizePrices = json_decode($product->size_prices ?? '{}', true);
+                                            $hasSizes = !empty($sizePrices);
 
+                                            // Smart detection logic (small → medium → min)
+                                            if ($hasSizes) {
+                                                if (isset($sizePrices['small'])) {
+                                                    $displayPrice = $sizePrices['small']; // Prefer small
+                                                } elseif (isset($sizePrices['medium'])) {
+                                                    $displayPrice = $sizePrices['medium']; // Else medium
+                                                } else {
+                                                    $displayPrice = min($sizePrices); // Else lowest available
+                                                }
+                                            } else {
+                                                // Fallback when no sizes exist
+                                                $displayPrice =
+                                                    $product->sale_price &&
+                                                    $product->sale_price < $product->regular_price
+                                                        ? $product->sale_price
+                                                        : $product->regular_price;
+                                            }
+                                        @endphp
+
+                                        {{-- Display price logic --}}
+                                        @if ($product->sale_price && $product->sale_price < $product->regular_price)
+                                            @if ($hasSizes)
+                                                <span class="money price price-old me-1">
+                                                    <s>Rs{{ number_format($product->regular_price, 0) }}</s>
+                                                </span>
+                                                <span class="money price text-secondary">
+                                                    From Rs{{ number_format($displayPrice, 0) }}*
+                                                </span>
+                                            @else
+                                                <span class="money price price-old me-1">
+                                                    <s>Rs{{ number_format($product->regular_price, 0) }}</s>
+                                                </span>
+                                                <span class="money price text-secondary">
+                                                    Rs{{ number_format($product->sale_price, 0) }}
+                                                </span>
+                                            @endif
+                                        @else
+                                            @if ($hasSizes)
+                                                <span class="money price text-secondary">
+                                                    From Rs{{ number_format($displayPrice, 0) }}
+                                                </span>
+                                            @else
+                                                <span class="money price text-secondary">
+                                                    Rs{{ number_format($product->regular_price, 0) }}
+                                                </span>
+                                            @endif
+                                        @endif
                                     </div>
+
+
+
                                     @if (session()->has('wishlist') && array_key_exists($product->id, session('wishlist')))
-                                        <form method="POST" action="{{ route('wishlist.remove', ['id' => $product->id]) }}">
+                                        <form method="POST"
+                                            action="{{ route('wishlist.remove', ['id' => $product->id]) }}">
                                             @csrf
                                             @method('DELETE')
-                                            <button class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0"
+                                            <button
+                                                class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0"
                                                 style="color:orange;" title="Already in Wishlist">
                                                 <svg width="16" height="16" viewBox="0 0 20 20" fill="red"
                                                     xmlns="http://www.w3.org/2000/svg">
@@ -396,7 +458,8 @@
                                             <input type="hidden" name="price"
                                                 value="{{ $product->sale_price ?? $product->regular_price }}">
 
-                                            <button class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0"
+                                            <button
+                                                class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0"
                                                 title="Add To Wishlist">
                                                 <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
                                                     xmlns="http://www.w3.org/2000/svg">
@@ -431,28 +494,28 @@
 @endsection
 @push('scripts')
     <script>
-        $(function () {
-            $("#pagesize").on("change", function () {
+        $(function() {
+            $("#pagesize").on("change", function() {
                 $("#size").val($(this).val());
                 $("#frmfilter").submit();
             });
 
-            $("#orderby").on("change", function () {
+            $("#orderby").on("change", function() {
                 $("#order").val($(this).val());
                 $("#frmfilter").submit();
             });
 
-            $("input[name='brands']").on("change", function () {
+            $("input[name='brands']").on("change", function() {
                 let brands = "";
-                $("input[name='brands']:checked").each(function () {
+                $("input[name='brands']:checked").each(function() {
                     brands += brands === "" ? $(this).val() : "," + $(this).val();
                 });
                 $("#hdnBrands").val(brands);
                 $("#frmfilter").submit();
             });
-            $("input[name='categories']").on("change", function () {
+            $("input[name='categories']").on("change", function() {
                 let categories = "";
-                $("input[name='categories']:checked").each(function () {
+                $("input[name='categories']:checked").each(function() {
                     categories += categories === "" ? $(this).val() : "," + $(this).val();
                 });
                 $("#hdnCategories").val(categories);
@@ -460,7 +523,7 @@
             });
         });
         document.querySelectorAll(".cutting-form").forEach(form => {
-            form.addEventListener("submit", function (e) {
+            form.addEventListener("submit", function(e) {
                 let cuttingOption = this.querySelector(".cutting_option").value;
                 if (cuttingOption === "") {
                     e.preventDefault();
@@ -468,16 +531,16 @@
                 }
             });
         });
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             document.querySelectorAll(".increase-btn").forEach(btn => {
-                btn.addEventListener("click", function () {
+                btn.addEventListener("click", function() {
                     let input = this.closest(".input-group").querySelector(".quantity-input");
                     input.value = parseInt(input.value) + 1;
                 });
             });
 
             document.querySelectorAll(".decrease-btn").forEach(btn => {
-                btn.addEventListener("click", function () {
+                btn.addEventListener("click", function() {
                     let input = this.closest(".input-group").querySelector(".quantity-input");
                     let current = parseInt(input.value);
                     if (current > 3) {
@@ -488,6 +551,5 @@
                 });
             });
         });
-
     </script>
 @endpush

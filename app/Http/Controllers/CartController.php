@@ -44,21 +44,35 @@ class CartController extends Controller
         $cart = session()->get('cart', []);
         $id = $request->id;
 
-        // 🛠️ Quantity ko int me convert karo aur minimum 3 enforce karo
+        // 🧠 Quantity validation (minimum 1)
         $requestedQty = (int) $request->quantity;
         if ($requestedQty < 1) {
             $requestedQty = 1;
         }
 
-        // 🧠 Agar product already cart me hai
-        if (isset($cart[$id])) {
-            $cart[$id]['quantity'] += $requestedQty;
+        // 🧩 Size aur price handling
+        $selectedSize = $request->size ?? 'default';
+        $selectedPrice = $request->price;
+
+        // Agar product ke size_prices aaye hain, to selected size ka price lo
+        if ($request->has('size_prices')) {
+            $sizePrices = json_decode($request->size_prices, true);
+            if (is_array($sizePrices) && isset($sizePrices[$selectedSize])) {
+                $selectedPrice = $sizePrices[$selectedSize];
+            }
+        }
+
+        // 🛠️ Agar product already cart me hai aur same size ka hai
+        $cartKey = $id . '_' . $selectedSize;
+        if (isset($cart[$cartKey])) {
+            $cart[$cartKey]['quantity'] += $requestedQty;
         } else {
-            // 🎯 Ab koi limit nahi — jitni bheji user ne, wohi jayegi (minimum 3)
-            $cart[$id] = [
+            // 🎯 Add new item with size info
+            $cart[$cartKey] = [
                 'id' => $id,
                 'name' => $request->name,
-                'price' => $request->price,
+                'size' => $selectedSize,
+                'price' => $selectedPrice,
                 'quantity' => $requestedQty,
                 'image' => $request->image,
                 'cutting_option' => $request->cutting_option,
@@ -66,8 +80,9 @@ class CartController extends Controller
         }
 
         session()->put('cart', $cart);
-        return redirect()->route('cart')->with('success', 'Product added to cart!');
+        return redirect()->route('cart')->with('success', 'Product added to cart successfully!');
     }
+
 
 
     public function increase_quantity($id)

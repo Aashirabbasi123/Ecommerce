@@ -153,21 +153,77 @@
                         </span>
                     </div>
 
-                    <div class="product-single__price">
-                        <span class="current-price">
-                            @if ($product->sale_price)
-                                <s>Rs{{ $product->regular_price }}</s> Rs{{ $product->sale_price }}*
+                    <!-- Product Price -->
+                    <div class="product-single__price mb-3">
+                        <span class="current-price d-block" id="displayPrice">
+                            @php
+                                $sizePrices = json_decode($product->size_prices ?? '{}', true);
+                                $hasSizes = !empty($sizePrices);
+
+                                // Smart detection logic (small → medium → min)
+                                if ($hasSizes) {
+                                    if (isset($sizePrices['small'])) {
+                                        $displayPrice = $sizePrices['small']; // Prefer small
+                                    } elseif (isset($sizePrices['medium'])) {
+                                        $displayPrice = $sizePrices['medium']; // Else medium
+                                    } else {
+                                        $displayPrice = min($sizePrices); // Else lowest available
+                                    }
+                                } else {
+                                    // No sizes — fallback
+                                    $displayPrice =
+                                        $product->sale_price && $product->sale_price < $product->regular_price
+                                            ? $product->sale_price
+                                            : $product->regular_price;
+                                }
+                            @endphp
+
+                            {{-- Display Logic --}}
+                            @if ($product->sale_price && $product->sale_price < $product->regular_price)
+                                @if ($hasSizes)
+                                    <s>Rs{{ number_format($product->regular_price, 0) }}</s>
+                                    From <strong>Rs{{ number_format($displayPrice, 0) }}*</strong>
+                                @else
+                                    <s>Rs{{ number_format($product->regular_price, 0) }}</s>
+                                    <strong>Rs{{ number_format($product->sale_price, 0) }}</strong>
+                                @endif
                             @else
-                                Rs{{ $product->regular_price }}
+                                @if ($hasSizes)
+                                    From <strong>Rs{{ number_format($displayPrice, 0) }}</strong>
+                                @else
+                                    <strong>Rs{{ number_format($product->regular_price, 0) }}</strong>
+                                @endif
                             @endif
                         </span>
                     </div>
 
+
+
+                    <!-- Short Description -->
                     <div class="product-single__short-desc">
                         <p>{!! $product->short_description !!}</p>
                     </div>
-                    <p><strong>Note:</strong> All our seafood prices are based on the weight before cleaning or cutting. The
-                        final weight at delivery will depend on the type of cut or preparation you select.</p>
+
+                    <p>
+                        <strong>Note:</strong> All our seafood prices are based on the weight before cleaning or cutting.
+                        The final weight at delivery will depend on the type of cut or preparation you select.
+                    </p>
+
+                    @if ($hasSizes)
+                        <div class="form-group mb-3">
+                            <label for="size" class="fw-bold d-block mb-2">Choose Size</label>
+                            <select id="size" name="size" class="form-control"
+                                style="height: 55px; border: 1px solid #ddd; border-radius: 0; box-shadow: none;">
+                                <option value="" selected disabled>Choose an option</option>
+                                @foreach ($sizePrices as $size => $price)
+                                    <option value="{{ $size }}">
+                                        {{ ucfirst(str_replace('_', ' ', $size)) }}
+                                        - Rs{{ number_format($price, 0) }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
 
                     <!-- Cutting Option Section -->
                     @php
@@ -251,6 +307,8 @@
                             </button>
                         </div>
                     </form>
+
+
                     <div id="cuttingGuideModal" class="modal">
                         <div class="modal-content">
                             <span class="close" id="closeModalBtn">&times;</span>
@@ -647,8 +705,7 @@
                     const x = (e.clientX - left) / width;
                     const y = (e.clientY - top) / height;
 
-                    // Calculate zoom based on mouse position
-                    const zoomLevel = 2.5; // 2.5x zoom
+                    const zoomLevel = 2.5;
                     const translateX = (0.5 - x) * 100;
                     const translateY = (0.5 - y) * 100;
 
@@ -662,10 +719,9 @@
                     img.style.transition = 'transform 0.3s ease';
                 });
 
-                // Click to toggle zoom (optional)
                 img.addEventListener('click', function() {
-                    if (img.style.transform === 'scale(2.5) translate(0%, 0%)' ||
-                        img.style.transform.includes('scale(2.5)')) {
+                    if (img.style.transform === 'scale(2.5) translate(0%, 0%)' || img.style
+                        .transform.includes('scale(2.5)')) {
                         img.style.transform = 'scale(1) translate(0, 0)';
                     } else {
                         img.style.transform = 'scale(2.5) translate(0%, 0%)';
@@ -699,24 +755,81 @@
             const btnIncrease = document.querySelector(".qty-control__increase");
             const btnDecrease = document.querySelector(".qty-control__reduce");
 
-            // Add to cart form validation
+            // 🧠 Add to cart + Size price logic
             const addToCartForm = document.querySelector('form[name="addtocart-form"]');
+            const sizeSelect = document.getElementById("size");
+            const priceDisplay = document.getElementById("displayPrice");
+            const hiddenPriceInput = document.getElementById("finalPrice");
+
+            const sizePrices = @json($sizePrices);
+            const regularPrice = {{ $product->regular_price }};
+            const salePrice = {{ $product->sale_price ?? $product->regular_price }};
+
+            // ✅ Update displayed and hidden price when size changes
+            function updatePrice(selectedSize) {
+                let finalPrice = salePrice; // default
+
+                if (sizePrices[selectedSize]) {
+                    const sizeData = sizePrices[selectedSize];
+
+                    if (typeof sizeData === 'object') {
+                        const newRegular = sizeData.regular ?? regularPrice;
+                        const newSale = sizeData.sale ?? salePrice;
+                        finalPrice = newSale;
+                        priceDisplay.innerHTML = `
+                        <s>Rs${newRegular}</s>
+                        <strong> Rs${newSale}* </strong>
+                    `;
+                    } else {
+                        finalPrice = sizeData;
+                        priceDisplay.innerHTML = `
+                        <strong> Rs${sizeData}* </strong>
+                    `;
+                    }
+                } else {
+                    priceDisplay.innerHTML = `
+                    <s>Rs${regularPrice}</s>
+                    <strong> Rs${salePrice}* </strong>
+                `;
+                    finalPrice = salePrice;
+                }
+
+                // ✅ hidden input me updated price set karo
+                if (hiddenPriceInput) hiddenPriceInput.value = finalPrice;
+                console.log("✅ Final Price Updated:", finalPrice);
+            }
+
+            // ✅ Change event for size select
+            if (sizeSelect) {
+                sizeSelect.addEventListener("change", function() {
+                    updatePrice(this.value);
+                });
+            }
+
+            // ✅ Form validation (Cutting + Size)
             if (addToCartForm) {
                 addToCartForm.addEventListener("submit", function(e) {
                     let cuttingOption = document.getElementById("cuttingOption").value;
+                    let sizeOption = sizeSelect ? sizeSelect.value : "";
+
                     if (cuttingOption === "") {
                         e.preventDefault();
                         alert("⚠️ Please select a Cutting Option before adding to cart!");
+                        return;
+                    }
+
+                    if (sizeSelect && sizeOption === "") {
+                        e.preventDefault();
+                        alert("⚠️ Please select a Size before adding to cart!");
+                        return;
+                    }
+
+                    // ✅ Force update price before submitting
+                    if (sizeOption) {
+                        updatePrice(sizeOption);
                     }
                 });
             }
         });
-
-        function submitAddToCartForm(productId) {
-            const form = document.getElementById(`addToCartForm-${productId}`);
-            if (form) {
-                form.submit();
-            }
-        }
     </script>
 @endpush

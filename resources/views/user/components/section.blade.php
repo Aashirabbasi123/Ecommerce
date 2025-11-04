@@ -1,22 +1,24 @@
 @stack('style')
 <main>
-  <link rel="stylesheet" href="{{ asset('css/section.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('css/section.css') }}" type="text/css" />
 
-    <!-- Hero Slider -->
+    <!-- Hero Slider - Fixed -->
     <section class="hero-slider">
         <div class="swiper-container hero-main-slider">
             <div class="swiper-wrapper">
                 @foreach ($slides as $slide)
                     <div class="swiper-slide">
-                        <img class="hero-bg" src="{{ asset('uploads/slides/' . $slide->image) }}" alt="{{ $slide->title }}" loading="lazy">
+                        <img class="hero-bg" src="{{ asset('uploads/slides/' . $slide->image) }}" alt="{{ $slide->title }}"
+                            loading="eager">
                         <div class="hero-content">
                             <span class="hero-badge">New Arrivals</span>
                             <h1 class="hero-title">{{ $slide->title }}</h1>
                             <p class="hero-subtitle">{{ $slide->subtitle }}</p>
                             <a href="{{ $slide->link }}" class="hero-btn">
                                 Shop Now
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14M12 5l7 7-7 7" />
                                 </svg>
                             </a>
                         </div>
@@ -28,7 +30,7 @@
         </div>
     </section>
 
-    <!-- Simple Category Grid - NO SLIDER -->
+    <!-- Simple Category Grid - CENTERED -->
     <section class="container category-section">
         <div class="section-header">
             <h2 class="section-title">Categories</h2>
@@ -38,7 +40,8 @@
             @foreach ($categories as $category)
                 <a href="{{ route('shop', ['categories' => $category->id]) }}" class="category-card">
                     <div class="category-icon">
-                        <img src="{{ asset('uploads/category/' . $category->image) }}" alt="{{ $category->name }}" loading="lazy">
+                        <img src="{{ asset('uploads/category/' . $category->image) }}" alt="{{ $category->name }}"
+                            loading="lazy">
                     </div>
                     <div class="category-name">{{ $category->name }}</div>
                 </a>
@@ -53,24 +56,25 @@
                 <h2 class="banner-title">🔥 Deals of the Day</h2>
                 <p class="banner-subtitle">Hurry up! These amazing offers are ending soon. Don't miss your chance!</p>
                 <div class="countdown">
-                    <div class="countdown-item timer-running">
+                    <div class="countdown-item">
                         <span class="countdown-number" id="days">00</span>
                         <span class="countdown-label">Days</span>
                     </div>
-                    <div class="countdown-item timer-running">
+                    <div class="countdown-item">
                         <span class="countdown-number" id="hours">00</span>
                         <span class="countdown-label">Hours</span>
                     </div>
-                    <div class="countdown-item timer-running">
+                    <div class="countdown-item">
                         <span class="countdown-number" id="minutes">00</span>
                         <span class="countdown-label">Minutes</span>
                     </div>
-                    <div class="countdown-item timer-running">
+                    <div class="countdown-item">
                         <span class="countdown-number" id="seconds">00</span>
                         <span class="countdown-label">Seconds</span>
                     </div>
                 </div>
-                <a href="{{ route('shop') }}" class="btn btn-secondary" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">
+                <a href="{{ route('shop') }}" class="btn btn-secondary"
+                    style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">
                     Shop All Deals
                 </a>
             </div>
@@ -88,50 +92,49 @@
                 @php
                     $discount = 0;
                     if ($product->sale_price && $product->sale_price < $product->regular_price) {
-                        $discount = round((($product->regular_price - $product->sale_price) / $product->regular_price) * 100);
+                        $discount = round(
+                            (($product->regular_price - $product->sale_price) / $product->regular_price) * 100,
+                        );
                     }
                 @endphp
 
-                <div class="product-card">
-                    @if ($discount > 0)
-                        <div class="product-badge">-{{ $discount }}% OFF</div>
-                    @endif
+                <a href="{{ route('detailpage', ['product_slug' => $product->slug]) }}" class="product-card-link">
+                    <div class="product-card">
+                        @if ($discount > 0)
+                            <div class="product-badge">-{{ $discount }}% OFF</div>
+                        @endif
 
-                    <div class="product-image">
-                        <img src="{{ asset('uploads/product/' . $product->image) }}" alt="{{ $product->name }}" loading="lazy">
-                    </div>
-
-                    <div class="product-info">
-                        <h3 class="product-title">
-                            <a href="{{ route('detailpage', ['product_slug' => $product->slug]) }}">
-                                {{ $product->name }}
-                            </a>
-                        </h3>
-
-                        <div class="product-price">
-                            @if ($product->sale_price && $product->sale_price < $product->regular_price)
-                                <span class="current-price">Rs{{ number_format($product->sale_price, 2) }}</span>
-                                <span class="original-price">Rs{{ number_format($product->regular_price, 2) }}</span>
-                            @else
-                                <span class="current-price">Rs{{ number_format($product->regular_price, 2) }}</span>
-                            @endif
+                        <div class="product-image">
+                            <img src="{{ asset('uploads/product/' . $product->image) }}" alt="{{ $product->name }}"
+                                loading="lazy">
                         </div>
 
-                        <div class="product-actions">
-                            <a href="{{ route('detailpage', ['product_slug' => $product->slug]) }}" class="btn btn-primary">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-                                </svg>
-                                Add to Cart
-                            </a>
-                            <button class="btn btn-secondary">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                                </svg>
-                            </button>
+                        <div class="product-info">
+                            <h3 class="product-title">{{ $product->name }}</h3>
+
+                            <div class="product-price">
+                                @if ($product->sale_price && $product->sale_price < $product->regular_price)
+                                    <span class="current-price">Rs{{ number_format($product->sale_price, 2) }}</span>
+                                    <span
+                                        class="original-price">Rs{{ number_format($product->regular_price, 2) }}</span>
+                                @else
+                                    <span
+                                        class="current-price">Rs{{ number_format($product->regular_price, 2) }}</span>
+                                @endif
+                            </div>
+
+                            <div class="product-actions d-flex align-items-center gap-2">
+                                <span class="btn btn-primary d-flex align-items-center gap-1">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2">
+                                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                                    </svg>
+                                    Add to Cart
+                                </span>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
             @endforeach
         </div>
     </section>
@@ -141,14 +144,17 @@
         <div class="products-grid">
             @foreach ($products->where('sale_price', '<', \DB::raw('regular_price'))->take(8) as $product)
                 @php
-                    $discount = round((($product->regular_price - $product->sale_price) / $product->regular_price) * 100);
+                    $discount = round(
+                        (($product->regular_price - $product->sale_price) / $product->regular_price) * 100,
+                    );
                 @endphp
 
                 <div class="product-card">
                     <div class="product-badge">-{{ $discount }}% OFF</div>
 
                     <div class="product-image">
-                        <img src="{{ asset('uploads/product/' . $product->image) }}" alt="{{ $product->name }}" loading="lazy">
+                        <img src="{{ asset('uploads/product/' . $product->image) }}" alt="{{ $product->name }}"
+                            loading="lazy">
                     </div>
 
                     <div class="product-info">
@@ -164,9 +170,11 @@
                         </div>
 
                         <div class="product-actions">
-                            <a href="{{ route('detailpage', ['product_slug' => $product->slug]) }}" class="btn btn-primary">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                            <a href="{{ route('detailpage', ['product_slug' => $product->slug]) }}"
+                                class="btn btn-primary">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
                                 </svg>
                                 Buy Now
                             </a>
@@ -176,9 +184,6 @@
             @endforeach
         </div>
     </section>
-
-    <!-- Footer Space -->
-    <div class="footer-space"></div>
 </main>
 
 <!-- Add Swiper JS and CSS -->
@@ -186,9 +191,18 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 <script>
-    // Initialize Hero Slider Only
+    // Initialize Hero Slider with fixes
     document.addEventListener('DOMContentLoaded', function() {
-        // Hero Slider
+        // Preload slider images
+        const preloadImages = () => {
+            const images = document.querySelectorAll('.hero-bg');
+            images.forEach(img => {
+                const preloadImage = new Image();
+                preloadImage.src = img.src;
+            });
+        };
+
+        // Initialize Hero Slider with better settings
         const heroSwiper = new Swiper('.hero-main-slider', {
             direction: 'horizontal',
             loop: true,
@@ -200,10 +214,30 @@
             fadeEffect: {
                 crossFade: true
             },
+            speed: 1000,
+            preloadImages: true,
+            updateOnImagesReady: true,
             pagination: {
                 el: '.swiper-pagination',
                 clickable: true,
+            },
+            on: {
+                init: function() {
+                    preloadImages();
+                    this.update();
+                },
+                imagesReady: function() {
+                    this.update();
+                }
             }
+        });
+
+        // Force slider update after images load
+        window.addEventListener('load', function() {
+            heroSwiper.update();
+            setTimeout(() => {
+                heroSwiper.update();
+            }, 100);
         });
 
         // Countdown Timer
@@ -242,7 +276,8 @@
         const images = document.querySelectorAll('img');
         images.forEach(img => {
             img.onerror = function() {
-                this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjBGMEYwIi8+CjxwYXRoIGQ9Ik04MCA2MEgxMjBWMTIwSDgwVjYwWiIgZmlsbD0iI0Q4RDhEOCIvPgo8cGF0aCBkPSJNNjAgODBIMTQwVjEwMEg2MFY4MFpNNjAgMTIwSDE0MFYxNDBINjBWMTIwWiIgZmlsbD0iI0Q4RDhEOCIvPgo8L3N2Zz4K';
+                this.src =
+                    'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjBGMEYwIi8+CjxwYXRoIGQ9Ik04MCA2MEgxMjBWMTIwSDgwVjYwWiIgZmlsbD0iI0Q4RDhEOCIvPgo8cGF0aCBkPSJNNjAgODBIMTQwVjEwMEg2MFY4MFpNNjAgMTIwSDE0MFYxNDBINjBWMTIwWiIgZmlsbD0iI0Q4RDhEOCIvPgo8L3N2Zz4K';
             };
 
             if (img.complete) {

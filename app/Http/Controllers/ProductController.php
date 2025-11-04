@@ -40,6 +40,7 @@ class ProductController extends Controller
             'quantity' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
             'brand_id' => 'required|exists:brands,id',
+            'size_prices' => 'nullable|array',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
@@ -58,23 +59,24 @@ class ProductController extends Controller
         $product->category_id = $request->category_id;
         $product->brand_id = $request->brand_id;
 
+        // ✅ Save size prices only if checkbox is checked
+        $product->size_prices = $request->has('enable_sizes') ? json_encode($request->size_prices ?? []) : null;
+
+        // ✅ Cutting options
+        $product->cutting_options = json_encode($request->cutting_options ?? []);
+
+        // ✅ Main image
         if ($request->hasFile('image')) {
             $product->image = $this->uploadProductImage($request->file('image'));
         }
 
+        // ✅ Gallery images
         if ($request->hasFile('images')) {
             $gallery = [];
             foreach ($request->file('images') as $imageFile) {
                 $gallery[] = $this->uploadProductImage($imageFile);
             }
             $product->images = implode(',', $gallery);
-        }
-
-
-        if ($request->has('cutting_options')) {
-            $product->cutting_options = json_encode($request->cutting_options, JSON_UNESCAPED_UNICODE);
-        } else {
-            $product->cutting_options = json_encode([]);
         }
 
         $product->save();
@@ -87,6 +89,10 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $categories = Category::orderBy('name')->get();
         $brands = Brand::orderBy('name')->get();
+
+        // ✅ Decode size_prices to show in edit form
+        $product->size_prices = json_decode($product->size_prices ?? '{}', true);
+
         return view('admin.product_edit', compact('product', 'categories', 'brands'));
     }
 
@@ -107,6 +113,7 @@ class ProductController extends Controller
             'quantity' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
             'brand_id' => 'required|exists:brands,id',
+            'size_prices' => 'nullable|array',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
@@ -124,37 +131,32 @@ class ProductController extends Controller
         $product->category_id = $request->category_id;
         $product->brand_id = $request->brand_id;
 
-        // ✅ Save cutting options (admin checkboxes)
-        if ($request->has('cutting_options')) {
-            $product->cutting_options = json_encode($request->cutting_options);
-        } else {
-            $product->cutting_options = json_encode([]);
-        }
+        // ✅ Save size prices only if checkbox is checked
+        $product->size_prices = $request->has('enable_sizes') ? json_encode($request->size_prices ?? []) : null;
+
+        // ✅ Cutting options
+        $product->cutting_options = json_encode($request->cutting_options ?? []);
 
         // ✅ Update main image
         if ($request->hasFile('image')) {
             if ($product->image) {
                 $oldPath = public_path('uploads/product/' . $product->image);
-                if (file_exists($oldPath)) {
+                if (file_exists($oldPath))
                     unlink($oldPath);
-                }
             }
             $product->image = $this->uploadProductImage($request->file('image'));
         }
 
         // ✅ Update gallery images
         if ($request->hasFile('images')) {
-            // Delete old gallery images from disk
             if ($product->images) {
                 foreach (explode(',', $product->images) as $oldImage) {
                     $oldPath = public_path('uploads/product/' . $oldImage);
-                    if (file_exists($oldPath)) {
+                    if (file_exists($oldPath))
                         unlink($oldPath);
-                    }
                 }
             }
 
-            // Upload new gallery images
             $gallery = [];
             foreach ($request->file('images') as $imageFile) {
                 $gallery[] = $this->uploadProductImage($imageFile);
@@ -166,6 +168,7 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products')->with('status', 'Product Updated Successfully!');
     }
+
 
 
     public function delete_product($id)

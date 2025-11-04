@@ -91,7 +91,7 @@
 }
 
 .modal-content {
-    background-color: #fff;
+    background-color: #ffffff;
     margin: 5% auto;
     padding: 20px;
     border-radius: 10px;
@@ -285,8 +285,8 @@
     gap: 20px;
     font-size: 0.95rem;
     color: #555;
-    border-top: 1px solid #eee;
-    border-bottom: 1px solid #eee;
+    border-top: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff;
     padding: 15px 0;
     margin-bottom: 30px;
 }
@@ -599,7 +599,7 @@ textarea.form-control:focus {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #fff;
+    background: #ffffff;
 }
 
 .main-slider .swiper-slide img {
@@ -874,7 +874,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f8f9fa;
+    background: #ffffff;
 }
 
 .zoom-container {
@@ -933,7 +933,7 @@ body {
 /* Simple navigation */
 .swiper-button-next,
 .swiper-button-prev {
-    background: rgba(255, 255, 255, 0.9);
+    background: rgb(255, 255, 255);
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -962,7 +962,7 @@ body {
     top: 12px;
     left: 12px;
     background: linear-gradient(135deg, #e63946, #d62839);
-    color: #fff;
+    color: #ffffff;
     padding: 6px 12px;
     font-size: 0.8rem;
     font-weight: 700;

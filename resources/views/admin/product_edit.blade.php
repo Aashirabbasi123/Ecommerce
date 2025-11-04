@@ -209,7 +209,6 @@
                                 <span class="alert alert-danger text-center">{{ $message }}</span>
                             @enderror
                         </div>
-
                         <!-- Stock / Featured -->
                         <div class="cols gap22">
                             <fieldset class="name">
@@ -243,6 +242,35 @@
                             @error('featured')
                                 <span class="alert alert-danger text-center">{{ $message }}</span>
                             @enderror
+                        </div>
+                        <!-- Size Option -->
+                        <div class="form-group mb-3">
+                            <label class="form-label fw-bold d-block mb-2">Enable Size Options</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="enableSizes" name="enable_sizes"
+                                    {{ !empty($product->size_prices) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="enableSizes">
+                                    Check to enable Small / Medium / Large prices
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Small Price</label>
+                            <input type="number" step="0.01" name="size_prices[small]" class="form-control"
+                                value="{{ old('size_prices.small', $product->size_prices['small'] ?? '') }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Medium Price</label>
+                            <input type="number" step="0.01" name="size_prices[medium]" class="form-control"
+                                value="{{ old('size_prices.medium', $product->size_prices['medium'] ?? '') }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Large Price</label>
+                            <input type="number" step="0.01" name="size_prices[large]" class="form-control"
+                                value="{{ old('size_prices.large', $product->size_prices['large'] ?? '') }}">
                         </div>
 
                         <!-- ✅ Cutting Options Section -->

@@ -27,7 +27,7 @@
 
     <style>
         /* ✅ Fullscreen Loader Overlay */
-        #loader-overlay {
+        /* #loader-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -40,23 +40,18 @@
             z-index: 99999;
             transition: opacity 0.9s ease;
         }
-
-        /* Loader spinner */
         .spinner {
-            /* background-image: linear-gradient(rgb(186, 66, 255) 35%, rgb(0, 225, 255)); */
             width: 100px;
             height: 100px;
             animation: spinning82341 1.7s linear infinite, hue 3s ease-in-out infinite;
             text-align: center;
             border-radius: 50px;
             filter: blur(1px);
-            /* box-shadow: 0px -5px 20px 0px rgb(186, 66, 255), 0px 5px 20px 0px rgb(0, 225, 255); */
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* fish image in center */
         .spinner1 {
             background: url("{{ asset('images/logo1.png') }}") no-repeat center center/contain;
             width: 100vh;
@@ -78,7 +73,7 @@
             100% {
                 filter: hue-rotate(360deg);
             }
-        }
+        } */
 
         /* ✅ Top Bar */
         .top-bar {
@@ -176,12 +171,12 @@
 </head>
 
 <body>
-    <!-- ✅ Loader -->
+    {{-- <!-- ✅ Loader -->
     <div id="loader-overlay">
         <div class="spinner">
             <div class="spinner1"></div>
         </div>
-    </div>
+    </div> --}}
     <a href="https://wa.me/+923231449519" target="_blank" class="whatsapp-float">
         <i class="fab fa-whatsapp"></i>
         <span class="chat-tooltip">Chat Now</span>
@@ -251,19 +246,19 @@
             });
         });
         // ✅ loader ke waqt body me class add karna
-        document.body.classList.add("loading");
+        // document.body.classList.add("loading");
 
-        window.addEventListener("load", function () {
-            const loader = document.getElementById("loader-overlay");
-            loader.style.opacity = "0";
+        // window.addEventListener("load", function () {
+        //     const loader = document.getElementById("loader-overlay");
+        //     loader.style.opacity = "0";
 
-            setTimeout(() => {
-                loader.style.display = "none";
+        //     setTimeout(() => {
+        //         loader.style.display = "none";
 
                 // ✅ loader hatne ke baad class remove
-                document.body.classList.remove("loading");
-            }, 500);
-        });
+        //         document.body.classList.remove("loading");
+        //     }, 500);
+        // });
     </script>
     @stack('scripts')
 </body>

@@ -221,6 +221,38 @@
                                 <span class="alert alert-danger text-center">{{ $message }}</span>
                             @enderror
                         </div>
+                        <!-- Checkbox to Enable Sizes -->
+                        <div class="form-group mb-3">
+                            <label class="form-label fw-bold d-block mb-2">Enable Size Options</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="enableSizes" name="enable_sizes"
+                                    {{ !empty($product->size_prices) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="enableSizes">Check to enable Small / Medium / Large
+                                    prices</label>
+                            </div>
+                        </div>
+
+                        <!-- Size Options -->
+                        <div id="sizeOptions" style="display: none;">
+                            <div class="form-group">
+                                <label>Small Price</label>
+                                <input type="number" step="0.01" name="size_prices[small]" class="form-control"
+                                    value="{{ old('size_prices.small', $product->size_prices['small'] ?? '') }}">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Medium Price</label>
+                                <input type="number" step="0.01" name="size_prices[medium]" class="form-control"
+                                    value="{{ old('size_prices.medium', $product->size_prices['medium'] ?? '') }}">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Large Price</label>
+                                <input type="number" step="0.01" name="size_prices[large]" class="form-control"
+                                    value="{{ old('size_prices.large', $product->size_prices['large'] ?? '') }}">
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label for="cuttingOptions">Cutting Options (Select Available Options)</label><br>
 
@@ -315,7 +347,25 @@
                 }
 
             });
-            or
+            document.addEventListener('DOMContentLoaded', function() {
+                const checkbox = document.getElementById('enableSizes');
+                const sizeOptions = document.getElementById('sizeOptions');
+
+                function toggleSizeFields() {
+                    if (checkbox.checked) {
+                        sizeOptions.style.display = 'block';
+                    } else {
+                        sizeOptions.style.display = 'none';
+                        // Clear values when unchecked (optional)
+                        sizeOptions.querySelectorAll('input').forEach(input => input.value = '');
+                    }
+                }
+
+                checkbox.addEventListener('change', toggleSizeFields);
+
+                // Run once on page load (edit form case)
+                toggleSizeFields();
+            });
         </script>
     @endpush
 @endsection

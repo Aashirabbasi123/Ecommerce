@@ -5,22 +5,21 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    public function up(): void
+    /**
+     * Run the migrations.
+     */
+    public function up()
     {
         Schema::table('products', function (Blueprint $table) {
-            if (!Schema::hasColumn('products', 'cutting_type')) {
-                $table->string('cutting_type')->nullable();
-            }
+            $table->text('short_description')->change();
         });
     }
 
-    public function down(): void
+    public function down()
     {
         Schema::table('products', function (Blueprint $table) {
-            if (Schema::hasColumn('products', 'cutting_type')) {
-                $table->dropColumn('cutting_type');
-            }
+            $table->string('short_description', 255)->change();
         });
     }
+
 };
-

@@ -22,8 +22,8 @@ class WishlistController extends Controller
 
         // Quantity fix: always min 3
         $qty = (int) $request->quantity;
-        if ($qty < 1) {
-            $qty = 1;
+        if ($qty < 3) {
+            $qty = 3;
         }
 
         if (!isset($wishlist[$productId])) {
